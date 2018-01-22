@@ -1,0 +1,51 @@
+<project project_version="1.1">
+    <project_settings>
+        <general>
+            <setting name="generalname" value="GGJ2018"/>
+            <setting name="generalgeneric" value="bin/Generic"/>
+            <setting name="generaltmp" value="bin/tmp"/>
+            <setting name="generalicon" value=""/>
+            <setting name="generalsplashscreen" value=""/>
+            <setting name="savedata_icon" value=""/>
+            <setting name="background_img" value=""/>
+            <setting name="generalmajor" value="0"/>
+            <setting name="generalminor" value="0"/>
+            <setting name="parentallevel" value="0"/>
+            <setting name="app_type" value="0"/>
+            <setting name="englishname" value=""/>
+            <setting name="frenchname" value=""/>
+            <setting name="spanishname" value=""/>
+            <setting name="germanname" value=""/>
+            <setting name="italianname" value=""/>
+            <desktop>
+                <setting name="desktopwidth" value="0"/>
+                <setting name="desktopheight" value="0"/>
+                <windows/>
+                <linux/>
+                <mac/>
+            </desktop>
+            <console>
+                <ps4>
+                    <setting name="pronunciationsigfile" value=""/>
+                    <setting name="pronunciationxmlfile" value=""/>
+                    <setting name="youtubeclientid" value=""/>
+                </ps4>
+                <psvita>
+                    <setting name="savedataquota" value="0"/>
+                    <setting name="livearea" value=""/>
+                </psvita>
+                <ps3/>
+                <xboxone>
+                    <setting name="packagingdirectory" value=""/>
+                    <setting name="mappingfile" value=""/>
+                </xboxone>
+                <xbox360/>
+            </console>
+            <mobile>
+                <android/>
+                <ios/>
+            </mobile>
+        </general>
+    </project_settings>
+    <extensions/>
+</project>

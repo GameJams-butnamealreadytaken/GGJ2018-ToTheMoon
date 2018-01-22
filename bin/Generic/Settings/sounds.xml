@@ -1,0 +1,4 @@
+<sounds>
+<sound name="gun_pistol_one_shot" max_playback="10" priority="2"/>
+<sound name="alienbomb_explosion_1" max_playback="10" priority="2"/>
+</sounds>

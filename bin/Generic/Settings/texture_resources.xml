@@ -1,0 +1,65 @@
+<textures>
+	<!--
+	<rule>
+		- name : the unique name of the rule when referencing it in a filter.
+		- platform : this rule will be defined only for this platform 
+		  (you can have multiple rules with the same name and different platforms,
+		  or even a default rule without platform, and a platform specific rule that overrides it).
+		- format : the desired output format, in the set of options supported by ShTextureCompiler.
+		- gamma : optional, the gamma of the input texture, default: 1.0 (some operations are done in linear space and converted back to gamma space)
+		- target_gamma : optional, the desired gamma of the output texture, default: same as source.
+		- is_normalmap : optional, set this value to true if the input texture is a normal map, default: false (special conversion rules will apply)
+		- downscale : optional, set this value if you want the source texture to be downscaled, default: 1 (ie. no downscaling)
+		- mipmaps : optional, set this value to false if you want to disable mipmap generation, default : true 
+		  (we enable mipmaps by default because it's more common to have them).
+		
+	<filter>
+		- rule : the name of the rule that will be used to convert the texture it the filter matches
+		  (we stop once the first filter that succeeds is found, in declaration order).
+		- file_name : optional, the texture file name (without path or extension) must match this value to pass the filter
+		  (the value can include '*' wildcards).
+		- file_dir : optional, the source directory part of the source texture path must contain the given value
+		  (no wildcards allowed here, use '/' as a directory delimiter if you want to match a subhierarchy and to prevent matching
+		  directory names only starting or ending with your pattern).
+		- file_ext : optional, the file extension must match exactly the given value (note that it's of limited use for now, 
+		  since the texture conversion tool only handles tga images).
+		  
+	<default_filter>
+		- rule : same as for 'filter', but it's the rule that will be used if no other filter is matched.
+		
+	notes:
+		- if you want to have a different source texture for a specific platform, simply put it in a subdirectory
+		  that matches to the platform name (you can also put no texture in the parent directory if there is no generic texture).
+		- you can declare rules and filters in any order, only the relative order of filters matters when matching them to a file.
+		- all matches are done case insensitive (all your file names should already be in lowercase anyway).
+	-->
+	
+	<rule name="sprite" format="rgba" gamma="2.2" mipmaps="false"/>
+	<rule name="gui_opaque" format="dxt1" gamma="2.2" mipmaps="false"/>
+	<rule name="gui_transparent" format="dxt5" gamma="2.2" mipmaps="false"/>
+
+	<rule name="color" format="dxt1" gamma="2.2" />
+	<rule name="colora" format="dxt5" gamma="2.2" />
+	<rule name="normal" format="dxt5n" is_normalmap="true" />
+	<rule name="normal" platform="xbox360" format="dxn" is_normalmap="true" />
+	<rule name="specular" format="dxt1" gamma="2.2" />
+	<rule name="opacity" format="dxt1" gamma="2.2" />
+	<rule name="illumination" format="dxt1" gamma="2.2"/>
+	<rule name="raw" format="rgba" />
+	<rule name="default" format="dxt_auto" gamma="2.2"/>
+
+	<filter file_dir="/sprites" rule="sprite"/>
+	<filter file_dir="/fonts" rule="sprite"/>
+	
+	<filter file_name="*_color" rule="color"/>
+	<filter file_name="*_colora" rule="colora"/>
+	<filter file_name="*_nrm" rule="normal"/>
+	<filter file_name="*_nm" rule="normal"/>
+	<filter file_name="*_spec" rule="specular"/>
+	<filter file_name="*_s" rule="specular"/>
+	<filter file_name="*_opa" rule="opacity"/>
+	<filter file_name="*_illu" rule="illumination"/>
+	<filter file_name="*_raw" rule="raw"/>
+	
+	<default_filter rule="default"/>
+</textures>
