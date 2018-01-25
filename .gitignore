@@ -33,5 +33,4 @@ _logs/
 Bin/tmp/
 Bin/Generic/Resources/SpritesTemp/*
 build/
-*.bat
 *.user
