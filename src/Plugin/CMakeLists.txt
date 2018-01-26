@@ -19,8 +19,12 @@ source_group("Plugin" FILES ${SOURCES_Plugin})
 set(SOURCES_Factory PluginFactory.cpp PluginFactory.h)
 source_group("Factory" FILES ${SOURCES_Factory})
 
+# Ship files
+set(SOURCES_Ship Ship.cpp Ship.h)
+
+source_group("Plugin" FILES ${SOURCES_Plugin})
 # Put everything together before adding platform-specific files
-set(SOURCES ${SOURCES_Plugin} ${SOURCES_Factory})
+set(SOURCES ${SOURCES_Plugin} ${SOURCES_Factory} ${SOURCES_Ship})
 
 # Compile to use it on Runtime
 add_library(Plugin STATIC ${SOURCES})

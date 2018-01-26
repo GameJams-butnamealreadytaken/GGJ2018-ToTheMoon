@@ -16,10 +16,10 @@ public:
 						Ship			(void);
 	virtual				~Ship			(void);
 
-	void				Initialize		(ShObject * pObject, EBlockType type);
+	void				Initialize		(ShObject * pObject, EShipType type);
 	void				Release			(void);
 
-	EBlockType			GetType			(void);
+	EShipType			GetType			(void);
 	ShObject *			GetSprite		(void);
 
 private:
