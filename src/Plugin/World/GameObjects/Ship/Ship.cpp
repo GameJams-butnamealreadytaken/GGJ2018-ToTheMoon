@@ -5,11 +5,10 @@
  */
 Ship::Ship(ShEntity2 * pEntity, const CShVector2 & vPosition)
 	: GameObject(pEntity, vPosition)
-	, m_eState(IDLE)
 	, m_target()
 	, m_fSpeed(5.0f)
 {
-	// ...
+	SetState((int)IDLE);
 }
 
 /**
@@ -40,7 +39,7 @@ void Ship::Release(void)
 */
 void Ship::Update(float dt)
 {
-	switch (m_eState)
+	switch (m_iState)
 	{
 	case IDLE:
 		{
@@ -74,7 +73,7 @@ Ship::EShipType Ship::GetType(void)
 void Ship::SetTarget(const CShVector2 & newTarget)
 {
 	m_target = newTarget;
-	m_eState = TRAVEL;
+	SetState((int)TRAVEL);
 }
 
 void Ship::AdjustDirectionToTarget(void)

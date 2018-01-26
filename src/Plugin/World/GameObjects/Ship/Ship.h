@@ -40,7 +40,6 @@ private:
 private:
 
 	EShipType	m_type;
-	EShipState	m_eState;
 
 	CShVector2	m_target;
 	CShVector2	m_orientation;
