@@ -10,11 +10,11 @@ public:
 	explicit		GameObject			(ShEntity2* pEntity, const CShVector2 & vPosition);
 	virtual			~GameObject			(void);
 
-	void			Initialize			(void);
-	void			Release				(void);
+	virtual void	Initialize			(void);
+	virtual void	Release				(void);
 
-	void			Animate				(int iSpriteCount, char * szSpriteLibrary, char * szSpriteName, float fAnimationInterFrameTime);
-	void			Update				(float dt);
+	virtual void	Animate				(int iSpriteCount, char * szSpriteLibrary, char * szSpriteName, float fAnimationInterFrameTime);
+	virtual void	Update				(float dt);
 
 	ShEntity2 *		GetSprite			(void);
 	CShVector2 &	GetPosition			(void);
