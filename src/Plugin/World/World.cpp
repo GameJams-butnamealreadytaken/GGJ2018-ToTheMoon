@@ -3,7 +3,7 @@
 /**
 * @brief Constructor
 */
-/*explicit*/ World::World(void)
+/*explicit*/ World::World(void) : m_world(1000.0f, 1000.0f)
 {
 	// ...
 }
