@@ -19,7 +19,7 @@ public:
 	ShEntity2 *		GetSprite			(void);
 	CShVector2 &	GetPosition			(void);
 
-private:
+protected:
 
 	bool					m_bAnimated;
 	CShArray<ShSprite*>		m_aSprite;
