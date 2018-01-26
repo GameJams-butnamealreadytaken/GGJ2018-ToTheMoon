@@ -28,8 +28,12 @@ set(SOURCES_GameObject World/GameObjects/GameObject.cpp World/GameObjects/GameOb
 source_group("World\\GameObject" FILES ${SOURCES_GameObject})
 
 # Ship files
-set(SOURCES_Ship Ship.cpp Ship.h)
-source_group("Ship" FILES ${SOURCES_Plugin})
+set(SOURCES_Ship World/GameObjects/Ship/Ship.cpp World/GameObjects/Ship/Ship.h)
+source_group("World\\GameObject\\Ship" FILES ${SOURCES_Ship})
+
+# Transmiter files
+set(SOURCES_Transmiter World/GameObjects/Transmiter/Transmiter.cpp World/GameObjects/Transmiter/Transmiter.h)
+source_group("World\\GameObject\\Transmiter" FILES ${SOURCES_Transmiter})
 
 # Put everything together before adding platform-specific files
 set(SOURCES 
@@ -37,7 +41,9 @@ ${SOURCES_Plugin}
 ${SOURCES_Factory} 
 ${SOURCES_World}
 ${SOURCES_GameObject}
-${SOURCES_Ship})
+${SOURCES_Ship}
+${SOURCES_Transmiter}
+)
 
 # Compile to use it on Runtime
 add_library(Plugin STATIC ${SOURCES})

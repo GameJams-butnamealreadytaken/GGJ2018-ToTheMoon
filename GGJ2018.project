@@ -1,4 +1,7 @@
 <project project_version="1.1">
+    <extensions>
+        <extension name="GGJ2018"/>
+    </extensions>
     <project_settings>
         <general>
             <setting name="generalname" value="GGJ2018"/>
@@ -47,5 +50,4 @@
             </mobile>
         </general>
     </project_settings>
-    <extensions/>
 </project>

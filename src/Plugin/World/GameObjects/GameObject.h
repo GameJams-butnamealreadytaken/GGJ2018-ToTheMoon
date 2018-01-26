@@ -7,23 +7,31 @@ class GameObject
 
 public:
 
-	explicit	GameObject			(ShEntity2* pEntity, const CShVector2 & vPosition);
-	virtual		~GameObject			(void);
+	explicit		GameObject			(ShEntity2* pEntity, const CShVector2 & vPosition);
+	virtual			~GameObject			(void);
 
-	void		Initialize			(void);
-	void		Release				(void);
+	virtual void	Initialize			(void);
+	virtual void	Release				(void);
 
-	void		Animate				(int iSpriteCount, char * szSpriteLibrary, char * szSpriteName, float fAnimationInterFrameTime);
-	void		Update				(float dt);
+	virtual void	Animate				(int iSpriteCount, char * szSpriteLibrary, char * szSpriteName, float fAnimationInterFrameTime);
+	virtual void	Update				(float dt);
 
-private:
+	void			SetState			(int iState);
+
+	ShEntity2 *		GetSprite			(void);
+
+	void			SetPosition2		(const CShVector2 & vPosition);
+	CShVector2 &	GetPosition			(void);
+
+protected:
+	int						m_iState;
+	float					m_fStateTime;
+	ShEntity2 *				m_pEntity;
+	CShVector2				m_vPosition;
 
 	bool					m_bAnimated;
 	CShArray<ShSprite*>		m_aSprite;
 	int						m_iCurrentAnimationSprite;
 	float					m_fAnimationInterFrameTime;
 	float					m_fAnimationTime;
-
-	ShEntity2 *				m_pEntity;
-	CShVector2				m_vPosition;
 };

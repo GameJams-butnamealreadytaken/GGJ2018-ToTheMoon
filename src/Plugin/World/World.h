@@ -2,6 +2,7 @@
 
 #include "ShSDK/ShSDK.h"
 
+#include "../../Network/World.h"
 #include "GameObjects/GameObject.h"
 
 class World
@@ -26,5 +27,6 @@ public:
 private:
 
 	CShIdentifier					m_levelIdentifier;
+	Network::World					m_world;
 	CShArray<GameObject*>			m_aGameObject;
 };
