@@ -30,8 +30,8 @@
 
 # Shine
 _logs/
-Bin/tmp/
-Bin/Generic/Resources/SpritesTemp/*
+bin/tmp/
+bin/Generic/Resources/SpritesTemp/*
 build/
 *.user
 Generate_GGJ2018.bat
