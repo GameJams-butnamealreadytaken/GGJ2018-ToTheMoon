@@ -24,10 +24,10 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 	m_levelIdentifier = levelIdentifier;
 
 	ShEntity2* pEntity = ShEntity2::Create(m_levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj2018"), CShIdentifier("img_01"), CShVector3(0.0f, 0.0f, 0.1f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
-	GameObject * pObject = new GameObject(pEntity, CShVector2(0.0f, 0.0f));
-	pObject->Animate(3, "ggj", "img", 0.5f);
+	Transmiter * pTransmiter = new Transmiter(pEntity, CShVector2(0.0f, 0.0f));
+	pTransmiter->Animate(3, "ggj", "img", 0.5f);
 
-	m_aGameObject.Add(pObject);
+	m_aTransmiter.Add(pTransmiter);
 }
 
 /**
@@ -45,12 +45,14 @@ void World::Update(float dt)
 {
 	m_world.update(dt);
 
-	int iGameObject = m_aGameObject.GetCount();
+	//
+	// Update Transmiter
+	int iTransmiterCount = m_aTransmiter.GetCount();
 
-	for (int iObject = 0; iObject < iGameObject; ++iObject)
+	for (int iTransmiter = 0; iTransmiter < iTransmiterCount; ++iTransmiter)
 	{
-		GameObject * pObject = m_aGameObject[iObject];
-		pObject->Update(dt);
+		Transmiter * pTransmiter = m_aTransmiter[iTransmiter];
+		pTransmiter->Update(dt);
 	}
 }
 

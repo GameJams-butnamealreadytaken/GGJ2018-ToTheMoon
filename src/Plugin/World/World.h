@@ -3,7 +3,8 @@
 #include "ShSDK/ShSDK.h"
 
 #include "../../Network/World.h"
-#include "GameObjects/GameObject.h"
+
+#include "GameObjects/Transmiter/Transmiter.h"
 
 class World
 {
@@ -28,5 +29,5 @@ private:
 
 	CShIdentifier					m_levelIdentifier;
 	Network::World					m_world;
-	CShArray<GameObject*>			m_aGameObject;
+	CShArray<Transmiter*>			m_aTransmiter;
 };
