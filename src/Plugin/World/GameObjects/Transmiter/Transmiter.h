@@ -12,8 +12,8 @@ public:
 	enum ETransmiterState
 	{
 		IDLE,
-		TRAVEL,
-		FIGHT,
+		APPEAR,
+		DESTROYED,
 	};
 
 	explicit			Transmiter			(ShEntity2 * pEntity, const CShVector2 & vPosition);
@@ -22,11 +22,12 @@ public:
 	void				Initialize			(void);
 	void				Release				(void);
 
-	virtual void		Update				(float dt) SH_ATTRIBUTE_OVERRIDE;
+	void				Start				(const CShVector2 & vPosition);
 
-	void				SetDestination		(const CShVector2 & newDest);
+	virtual void		Update				(float dt) SH_ATTRIBUTE_OVERRIDE;
 
 private:
 
 	ETransmiterState	m_eState;
+	float				m_fRadius;
 };
