@@ -4,13 +4,15 @@
 * @brief Constructor
 */
 /*explicit*/ GameObject::GameObject(ShEntity2 * pEntity, const CShVector2 & vPosition)
-: m_bAnimated(false)
+: m_iState(0)
+, m_fStateTime(0.0f)
+, m_pEntity(pEntity)
+, m_vPosition(vPosition)
+, m_bAnimated(false)
 , m_aSprite()
 , m_iCurrentAnimationSprite(0.0f)
 , m_fAnimationInterFrameTime(0.0f)
 , m_fAnimationTime(0.0f)
-, m_pEntity(pEntity)
-, m_vPosition(vPosition)
 {
 	// ...
 }
@@ -80,9 +82,20 @@ void GameObject::Update(float dt)
 	}
 }
 
+void GameObject::SetState(int iState)
+{
+	m_iState = iState;
+	m_fStateTime = 0.0f;
+}
+
 ShEntity2 * GameObject::GetSprite(void)
 {
 	return(m_pEntity);
+}
+
+void GameObject::SetPosition2(const CShVector2 & vPosition)
+{
+	ShEntity2::SetPosition2(m_pEntity, vPosition);
 }
 
 CShVector2 & GameObject::GetPosition(void)
