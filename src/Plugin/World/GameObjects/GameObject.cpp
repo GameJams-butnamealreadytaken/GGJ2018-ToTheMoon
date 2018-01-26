@@ -50,8 +50,9 @@ void GameObject::Animate(int iSpriteCount, char* szSpriteLibrary, char* szSprite
 	for (int iFrame = 0; iFrame < iSpriteCount; ++iFrame)
 	{
 		char szEntityName[1024];
-		sprintf(szEntityName, "%s_%04d", szSpriteName, iFrame);
-		m_aSprite.Add(ShSprite::Find(CShIdentifier(szSpriteLibrary), CShIdentifier(szEntityName)));
+		sprintf(szEntityName, "%s_%02d", szSpriteName, iFrame+1);
+		ShSprite* pSprite = ShSprite::Find(CShIdentifier(szSpriteLibrary), CShIdentifier(szEntityName));
+		m_aSprite.Add(pSprite);
 	}
 }
 
@@ -74,6 +75,7 @@ void GameObject::Update(float dt)
 			}
 
 			ShEntity2::SetSprite(m_pEntity, m_aSprite[m_iCurrentAnimationSprite]);
+			m_fAnimationTime = 0.0f;
 		}
 	}
 }

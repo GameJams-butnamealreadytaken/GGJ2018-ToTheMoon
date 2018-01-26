@@ -15,16 +15,35 @@ public:
 		TRORAPIDE,
 	};
 
-						Ship			(ShEntity2 * pEntity, const CShVector2 & vPosition);
-	virtual				~Ship			(void);
+	enum EShipState
+	{
+		IDLE,
+		TRAVEL,
+		FIGHT,
+	};
 
-	void				Initialize		(ShObject * pObject, EShipType type);
-	void				Release			(void);
+						Ship					(ShEntity2 * pEntity, const CShVector2 & vPosition);
+	virtual				~Ship					(void);
 
-	EShipType			GetType			(void);
+	void				Initialize				(EShipType type);
+	void				Release					(void);
+
+	virtual void		Update					(float dt) SH_ATTRIBUTE_OVERRIDE;
+
+	EShipType			GetType					(void);
+
+	void				SetTarget				(const CShVector2 & newTarget);
+
+private:
+	void				AdjustDirectionToTarget	(void);
 
 private:
 
 	EShipType	m_type;
-	
+	EShipState	m_eState;
+
+	CShVector2	m_target;
+	CShVector2	m_orientation;
+
+	float		m_fSpeed;
 };
