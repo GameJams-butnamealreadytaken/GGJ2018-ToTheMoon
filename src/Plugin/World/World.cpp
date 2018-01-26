@@ -35,7 +35,7 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 */
 void World::Release(void)
 {
-
+	
 }
 
 /**
@@ -43,6 +43,8 @@ void World::Release(void)
 */
 void World::Update(float dt)
 {
+	m_world.update(dt);
+
 	int iGameObject = m_aGameObject.GetCount();
 
 	for (int iObject = 0; iObject < iGameObject; ++iObject)
