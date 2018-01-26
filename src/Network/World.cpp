@@ -14,7 +14,7 @@ namespace Network
 /**
  * @brief Constructor
  */
-World::World(void) : m_ShipCount(0)
+World::World(float size_x, float size_y) : m_ShipCount(0), m_bounds(size_x, size_y)
 {
 	memset(m_aShips, 0, sizeof(m_aShips));
 }
@@ -24,16 +24,20 @@ World::World(void) : m_ShipCount(0)
  */
 World::~World(void)
 {
-
+	// ...
 }
 
 /**
  * @brief update
  * @param delta time in seconds
  */
-void World::update(double dt)
+void World::update(float dt)
 {
-	// TODO
+	for (unsigned int i = 0; i < MAX_SHIPS; ++i)
+	{
+		m_aShips[i].update(dt);
+
+	}
 }
 
 }
