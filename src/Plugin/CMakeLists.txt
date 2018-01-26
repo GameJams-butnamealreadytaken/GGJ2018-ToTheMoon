@@ -28,7 +28,7 @@ set_property(TARGET Plugin PROPERTY FOLDER "Runtime")
 set_property(TARGET Plugin APPEND PROPERTY COMPILE_DEFINITIONS "${SHSDK_COMPILE_DEFINITIONS} -fno-exceptions -fno-rtti")
 set_property(TARGET Plugin APPEND PROPERTY COMPILE_FLAGS "${SHSDK_COMPILE_FLAGS}")
 
-target_link_libraries(Plugin INTERFACE ${SHSDK_LIBRARIES})
+target_link_libraries(Plugin INTERFACE ${SHSDK_LIBRARIES} Network)
 target_include_directories(Plugin PUBLIC "${SHSDK_INCLUDE_DIR}")
 
 # Compile to use it in the Shine Editor
@@ -39,5 +39,5 @@ set_property(TARGET Plugin_Editor APPEND PROPERTY COMPILE_FLAGS "${SHSDK_COMPILE
 set_property(TARGET Plugin_Editor APPEND PROPERTY COMPILE_DEFINITIONS "SH_EDITOR=1" "_INTERNAL_DLL") # FIXME
 set_property(TARGET Plugin_Editor APPEND PROPERTY POSITION_INDEPENDENT_CODE True)
 
-target_link_libraries(Plugin_Editor PRIVATE ${SHSDK_EDITOR_LIBRARIES})
+target_link_libraries(Plugin_Editor PRIVATE ${SHSDK_EDITOR_LIBRARIES} Network)
 target_include_directories(Plugin_Editor PUBLIC "${SHSDK_INCLUDE_DIR}")
