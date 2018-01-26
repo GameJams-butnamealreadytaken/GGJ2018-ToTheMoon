@@ -3,7 +3,7 @@
 #include "ShSDK/ShSDK.h"
 #include "ShEngineExt/ShEngineExt.h"
 
-#include "World\GameObjects\GameObject.h"
+#include "../GameObject.h"
 
 class Ship : public GameObject
 {
