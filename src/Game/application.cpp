@@ -2,7 +2,7 @@
 #include "Game.h"
 #include "inputs.h"
 
-#include "Plugin/PluginFactory.h"
+#include "PluginFactory.h"
 
 extern "C"
 {
