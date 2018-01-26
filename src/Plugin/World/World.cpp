@@ -23,7 +23,7 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 {
 	m_levelIdentifier = levelIdentifier;
 
-	ShEntity2* pEntity = ShEntity2::Create(m_levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj2018"), CShIdentifier(""), CShVector3(0.0f, 0.0f, 0.1f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
+	ShEntity2* pEntity = ShEntity2::Create(m_levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj2018"), CShIdentifier("img_01"), CShVector3(0.0f, 0.0f, 0.1f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
 	GameObject * pObject = new GameObject(pEntity, CShVector2(0.0f, 0.0f));
 	pObject->Animate(3, "ggj2018", "img", 0.5f);
 
