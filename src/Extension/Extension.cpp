@@ -2,8 +2,8 @@
 
 #include "ShSDK/ShSDK.h"
 
-#include "Plugin/PluginFactory.h"
-#include "Plugin/Plugin.h"
+#include "PluginFactory.h"
+#include "Plugin.h"
 
 typedef void (*register_fn)(void);
 typedef void (*unregister_fn)(void);
