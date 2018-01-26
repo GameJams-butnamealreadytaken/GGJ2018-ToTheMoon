@@ -2,7 +2,7 @@
 
 #include "ShSDK/ShSDK.h"
 
-#include "GameObjects\GameObject.h"
+#include "GameObjects/GameObject.h"
 
 class World
 {

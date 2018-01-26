@@ -3,7 +3,7 @@
 #include "ShSDK/ShSDK.h"
 #include "ShEngineExt/ShEngineExt.h"
 
-#include "World\World.h"
+#include "World/World.h"
 
 class PluginGGJ2018 : public CShPlugin
 {
