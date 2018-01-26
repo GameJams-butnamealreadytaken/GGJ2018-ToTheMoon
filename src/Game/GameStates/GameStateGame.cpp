@@ -2,8 +2,8 @@
 
 #include "../Game.h"
 
-#include "Plugin/Plugin.h"
-#include "Plugin/PluginFactory.h"
+#include "Plugin.h"
+#include "PluginFactory.h"
 
 /**
 * @brief GameStateGame::Constructor
