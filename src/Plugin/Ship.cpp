@@ -19,7 +19,7 @@ Ship::~Ship(void)
 /**
 * @brief Initialize
 */
-void Ship::Initialize(ShObject * pSprite, EBlockType type)
+void Ship::Initialize(ShObject * pSprite, EShipType type)
 {
 	m_type = type;
 	m_pSprite = pSprite;
@@ -30,14 +30,13 @@ void Ship::Initialize(ShObject * pSprite, EBlockType type)
 */
 void Ship::Release(void)
 {
-	m_pBody = shNULL;
 	m_pSprite = shNULL;
 }
 
 /**
 * @brief GetType
 */
-Ship::EBlockType Ship::GetType(void)
+Ship::EShipType Ship::GetType(void)
 {
 	return(m_type);
 }
