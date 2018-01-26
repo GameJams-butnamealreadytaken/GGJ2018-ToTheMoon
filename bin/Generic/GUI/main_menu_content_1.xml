@@ -1,0 +1,13 @@
+<gui>
+	<sss>
+		<style target="text"								text_color="#FFFFFFFF" font="sst_medium_28.abc"/>
+		<style target="button" 								text_color="#FFFFFFFF" font="sst_medium_28.abc" sprite_library="ggj" background_image="standard_button"/>
+		
+		<style identifier="button_main_menu_1_play" 		position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent"  v_pivot="top" h_pivot="left" position_x="30"	position_y="20" width="40"	height="20" color="#FF888888"/>
+		<style identifier="button_main_menu_1_settings" 	position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent"  v_pivot="top" h_pivot="left" position_x="30"	position_y="60" width="40"	height="20" color="#FF888888"/>
+	</sss>
+	<root>
+		<button id="button_main_menu_1_play" text="Jouer"/>
+		<button id="button_main_menu_1_settings" text="Paramètres"/>
+	</root>
+</gui>
