@@ -20,6 +20,10 @@ public:
 	// Update
 	void update(float dt);
 
+	//
+	// Create Ship
+	Ship * createShip(void);
+
 protected:
 
 private:

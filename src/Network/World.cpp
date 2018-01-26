@@ -42,4 +42,17 @@ void World::update(float dt)
 	}
 }
 
+/**
+ * @brief Create Ship
+ * @return new Ship
+ */
+Ship * World::createShip(void)
+{
+	unsigned int shipIndex = m_ShipCount;
+
+	++m_ShipCount;
+
+	return(m_aShips+shipIndex);
+}
+
 }
