@@ -7,6 +7,9 @@
  */
 GameStateMainMenu::GameStateMainMenu(void)
 : m_eCurrentState(IDLE)
+, m_pControlBackground(shNULL)
+, m_pControlMainMenu(shNULL)
+, m_pControlMainMenuContent1(shNULL)
 {
 	// ...
 }
@@ -29,6 +32,30 @@ void GameStateMainMenu::init(void)
 	SH_ASSERT(loading);
 
 	Game & game = Game::instance();
+	
+	//
+	// GUI
+	{
+		m_pControlBackground		= ShGUI::LoadGUIAndSSS(CShIdentifier("background"), shNULL);
+		SH_ASSERT(shNULL != m_pControlBackground);
+		m_pControlMainMenu			= ShGUI::LoadGUIAndSSS(CShIdentifier("main_menu_background"), m_pControlBackground);
+		SH_ASSERT(shNULL != m_pControlMainMenu);
+
+		ShGUIControl * pControlMainMenuContent = ShGUIControl::GetElementById(CShIdentifier("panel_main_menu_content"), m_pControlMainMenu);
+		SH_ASSERT(shNULL != pControlMainMenuContent);
+		m_pControlMainMenuContent1	= ShGUI::LoadGUIAndSSS(CShIdentifier("main_menu_content_1"), pControlMainMenuContent);
+		SH_ASSERT(shNULL != m_pControlMainMenuContent1);
+		
+		ShGUIControlButton * pButtonExit = (ShGUIControlButton*)ShGUIControl::GetElementById(CShIdentifier("button_main_menu_quit"), m_pControlMainMenu);
+		SH_ASSERT(shNULL != pButtonExit);
+		ShGUIControlButton::AddSlotFctPtrClick(pButtonExit, (pSlotSDKButtonClick)OnButtonExitClicked);
+		ShGUIControlButton * pButtonPlay = (ShGUIControlButton*)ShGUIControl::GetElementById(CShIdentifier("button_main_menu_1_play"), m_pControlMainMenuContent1);
+		SH_ASSERT(shNULL != pButtonPlay);
+		ShGUIControlButton::AddSlotFctPtrClick(pButtonPlay, (pSlotSDKButtonClick)OnButtonPlayClicked);
+		ShGUIControlButton * pButtonSettings = (ShGUIControlButton*)ShGUIControl::GetElementById(CShIdentifier("button_main_menu_1_settings"), m_pControlMainMenuContent1);
+		SH_ASSERT(shNULL != pButtonSettings);
+		ShGUIControlButton::AddSlotFctPtrClick(pButtonSettings, (pSlotSDKButtonClick)OnButtonSettingsClicked);
+	}
 
 	setState(ANIM_INTRO_ENTERED);
 }
@@ -39,6 +66,12 @@ void GameStateMainMenu::init(void)
 void GameStateMainMenu::release(void)
 {
 	ShLevel::Release();
+	
+	//
+	// GUI
+	ShGUIControl::RemoveFromParent(m_pControlMainMenuContent1);
+	ShGUIControl::RemoveFromParent(m_pControlMainMenu);
+	ShGUIControl::RemoveFromParent(m_pControlBackground);
 }
 
 /**
@@ -62,7 +95,12 @@ void GameStateMainMenu::exiting(void)
  */
 void GameStateMainMenu::obscuring(void)
 {
-	// ...
+
+	//
+	// GUI
+	ShGUIControl::Show(m_pControlBackground, false);
+	ShGUIControl::Show(m_pControlMainMenu, false);
+	ShGUIControl::Show(m_pControlMainMenuContent1, false);
 }
 
 /**
@@ -71,6 +109,12 @@ void GameStateMainMenu::obscuring(void)
 void GameStateMainMenu::revealed(void)
 {
 	Game & game = Game::instance();
+
+	//
+	// GUI
+	ShGUIControl::Show(m_pControlMainMenuContent1, true);
+	ShGUIControl::Show(m_pControlMainMenu, true);
+	ShGUIControl::Show(m_pControlBackground, true);
 }
 
 /**
@@ -145,6 +189,45 @@ void GameStateMainMenu::setState(GameStateMainMenu::EState eState)
 		}
 		break;
 	}
+}
+
+/**
+ * @brief GameStateMainMenu::OnButtonPlayClicked	
+ * @param pButton
+ */
+/*static*/ bool GameStateMainMenu::OnButtonPlayClicked(ShGUIControlButton * pButton)
+{
+	//
+	// TODO FIXME : launch the game !
+	SH_TRACE("Game launched");
+
+	return(true);
+}
+
+/**
+ * @brief GameStateMainMenu::OnButtonSettingsClicked
+ * @param pButton
+ */
+/*static*/ bool GameStateMainMenu::OnButtonSettingsClicked(ShGUIControlButton * pButton)
+{
+	//
+	// TODO FIXME : launch the settings !
+	SH_TRACE("Settings opened");
+
+	return(true);
+}
+
+/**
+ * @brief GameStateMainMenu::OnButtonExitClicked
+ * @param pButton
+ */
+/*static*/ bool GameStateMainMenu::OnButtonExitClicked(ShGUIControlButton * pButton)
+{
+	//
+	// Quits the game
+	ShApplication::RequestQuit();
+
+	return(true);
 }
 
 /**
