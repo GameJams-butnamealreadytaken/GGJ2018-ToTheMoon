@@ -3,7 +3,9 @@
 #include "ShSDK/ShSDK.h"
 #include "ShEngineExt/ShEngineExt.h"
 
-class Ship
+#include "World\GameObjects\GameObject.h"
+
+class Ship : public GameObject
 {
 public:
 	enum EShipType
@@ -13,18 +15,16 @@ public:
 		TRORAPIDE,
 	};
 
-						Ship			(void);
+						Ship			(ShEntity2 * pEntity, const CShVector2 & vPosition);
 	virtual				~Ship			(void);
 
 	void				Initialize		(ShObject * pObject, EShipType type);
 	void				Release			(void);
 
 	EShipType			GetType			(void);
-	ShObject *			GetSprite		(void);
 
 private:
 
-	ShObject *	m_pSprite;
 	EShipType	m_type;
 	
 };

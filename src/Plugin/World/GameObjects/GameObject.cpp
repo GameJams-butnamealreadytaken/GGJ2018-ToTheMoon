@@ -77,3 +77,13 @@ void GameObject::Update(float dt)
 		}
 	}
 }
+
+ShEntity2 * GameObject::GetSprite(void)
+{
+	return(m_pEntity);
+}
+
+CShVector2 & GameObject::GetPosition(void)
+{
+	return(m_vPosition);
+}
