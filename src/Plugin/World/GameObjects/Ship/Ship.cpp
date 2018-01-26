@@ -3,7 +3,8 @@
 /**
  * @brief Constructor
  */
-Ship::Ship(void)
+Ship::Ship(ShEntity2 * pEntity, const CShVector2 & vPosition)
+	: GameObject(pEntity, vPosition)
 {
 	// ...
 }
@@ -22,7 +23,6 @@ Ship::~Ship(void)
 void Ship::Initialize(ShObject * pSprite, EShipType type)
 {
 	m_type = type;
-	m_pSprite = pSprite;
 }
 
 /**
@@ -30,7 +30,6 @@ void Ship::Initialize(ShObject * pSprite, EShipType type)
 */
 void Ship::Release(void)
 {
-	m_pSprite = shNULL;
 }
 
 /**
@@ -39,12 +38,4 @@ void Ship::Release(void)
 Ship::EShipType Ship::GetType(void)
 {
 	return(m_type);
-}
-
-/**
-* @brief GetSprite
-*/
-ShObject * Ship::GetSprite(void)
-{
-	return(m_pSprite);
 }
