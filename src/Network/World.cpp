@@ -1,10 +1,12 @@
 #include "World.h"
 
+#if __gnu_linux__
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <net/if.h>
 #include <arpa/inet.h>
 #include <netdb.h>
+#endif // __gnu_linux__
 
 #include <string.h> // memset
 
