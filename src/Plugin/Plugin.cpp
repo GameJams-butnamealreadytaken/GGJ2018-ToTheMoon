@@ -29,6 +29,8 @@ void PluginGGJ2018::OnPlayStart(const CShIdentifier & levelIdentifier)
 	const CShVector2 & viewport = ShCamera::GetViewport(pCurrentCamera);
 
 	m_levelIdentifier = levelIdentifier;
+
+	m_world.Initialize(m_levelIdentifier);
 }
 
 /**
@@ -37,6 +39,8 @@ void PluginGGJ2018::OnPlayStart(const CShIdentifier & levelIdentifier)
  */
 void PluginGGJ2018::OnPlayStop(const CShIdentifier & levelIdentifier)
 {
+	m_world.Release();
+
 	m_levelIdentifier = GID(NULL);
 }
 
@@ -54,7 +58,7 @@ void PluginGGJ2018::OnPreUpdate(float dt)
 */
 void PluginGGJ2018::OnPostUpdate(float dt)
 {
-	
+	m_world.Update(dt);
 }
 
 /**
@@ -65,7 +69,7 @@ void PluginGGJ2018::OnPostUpdate(float dt)
  */
 void PluginGGJ2018::OnTouchDown(int iTouch, float positionX, float positionY)
 {
-	// ...
+	m_world.OnTouchDown(iTouch, positionX, positionY);
 }
 
 
@@ -77,7 +81,7 @@ void PluginGGJ2018::OnTouchDown(int iTouch, float positionX, float positionY)
  */
 void PluginGGJ2018::OnTouchUp(int iTouch, float positionX, float positionY)
 {
-	
+	m_world.OnTouchUp(iTouch, positionX, positionY);
 }
 
 /**
@@ -88,5 +92,5 @@ void PluginGGJ2018::OnTouchUp(int iTouch, float positionX, float positionY)
  */
 void PluginGGJ2018::OnTouchMove(int iTouch, float positionX, float positionY)
 {
-	// ...
+	m_world.OnTouchMove(iTouch, positionX, positionY);
 }

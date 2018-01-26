@@ -3,6 +3,8 @@
 #include "ShSDK/ShSDK.h"
 #include "ShEngineExt/ShEngineExt.h"
 
+#include "World\World.h"
+
 class PluginGGJ2018 : public CShPlugin
 {
 public:
@@ -31,4 +33,6 @@ public:
 private:
 
 	CShIdentifier m_levelIdentifier;
+
+	World		  m_world;
 };
