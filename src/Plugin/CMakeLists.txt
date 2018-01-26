@@ -29,7 +29,7 @@ source_group("World\\GameObject" FILES ${SOURCES_GameObject})
 
 # Ship files
 set(SOURCES_Ship Ship.cpp Ship.h)
-source_group("Ship" FILES ${SOURCES_Plugin})
+source_group("World\\GameObject\\Ship" FILES ${SOURCES_Ship})
 
 # Put everything together before adding platform-specific files
 set(SOURCES 
