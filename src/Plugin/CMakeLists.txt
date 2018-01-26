@@ -19,8 +19,20 @@ source_group("Plugin" FILES ${SOURCES_Plugin})
 set(SOURCES_Factory PluginFactory.cpp PluginFactory.h)
 source_group("Factory" FILES ${SOURCES_Factory})
 
+# World files
+set(SOURCES_World World/World.cpp World/World.h)
+source_group("World" FILES ${SOURCES_World})
+
+# GameObject files
+set(SOURCES_GameObject World/GameObjects/GameObject.cpp World/GameObjects/GameObject.h)
+source_group("World\\GameObject" FILES ${SOURCES_GameObject})
+
 # Put everything together before adding platform-specific files
-set(SOURCES ${SOURCES_Plugin} ${SOURCES_Factory})
+set(SOURCES 
+${SOURCES_Plugin} 
+${SOURCES_Factory} 
+${SOURCES_World}
+${SOURCES_GameObject})
 
 # Compile to use it on Runtime
 add_library(Plugin STATIC ${SOURCES})
