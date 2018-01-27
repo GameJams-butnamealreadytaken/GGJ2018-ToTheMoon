@@ -12,8 +12,12 @@ source_group("World" FILES ${SOURCES_World})
 set(SOURCES_Ship Ship.cpp Ship.h)
 source_group("Ship" FILES ${SOURCES_Ship})
 
+# Transmitter files
+set(SOURCES_Transmitter Transmitter.cpp Transmitter.h)
+source_group("Transmitter" FILES ${SOURCES_Transmitter})
+
 # Put everything together before adding platform-specific files
-set(SOURCES ${SOURCES_Network} ${SOURCES_World} ${SOURCES_Ship})
+set(SOURCES ${SOURCES_Network} ${SOURCES_World} ${SOURCES_Ship} ${SOURCES_Transmitter})
 
 add_library(Network STATIC ${SOURCES})
 
