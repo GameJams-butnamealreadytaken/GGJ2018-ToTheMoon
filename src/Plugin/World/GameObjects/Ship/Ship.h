@@ -39,8 +39,6 @@ public:
 
 	EShipType					GetShipType				(void);
 
-	virtual CShVector2			GetShipPosition			(void);
-
 private:
 	void						UpdateSprite			(void);
 
