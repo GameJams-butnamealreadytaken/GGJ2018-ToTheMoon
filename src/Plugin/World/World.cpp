@@ -13,6 +13,7 @@
 /*explicit*/ World::World(void) 
 	: m_levelIdentifier()
 	, m_world(INFINITY, INFINITY)
+	, m_pUser(shNULL)
 	, m_explosionManager()
 	, m_projectileManager()
 	, m_apTransmitter()
@@ -86,6 +87,9 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 		Team * pTeam = new Team(i);
 		m_aTeam.Add(pTeam);
 	}
+
+	m_pUser = ShUser::GetUser(0);
+	SH_ASSERT(shNULL != m_pUser);
 }
 
 /**
@@ -170,6 +174,14 @@ void World::Update(float dt)
 	{
 		Transmitter * pTransmitter = m_apTransmitter[iTransmitter];
 		pTransmitter->Update(dt);
+	}
+
+	if (m_pUser)
+	{
+		if (ShUser::HasTriggeredAction(m_pUser, CShIdentifier("beacon")))
+		{
+			CreateTransmitter(0.0f, 0.0f);
+		}
 	}
 }
 
