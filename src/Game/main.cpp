@@ -4,7 +4,28 @@
 
 bool g_bDisableAnimations = false;
 
-#if SH_LINUX
+
+#if SH_PC
+void ParseArgumentsWindows(void)
+{
+	int nArgs = 0;
+	LPWSTR * szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
+
+	if (nullptr != szArglist)
+	{
+		for (int i = 0; i < nArgs; ++i)
+		{
+			if (!wcscmp(szArglist[i], L"--disable-animations"))
+			{
+				g_bDisableAnimations = true;
+			}
+		}
+
+		// Free memory allocated for CommandLineToArgvW arguments.
+		LocalFree(szArglist);
+	}
+}
+#else
 void ParseArguments(int argc, char ** argv)
 {
 	for (int i = 0; i < argc; ++i)
@@ -17,9 +38,11 @@ void ParseArguments(int argc, char ** argv)
 }
 #endif // SH_LINUX
 
+
 #if SH_PC
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int)
 {
+	ParseArguments();
 #else
 int main(int argc, char ** argv)
 {
