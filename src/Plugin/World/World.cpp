@@ -286,4 +286,6 @@ void World::CreateTransmitter(float x, float y, const Network::Transmitter * pNe
 	pTrans->Start(CShVector2(x, y));
 	m_apTransmitter.Add(pTrans);
 	
+	int teamId = 0; // get id from network transmitter
+	m_aTeam[teamId]->AddTransmitter(pTrans);
 }

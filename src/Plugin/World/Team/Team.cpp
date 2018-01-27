@@ -51,10 +51,17 @@ void Team::AddTransmitter(Transmitter * pTransmitter)
 	SH_ASSERT(shNULL != pTransmitter);
 
 	// Check if has neighbour
-	int nTransCount = m_apTransmitter.GetCount();
-	for (int i = 0; i < nTransCount; ++i)
 	{
-
+		CShVector2 & newPos = pTransmitter->GetPosition2();
+		int nTransCount = m_apTransmitter.GetCount();
+		for (int i = 0; i < nTransCount; ++i)
+		{
+			CShVector2 & transPos = m_apTransmitter[i]->GetPosition2();
+			if (10.0f < ComputeVecteurNorme(newPos.m_x, newPos.m_y, transPos.m_x, transPos.m_y))
+			{
+				pTransmitter->AddNeighbour(m_apTransmitter[i]);
+			}
+		}
 	}
 
 	m_apTransmitter.Add(pTransmitter);
