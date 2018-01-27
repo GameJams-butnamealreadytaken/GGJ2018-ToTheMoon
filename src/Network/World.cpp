@@ -4,29 +4,11 @@
 
 #include <stdio.h>
 #include <assert.h>
-
-#if __gnu_linux__
-#	include <sys/socket.h>
-#	include <netinet/in.h>
-#	include <net/if.h>
-#	include <arpa/inet.h>
-#	include <netdb.h>
-#	include <unistd.h>
-#else
-#	include <winsock2.h>
-#	include <ws2tcpip.h>
-#endif // __gnu_linux__
-
 #include <string.h> // memset
-
-#define PORT (8123)
-
-#define BRD_HELO_ADDR	"192.168.1.255"
-#define BRD_HELO_PORT	(PORT)
 
 #define MAX_MESSAGE_SIZE (512)
 
-#define ENABLE_DEBUG_PRINT 1
+#define ENABLE_DEBUG_PRINT 0
 
 namespace Network
 {
@@ -41,8 +23,6 @@ World::World(float size_x, float size_y)
 , m_pListener(nullptr)
 {
 	memset(m_aShips, 0, sizeof(m_aShips));
-
-	m_sock = -1;
 }
 
 /**
@@ -59,14 +39,14 @@ World::~World(void)
  */
 bool World::init(void)
 {
-	if (!initSocket())
+	if (!m_network.InitSocket())
 	{
 		return(false);
 	}
 
 	if (!broadcastHelloMessage())
 	{
-		releaseSocket();
+		m_network.CloseSocket();
 		return(false);
 	}
 
@@ -78,65 +58,7 @@ bool World::init(void)
  */
 void World::release(void)
 {
-	releaseSocket();
-}
-
-/**
- * @brief Initialize socket
- * @return
- */
-bool World::initSocket(void)
-{
-	m_sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-
-	if (m_sock < 0)
-	{
-		return(false);
-	}
-
-	struct sockaddr_in si;
-	si.sin_family = AF_INET;
-	si.sin_port = htons(PORT);
-	si.sin_addr.s_addr = htonl(INADDR_ANY);
-
-	if (bind(m_sock, (struct sockaddr*)&si, sizeof(si)) <0)
-	{
-#if WIN32
-		closesocket(m_sock);
-#else // WIN32
-		close(m_sock);
-#endif // WIN32
-		return(false);
-	}
-
-	int enable = 1;
-	
-#if WIN32
-	if (setsockopt(m_sock, SOL_SOCKET, SO_BROADCAST, (const char *)&enable, sizeof(int)) < 0)
-	{
-		closesocket(m_sock);
-#else // WIN32
-	if (setsockopt(m_sock, SOL_SOCKET, SO_BROADCAST, (void*)&enable, sizeof(int)) < 0)
-		{
-		close(m_sock);
-#endif // WIN32
-		return(false);
-	}
-
-	return(true);
-}
-
-/**
- * @brief World::releaseSocket
- * @return
- */
-void World::releaseSocket(void)
-{
-#if WIN32
-	closesocket(m_sock);
-#else // WIN32
-	close(m_sock);
-#endif // WIN32
+	m_network.CloseSocket();
 }
 
 /**
@@ -145,56 +67,34 @@ void World::releaseSocket(void)
  */
 bool World::broadcastHelloMessage(void)
 {
-	struct sockaddr_in addr;
-	addr.sin_family = AF_INET;
-	addr.sin_port = htons(BRD_HELO_PORT);
-	addr.sin_addr.s_addr = inet_addr(BRD_HELO_ADDR);
-
 	HelloMessage msg;
-#if WIN32
-	SSIZE_T size = sendto(m_sock, (const char*)&msg, sizeof(msg), 0, (sockaddr*)&addr, sizeof(addr));
-#else // WIN32
-	ssize_t size = sendto(m_sock, (void*)&msg, sizeof(msg), 0, (sockaddr*)&addr, sizeof(addr));
-#endif // WIN32
 
-	return(true);
+	return(m_network.BroadcastMessage(msg));
 }
 
 /**
  * @brief World::handleHelloMessage
  */
-void World::handleHelloMessage(HelloMessage * msg, struct sockaddr* sender, unsigned int sendsize)
+void World::handleHelloMessage(HelloMessage * msg, char * machine, char * service)
 {
-	char machine[NI_MAXHOST];
-	char service[NI_MAXSERV];
+	printf("HELLO from %s:%s\n", machine, service);
 
-	if (0 == getnameinfo(sender, sendsize, machine, NI_MAXHOST, service, NI_MAXSERV, NI_NUMERICHOST|NI_NUMERICSERV))
-	{
-		SyncShipStateMessage response;
-		response.shipId = 0;
-		response.position = vec2(0.0f, 0.0f);
-		response.target = vec2(0.0f, 0.0f);
-		response.speed = 0.0f;
+	SyncShipStateMessage response;
+	response.shipId = 0;
+	response.position = vec2(0.0f, 0.0f);
+	response.target = vec2(0.0f, 0.0f);
+	response.speed = 0.0f;
 
-		struct sockaddr_in addr;
-		addr.sin_family = AF_INET;
-		addr.sin_port = htons(BRD_HELO_PORT);
-		addr.sin_addr.s_addr = inet_addr(machine);
-#if WIN32
-		SSIZE_T size = sendto(m_sock, (const char*)&response, sizeof(SyncShipStateMessage), 0, (sockaddr*)&addr, sizeof(addr));
-#else // WIN32
-		ssize_t size = sendto(m_sock, (void*)&response, sizeof(SyncShipStateMessage), 0, (sockaddr*)&addr, sizeof(addr));
-#endif // WIN32
-	
-		assert(size > 0);
-	}
+	m_network.SendMessageToMachine(response, machine);
 }
 
 /**
  * @brief World::handleSyncShipStateMessage
  */
-void World::handleSyncShipStateMessage(SyncShipStateMessage * msg, struct sockaddr* sender, unsigned int sendsize)
+void World::handleSyncShipStateMessage(SyncShipStateMessage * msg, char * machine, char * service)
 {
+	printf("SHIP_STATE from %s:%s\n", machine, service);
+
 	Ship * ship = nullptr; // FIXME : find ship msg->shipId
 
 	if (!ship)
@@ -216,8 +116,10 @@ void World::handleSyncShipStateMessage(SyncShipStateMessage * msg, struct sockad
 /**
  * @brief World::handleCreateShipMessage
  */
-void World::handleCreateShipMessage(CreateShipMessage * msg, struct sockaddr* sender, unsigned int sendsize)
+void World::handleCreateShipMessage(CreateShipMessage * msg, char * machine, char * service)
 {
+	printf("CREATE_SHIP from %s:%s\n", machine, service);
+
 	Ship * ship = createShip();
 	assert(nullptr != ship);
 	if (m_pListener)
@@ -234,8 +136,10 @@ void World::handleCreateShipMessage(CreateShipMessage * msg, struct sockaddr* se
 /**
  * @brief World::handleCreateTransmitterMessage
  */
-void World::handleCreateTransmitterMessage(CreateTransmitterMessage * msg, struct sockaddr* sender, unsigned int sendsize)
+void World::handleCreateTransmitterMessage(CreateTransmitterMessage * msg, char * machine, char * service)
 {
+	printf("CREATE_TRANSMITTER from %s:%s\n", machine, service);
+
 	// TODO
 }
 
@@ -256,106 +160,53 @@ void World::update(float dt)
 
 	//
 	// Receive messages
+	unsigned int size = MAX_MESSAGE_SIZE;
+	char MSG [MAX_MESSAGE_SIZE];
 
-	fd_set fdset;
-	FD_ZERO(&fdset);
-	FD_SET(m_sock, &fdset);
+	char machine[1025] = { '\0' };
+	char service[1025] = { '\0' };
 
-	struct timeval timeout;
-	timeout.tv_sec = 0;
-	timeout.tv_usec = 0;
-
-	if (select(m_sock+1, &fdset, nullptr, nullptr, &timeout) > 0)
+	if (m_network.Receive(MSG, size, machine, service))
 	{
-		struct sockaddr_storage sender;
-		socklen_t sendsize = sizeof(sender);
-		memset(&sender, 0, sizeof(sender));
-
-#if WIN32	
-		char MSG [MAX_MESSAGE_SIZE];
-		SSIZE_T size = recvfrom(m_sock, MSG, sizeof(MSG), 0, (struct sockaddr*)&sender, &sendsize);
-#else // WIN32
-		unsigned char MSG[MAX_MESSAGE_SIZE];
-		ssize_t size = recvfrom(m_sock, MSG, sizeof(MSG), 0, (struct sockaddr*)&sender, &sendsize);
-#endif // WIN32
-		
-
-		if (size <= 0)
+		if (size > 0)
 		{
-			return;
-		}
+			MSG_ID id = *((MSG_ID*)MSG);
 
-		MSG_ID id = *((MSG_ID*)MSG);
-
-		switch (id)
-		{
-			case HELLO:
-			{
-				static_assert(sizeof(HelloMessage) < MAX_MESSAGE_SIZE, "HelloMessage is too big !");
-				assert(sizeof(HelloMessage) == size);
-				handleHelloMessage((HelloMessage*)MSG, (struct sockaddr*)&sender, sendsize);
-			}
-			break;
-
-			case SYNC_SHIP_STATE:
-			{
-				static_assert(sizeof(SyncShipStateMessage) < MAX_MESSAGE_SIZE, "ShipStateMessage is too big !");
-				assert(sizeof(SyncShipStateMessage) == size);
-				handleSyncShipStateMessage((SyncShipStateMessage*)MSG, (struct sockaddr*)&sender, sendsize);
-			}
-			break;
-
-			case CREATE_SHIP:
-			{
-				static_assert(sizeof(CreateShipMessage) < MAX_MESSAGE_SIZE, "ShipStateMessage is too big !");
-				assert(sizeof(CreateShipMessage) == size);
-				handleCreateShipMessage((CreateShipMessage*)MSG, (struct sockaddr*)&sender, sendsize);
-			}
-			break;
-
-			case CREATE_TRANSMITTER:
-			{
-				static_assert(sizeof(CreateTransmitterMessage) < MAX_MESSAGE_SIZE, "ShipStateMessage is too big !");
-				assert(sizeof(CreateTransmitterMessage) == size);
-				handleCreateTransmitterMessage((CreateTransmitterMessage*)MSG, (struct sockaddr*)&sender, sendsize);
-			}
-			break;
-		}
-
-#if ENABLE_DEBUG_PRINT
-		char machine[NI_MAXHOST];
-		char service[NI_MAXSERV];
-
-		if (0 == getnameinfo((struct sockaddr*)&sender, sendsize, machine, NI_MAXHOST, service, NI_MAXSERV, NI_NUMERICHOST|NI_NUMERICSERV))
-		{
 			switch (id)
 			{
 				case HELLO:
 				{
-					printf("HELLO from %s:%s\n", machine, service);
+					static_assert(sizeof(HelloMessage) < MAX_MESSAGE_SIZE, "HelloMessage is too big !");
+					assert(sizeof(HelloMessage) == size);
+					handleHelloMessage((HelloMessage*)MSG, machine, service);
 				}
 				break;
 
 				case SYNC_SHIP_STATE:
 				{
-					printf("SHIP_STATE from %s:%s\n", machine, service);
+					static_assert(sizeof(SyncShipStateMessage) < MAX_MESSAGE_SIZE, "ShipStateMessage is too big !");
+					assert(sizeof(SyncShipStateMessage) == size);
+					handleSyncShipStateMessage((SyncShipStateMessage*)MSG, machine, service);
 				}
 				break;
 
 				case CREATE_SHIP:
 				{
-					printf("CREATE_SHIP from %s:%s\n", machine, service);
+					static_assert(sizeof(CreateShipMessage) < MAX_MESSAGE_SIZE, "ShipStateMessage is too big !");
+					assert(sizeof(CreateShipMessage) == size);
+					handleCreateShipMessage((CreateShipMessage*)MSG, machine, service);
 				}
 				break;
 
 				case CREATE_TRANSMITTER:
 				{
-					printf("CREATE_TRANSMITTER from %s:%s\n", machine, service);
+					static_assert(sizeof(CreateTransmitterMessage) < MAX_MESSAGE_SIZE, "ShipStateMessage is too big !");
+					assert(sizeof(CreateTransmitterMessage) == size);
+					handleCreateTransmitterMessage((CreateTransmitterMessage*)MSG, machine, service);
 				}
 				break;
 			}
 		}
-#endif // ENABLE_DEBUG_PRINT
 	}
 }
 

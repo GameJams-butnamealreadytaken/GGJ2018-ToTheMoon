@@ -2,6 +2,8 @@
 
 #include "utils.h"
 
+#include "NetworkHelper.h"
+
 #include "Ship.h"
 #include "Transmitter.h"
 
@@ -42,15 +44,12 @@ public:
 
 protected:
 
-	bool initSocket(void);
-	void releaseSocket(void);
-
 	bool broadcastHelloMessage(void);
 
-	void handleHelloMessage(HelloMessage * msg, struct ::sockaddr* sender, unsigned int sendsize);
-	void handleSyncShipStateMessage(SyncShipStateMessage * msg, struct ::sockaddr * sender, unsigned int sendsize);
-	void handleCreateShipMessage(CreateShipMessage * msg, struct ::sockaddr* sender, unsigned int sendsize);
-	void handleCreateTransmitterMessage(CreateTransmitterMessage * msg, struct ::sockaddr * sender, unsigned int sendsize);
+	void handleHelloMessage(HelloMessage * msg, char * machine, char * service);
+	void handleSyncShipStateMessage(SyncShipStateMessage * msg, char * machine, char * service);
+	void handleCreateShipMessage(CreateShipMessage * msg, char * machine, char * service);
+	void handleCreateTransmitterMessage(CreateTransmitterMessage * msg, char * machine, char * service);
 
 private:
 
@@ -64,7 +63,7 @@ private:
 
 	vec2 m_halfSize;
 
-	int m_sock;
+	NetworkHelper m_network;
 
 	WorldListener * m_pListener;
 };

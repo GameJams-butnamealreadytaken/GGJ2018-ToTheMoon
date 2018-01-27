@@ -1,12 +1,179 @@
 #include "NetworkHelper.h"
 
 #if WIN32
+#	include <winsock2.h>
 #	include <ws2tcpip.h>
 #	include <IPHlpApi.h>
-#else // WIN32
+#else
+#	include <sys/socket.h>
+#	include <netinet/in.h>
+#	include <net/if.h>
+#	include <arpa/inet.h>
+#	include <netdb.h>
+#	include <unistd.h>
 #endif // WIN32
 
+#include <assert.h>
 #include <string.h> // memset
+
+#define PORT (8123)
+
+#define BRD_HELO_ADDR	"192.168.1.255"
+#define BRD_HELO_PORT	(PORT)
+
+/**
+ * @brief Constructor
+ */
+NetworkHelper::NetworkHelper(void)
+{
+	m_sock = -1;
+}
+
+/**
+ * @brief Destructor
+ */
+NetworkHelper::~NetworkHelper(void)
+{
+	if (m_sock != -1)
+	{
+		CloseSocket();
+	}
+}
+
+/**
+ * @brief NetworkHelper::InitSocket
+ * @return
+ */
+bool NetworkHelper::InitSocket(void)
+{
+	m_sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+
+	if (m_sock < 0)
+	{
+		return(false);
+	}
+
+	struct sockaddr_in si;
+	si.sin_family = AF_INET;
+	si.sin_port = htons(PORT);
+	si.sin_addr.s_addr = htonl(INADDR_ANY);
+
+	if (bind(m_sock, (struct sockaddr*)&si, sizeof(si)) <0)
+	{
+		CloseSocket();
+		return(false);
+	}
+
+	int enable = 1;
+
+#if WIN32
+	if (setsockopt(m_sock, SOL_SOCKET, SO_BROADCAST, (const char *)&enable, sizeof(int)) < 0)
+#else // WIN32
+	if (setsockopt(m_sock, SOL_SOCKET, SO_BROADCAST, (void*)&enable, sizeof(int)) < 0)
+#endif // WIN32
+	{
+		CloseSocket();
+		return(false);
+	}
+
+	return(true);
+}
+
+/**
+ * @brief NetworkHelper::CloseSocket
+ */
+void NetworkHelper::CloseSocket(void)
+{
+#if WIN32
+	closesocket(m_sock);
+#else // WIN32
+	close(m_sock);
+#endif // WIN32
+
+	m_sock = -1;
+}
+
+/**
+ * @brief NetworkHelper::BroadcastMessage
+ * @param msg
+ * @param size
+ * @return
+ */
+bool NetworkHelper::BroadcastMessage(void * msg, unsigned int size)
+{
+	struct sockaddr_in addr;
+	addr.sin_family = AF_INET;
+	addr.sin_port = htons(BRD_HELO_PORT);
+	addr.sin_addr.s_addr = inet_addr(BRD_HELO_ADDR);
+
+#if WIN32
+	/*SSIZE_T size =*/ sendto(m_sock, (const char*)msg, size, 0, (sockaddr*)&addr, sizeof(addr));
+#else // WIN32
+	/*ssize_t size =*/ sendto(m_sock, (void*)msg, size, 0, (sockaddr*)&addr, sizeof(addr));
+#endif // WIN32
+
+	return(true);
+}
+
+/**
+ * @brief NetworkHelper::SendMessage
+ * @param msg
+ * @param size
+ * @return
+ */
+bool NetworkHelper::SendMessageToMachine(void * msg, unsigned int size, char * machine)
+{
+	struct sockaddr_in addr;
+	addr.sin_family = AF_INET;
+	addr.sin_port = htons(PORT);
+	addr.sin_addr.s_addr = inet_addr(machine);
+
+#if WIN32
+	/*SSIZE_T size =*/ sendto(m_sock, (const char*)msg, size, 0, (sockaddr*)&addr, sizeof(addr));
+#else // WIN32
+	/*ssize_t size =*/ sendto(m_sock, (void*)msg, size, 0, (sockaddr*)&addr, sizeof(addr));
+#endif // WIN32
+
+	return(true);
+}
+
+/**
+ * @brief NetworkHelper::Receive
+ * @return
+ */
+bool NetworkHelper::Receive(char * buffer, unsigned int & size, char * machine, char * service)
+{
+	fd_set fdset;
+	FD_ZERO(&fdset);
+	FD_SET(m_sock, &fdset);
+
+	struct timeval timeout;
+	timeout.tv_sec = 0;
+	timeout.tv_usec = 0;
+
+	if (select(m_sock+1, &fdset, nullptr, nullptr, &timeout) > 0)
+	{
+		struct sockaddr_storage sender;
+		socklen_t sendsize = sizeof(sender);
+		memset(&sender, 0, sizeof(sender));
+
+#if WIN32
+		size = recvfrom(m_sock, buffer, size, 0, (struct sockaddr*)&sender, &sendsize);
+#else // WIN32
+		size = recvfrom(m_sock, buffer, size, 0, (struct sockaddr*)&sender, &sendsize);
+#endif // WIN32
+
+		if (machine && service)
+		{
+			int res = getnameinfo((struct sockaddr*)&sender, sendsize, machine, NI_MAXHOST, service, NI_MAXSERV, NI_NUMERICHOST|NI_NUMERICSERV);
+			assert(res == 0);
+		}
+
+		return(true);
+	}
+
+	return(false);
+}
 
 /**
  * @brief discoverNetwork
