@@ -2,12 +2,15 @@
 
 #include "GameObjects/projectile/ProjectileManager.h"
 
+#define TEST 1
+
 /**
 * @brief Constructor
 */
 /*explicit*/ World::World(void) 
 	: m_levelIdentifier()
 	, m_world(1000.0f, 1000.0f)
+	, m_explosionManager()
 	, m_projectileManager()
 	, m_apTransmiter()
 	, m_apShip()
@@ -33,6 +36,7 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 
 	m_world.init();
 
+	m_explosionManager.Initialize(levelIdentifier);
 	m_projectileManager.Initialize(levelIdentifier);
 
 	//
@@ -62,6 +66,7 @@ void World::Release(void)
 	m_apShip.Empty();
 
 	m_projectileManager.Release();
+	m_explosionManager.Release();
 
 	m_world.release();
 }
@@ -74,20 +79,28 @@ void World::Update(float dt)
 	m_world.update(dt);
 
 	//
+	// Update explosion manager
+	m_explosionManager.Update(dt);
+
+	//
 	// Update projectile manager
 	m_projectileManager.Update(dt);
-
 	
-	static float x = 0.0f;
-	static float y = 0.0f;
-	y += dt;
-	x += dt;
-
-	if (y > 0.1f)
+#if TEST
 	{
-		m_projectileManager.Start(ProjectileManager::e_projectile_bullet, CShVector2(0.0f, 0.0f), CShVector2(500.0f * cos(x), 500.0f * sin(x)), 5.0f);
-		y = 0.0f;
+		static float x = 0.0f;
+		static float y = 0.0f;
+
+		y += dt;
+		x += dt;
+
+		if (y > 0.1f)
+		{
+			m_projectileManager.Start(ProjectileManager::e_projectile_bullet, CShVector2(0.0f, 0.0f), CShVector2(500.0f * cos(x), 500.0f * sin(x)), 5.0f);
+			y = 0.0f;
+		}
 	}
+#endif //TEST
 
 	//
 	// Update Transmiters
@@ -121,6 +134,10 @@ void World::OnTouchDown(int iTouch, float positionX, float positionY)
 	{
 		m_pShip->SetTarget(positionX, positionY, 5.0f); // todo move speed on her right place
 	}
+
+#if TEST
+	m_explosionManager.Start(CShVector2(positionX, positionY));
+#endif //TEST
 }
 
 /**

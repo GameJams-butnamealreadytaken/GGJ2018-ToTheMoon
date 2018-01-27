@@ -4,6 +4,7 @@
 
 #include "../../Network/World.h"
 
+#include "GameObjects/Explosion/ExplosionManager.h"
 #include "GameObjects/projectile/ProjectileManager.h"
 #include "GameObjects/Transmiter/Transmiter.h"
 #include "GameObjects/Ship/Ship.h"
@@ -32,6 +33,7 @@ private:
 	CShIdentifier					m_levelIdentifier;
 	Network::World					m_world;
 
+	ExplosionManager				m_explosionManager;
 	ProjectileManager				m_projectileManager;
 
 	CShArray<Transmiter *>			m_apTransmiter;
