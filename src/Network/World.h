@@ -10,6 +10,8 @@ struct sockaddr;
 namespace Network
 {
 
+class WorldListener;
+
 class World
 {
 public:
@@ -46,7 +48,9 @@ protected:
 	bool broadcastHelloMessage(void);
 
 	void handleHelloMessage(HelloMessage * msg, struct ::sockaddr* sender, unsigned int sendsize);
-	void handleShipStateMessage(ShipStateMessage * msg, struct ::sockaddr * sender, unsigned int sendsize);
+	void handleSyncShipStateMessage(SyncShipStateMessage * msg, struct ::sockaddr * sender, unsigned int sendsize);
+	void handleCreateShipMessage(CreateShipMessage * msg, struct ::sockaddr* sender, unsigned int sendsize);
+	void handleCreateTransmitterMessage(CreateTransmitterMessage * msg, struct ::sockaddr * sender, unsigned int sendsize);
 
 private:
 
@@ -62,6 +66,7 @@ private:
 
 	int m_sock;
 
+	WorldListener * m_pListener;
 };
 
 }
