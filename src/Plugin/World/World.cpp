@@ -11,15 +11,16 @@
 * @brief Constructor
 */
 /*explicit*/ World::World(void) 
-	: m_levelIdentifier()
-	, m_world(INFINITY, INFINITY)
-	, m_pUser(shNULL)
-	, m_explosionManager()
-	, m_projectileManager()
-	, m_apTransmitter()
-	, m_apShip()
-	, m_pShip(shNULL)
-	, m_aTeam()
+: m_levelIdentifier()
+, m_world(5.0f * 2048.0f, 5.0f * 1152.0f)
+, m_pMiniMap(shNULL)
+, m_pUser(shNULL)
+, m_explosionManager()
+, m_projectileManager()
+, m_apTransmitter()
+, m_apShip()
+, m_pShip(shNULL)
+, m_aTeam()
 {
 	// ...
 }
@@ -41,6 +42,7 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 
 	m_world.init();
 	m_world.setListener(this);
+	m_pMiniMap->Initialize(this);
 	m_explosionManager.Initialize(levelIdentifier);
 	m_projectileManager.Initialize(levelIdentifier);
 
@@ -125,6 +127,7 @@ void World::Release(void)
 	m_projectileManager.Release();
 	m_explosionManager.Release();
 
+	m_pMiniMap->Release();
 	m_world.release();
 }
 
@@ -134,6 +137,7 @@ void World::Release(void)
 void World::Update(float dt)
 {
 	m_world.update(dt);
+	m_pMiniMap->Update(dt);
 
 	//
 	// Update planets

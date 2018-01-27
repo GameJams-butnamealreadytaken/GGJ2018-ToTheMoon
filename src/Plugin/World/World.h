@@ -5,6 +5,8 @@
 #include "../../Network/World.h"
 #include "../../Network/WorldListener.h"
 
+#include "../World/MiniMap/MiniMap.h"
+
 #include "GameObjects/Explosion/ExplosionManager.h"
 #include "GameObjects/Projectile/ProjectileManager.h"
 
@@ -13,6 +15,7 @@ class Planet;
 class Ship;
 class Transmitter;
 class Team;
+class MiniMap;
 
 class World : public Network::WorldListener
 {
@@ -44,6 +47,8 @@ private:
 
 	CShIdentifier					m_levelIdentifier;
 	Network::World					m_world;
+
+	MiniMap *						m_pMiniMap;
 
 	ShUser *						m_pUser;
 
