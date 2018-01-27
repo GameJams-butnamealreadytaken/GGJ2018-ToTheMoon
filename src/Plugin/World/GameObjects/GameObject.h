@@ -18,10 +18,12 @@ public:
 
 	void			SetState			(int iState);
 
+	void			SetShow				(bool bShow);
+
 	ShEntity2 *		GetSprite			(void);
 
 	void			SetPosition2		(const CShVector2 & vPosition);
-	CShVector2 &	GetPosition			(void);
+	CShVector2 &	GetPosition2			(void);
 
 protected:
 	int						m_iState;
