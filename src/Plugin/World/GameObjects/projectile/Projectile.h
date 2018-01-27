@@ -9,6 +9,12 @@ class Projectile : public GameObject
 {
 public:
 
+	enum EState
+	{
+		OFF,
+		ON
+	};
+
 	explicit								Projectile			(ShEntity2 * pEntity, const CShVector2 & vPosition);
 	virtual									~Projectile			(void);
 
@@ -23,6 +29,9 @@ public:
 	virtual GameObject::EType				GetType				(void) = 0;
 
 protected:
-	float									m_fSpeed;
+	EState									m_eState;
+	CShVector2								m_vStartPosition;
 	CShVector2								m_vDestination;
+	float									m_fSpeed;
+	float									m_fCompletion;
 };
