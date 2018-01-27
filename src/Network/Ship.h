@@ -16,7 +16,8 @@ public:
 	//
 	// Constructor / Destructor
 	Ship(void);
-	Ship(const uuid_t & id, float x, float y);
+	Ship(const uuid_t & id, unsigned int team);
+	Ship(const uuid_t & id, unsigned int team, float x, float y);
 	~Ship(void);
 
 	//
@@ -53,6 +54,13 @@ public:
 		return(m_position);
 	}
 
+	//
+	// Team
+	unsigned int getTeam(void) const
+	{
+		return(m_team);
+	}
+
 protected:
 
 	//
@@ -70,6 +78,8 @@ private:
 	vec2 m_target;
 
 	float m_speed; // unit / s
+
+	unsigned int m_team;
 
 	bool m_bNeedSync;
 };

@@ -10,7 +10,7 @@ namespace Network
 /**
  * @brief Default constructor
  */
-Ship::Ship(void) : m_position(0.0f, 0.0f), m_target(0.0f, 0.0f), m_speed(0.0f), m_bNeedSync(false)
+Ship::Ship(void) : m_position(0.0f, 0.0f), m_target(0.0f, 0.0f), m_speed(0.0f), m_team(0), m_bNeedSync(false)
 {
 #if __gnu_linux__
 	uuid_clear(m_uuid);
@@ -22,10 +22,23 @@ Ship::Ship(void) : m_position(0.0f, 0.0f), m_target(0.0f, 0.0f), m_speed(0.0f), 
 /**
  * @brief Constructor
  * @param id
+ */
+Ship::Ship(const uuid_t & id, unsigned int team) : m_position(0.0f, 0.0f), m_target(0.0f, 0.0f), m_speed(0.0f), m_team(team), m_bNeedSync(false)
+{
+#if __gnu_linux__
+	uuid_copy(m_uuid, id);
+#else
+	memcpy(&m_uuid, (void*)&id, sizeof(uuid_t));
+#endif // __gnu_linux__
+}
+
+/**
+ * @brief Constructor
+ * @param id
  * @param x
  * @param y
  */
-Ship::Ship(const uuid_t & id, float x, float y) : m_position(x, y), m_target(x, y), m_speed(0.0f), m_bNeedSync(false)
+Ship::Ship(const uuid_t & id, unsigned int team, float x, float y) : m_position(x, y), m_target(x, y), m_speed(0.0f), m_team(team), m_bNeedSync(false)
 {
 #if __gnu_linux__
 	uuid_copy(m_uuid, id);
@@ -101,7 +114,5 @@ void Ship::clampPosition(const vec2 & halfSize)
 		m_position.y = -halfSize.y;
 	}
 }
-
-
 
 }

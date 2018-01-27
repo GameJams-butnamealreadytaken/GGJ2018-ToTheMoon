@@ -16,7 +16,8 @@ public:
 	//
 	// Constructor / Destructor
 	Transmitter(void);
-	Transmitter(const uuid_t & id, float x, float y);
+	Transmitter(const uuid_t & id, unsigned int team);
+	Transmitter(const uuid_t & id, unsigned int team, float x, float y);
 	~Transmitter(void);
 
 	//
@@ -24,6 +25,13 @@ public:
 	const vec2 & getPosition(void) const
 	{
 		return(m_position);
+	}
+
+	//
+	// Team
+	unsigned int getTeam(void) const
+	{
+		return(m_team);
 	}
 
 protected:
@@ -38,6 +46,7 @@ private:
 
 	vec2 m_position;
 
+	unsigned int m_team;
 };
 
 }

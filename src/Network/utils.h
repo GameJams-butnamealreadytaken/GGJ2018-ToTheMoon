@@ -6,7 +6,7 @@
 #	include <rpc.h>
 #endif // __gnu_linux__
 
-#define CURRENT_NETWORK_VERSION (0xFF0001)
+#define CURRENT_NETWORK_VERSION (0xFF0002)
 
 namespace Network
 {
@@ -83,6 +83,7 @@ struct CreateShipMessage
 	vec2 position;
 	vec2 target;
 	float speed;
+	unsigned int team;
 };
 
 struct DestroyShipMessage
@@ -109,6 +110,7 @@ struct SyncShipStateMessage
 	vec2 position;
 	vec2 target;
 	float speed;
+	unsigned int team;
 };
 
 struct CreateTransmitterMessage
@@ -122,6 +124,7 @@ struct CreateTransmitterMessage
 	uuid_t transmitterId;
 
 	vec2 position;
+	unsigned int team;
 };
 
 struct DestroyTransmitterMessage
@@ -146,6 +149,7 @@ struct SyncTransmitterStateMessage
 	uuid_t transmitterId;
 
 	vec2 position;
+	unsigned int team;
 };
 
 }

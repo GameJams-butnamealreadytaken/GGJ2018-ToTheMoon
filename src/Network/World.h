@@ -34,12 +34,12 @@ public:
 
 	//
 	// Create Ship
-	Ship * createShip	(float x, float y);
+	Ship * createShip	(unsigned int team, float x, float y);
 	Ship * findShip		(const uuid_t & uuid);
 
 	//
 	// Create Transmitter
-	Transmitter * createTransmitter	(float x, float y);
+	Transmitter * createTransmitter	(unsigned int team, float x, float y);
 	Transmitter * findTransmitter	(const uuid_t & uuid);
 
 	void setListener(WorldListener * pListener)
@@ -49,8 +49,8 @@ public:
 
 protected:
 
-	Transmitter * createTransmitterInternal(const uuid_t & uuid, float x, float y);
-	Ship * createShipInternal(const uuid_t & uuid, float x, float y);
+	Transmitter * createTransmitterInternal(const uuid_t & uuid, unsigned int team, float x, float y);
+	Ship * createShipInternal(const uuid_t & uuid, unsigned int team, float x, float y);
 
 	bool broadcastHelloMessage(void);
 
