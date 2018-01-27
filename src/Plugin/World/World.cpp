@@ -47,7 +47,31 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 		{
 			ShEntity2* pEntity = ShEntity2::Create(levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("moon_01"), CShVector3(0.0f, 0.0f, 99.0f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
 			m_aPlanet[0] = new Planet(Planet::e_planet_moon, pEntity);
-			m_aPlanet[0]->SetPosition2(CShVector2(-400.0f, -400.0f));
+			m_aPlanet[0]->SetPosition2(CShVector2(-700.0f, -700.0f));
+		}
+
+		//
+		// Earth
+		{
+			ShEntity2* pEntity = ShEntity2::Create(levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("earth_01"), CShVector3(0.0f, 0.0f, 99.0f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
+			m_aPlanet[1] = new Planet(Planet::e_planet_earth, pEntity);
+			m_aPlanet[1]->SetPosition2(CShVector2(700.0f, -700.0f));
+		}
+
+		//
+		// Mars
+		{
+			ShEntity2* pEntity = ShEntity2::Create(levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("mars_01"), CShVector3(0.0f, 0.0f, 99.0f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
+			m_aPlanet[2] = new Planet(Planet::e_planet_mars, pEntity);
+			m_aPlanet[2]->SetPosition2(CShVector2(-700.0f, 700.0f));
+		}
+
+		//
+		// Jupiter
+		{
+			ShEntity2* pEntity = ShEntity2::Create(levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("jupiter_01"), CShVector3(0.0f, 0.0f, 99.0f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
+			m_aPlanet[3] = new Planet(Planet::e_planet_jupiter, pEntity);
+			m_aPlanet[3]->SetPosition2(CShVector2(700.0f, 700.0f));
 		}
 	}
 
@@ -92,7 +116,11 @@ void World::Update(float dt)
 
 	//
 	// Update planets
-	m_aPlanet[0]->Update(dt);
+	for (int iPlanet = 0; iPlanet < 4; ++iPlanet) 
+	{
+		m_aPlanet[iPlanet]->Update(dt);
+	}
+	
 
 	//
 	// Update explosion manager
