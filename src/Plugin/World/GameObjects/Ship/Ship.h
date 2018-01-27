@@ -42,6 +42,8 @@ public:
 private:
 	void						UpdateSprite			(void);
 
+	float						computeVecteurNorme		(float Ax, float Ay, float Bx, float By);
+
 private:
 
 	EShipType	m_type;
