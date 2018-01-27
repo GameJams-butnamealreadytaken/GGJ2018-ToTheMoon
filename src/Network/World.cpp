@@ -16,7 +16,7 @@ namespace Network
 /**
  * @brief Constructor
  */
-World::World(float size_x, float size_y) : m_ShipCount(0), m_bounds(size_x, size_y)
+World::World(float size_x, float size_y) : m_ShipCount(0), m_halfSize(size_x, size_y)
 {
 	memset(m_aShips, 0, sizeof(m_aShips));
 }
@@ -37,8 +37,11 @@ void World::update(float dt)
 {
 	for (unsigned int i = 0; i < MAX_SHIPS; ++i)
 	{
-		m_aShips[i].update(dt);
+		Ship & ship = m_aShips[i];
 
+		ship.update(dt);
+
+		ship.clampPosition(m_halfSize);
 	}
 }
 
@@ -48,11 +51,24 @@ void World::update(float dt)
  */
 Ship * World::createShip(void)
 {
-	unsigned int shipIndex = m_ShipCount;
+	createShip(0.0f, 0.0f);
+}
+
+/**
+ * @brief Create Ship
+ * @param x
+ * @param y
+ * @return new Ship
+ */
+Ship * World::createShip(float x, float y)
+{
+	Ship * ship = m_aShips + m_ShipCount;
 
 	++m_ShipCount;
 
-	return(m_aShips+shipIndex);
+	*ship = Ship(x, y);
+
+	return(ship);
 }
 
 }
