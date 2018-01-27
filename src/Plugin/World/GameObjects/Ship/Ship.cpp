@@ -57,7 +57,7 @@ void Ship::Update(float dt)
 			{
 				const Network::vec2 & targetPos = m_pNetworkShip->getTarget();
 
-				if (6.0f > computeVecteurNorme(m_vPosition.m_x, m_vPosition.m_y, targetPos.x, targetPos.y))
+				if (6.0f > ComputeVecteurNorme(m_vPosition.m_x, m_vPosition.m_y, targetPos.x, targetPos.y))
 				{
 					// setSpeed à 0 & setState à Idle si pos, FIGHT sinon
 					m_pNetworkShip->setSpeed(0.0f);
@@ -119,7 +119,7 @@ void Ship::UpdateSprite(void)
 	ShEntity2::SetWorldPosition(m_pEntity, CShVector3(shipPos.x, shipPos.y, ShEntity2::GetWorldPositionZ(m_pEntity)));
 }
 
-/*virtual*/ float Ship::computeVecteurNorme(float Ax, float Ay, float Bx, float By)
+float Ship::ComputeVecteurNorme(float Ax, float Ay, float Bx, float By)
 {
 	return sqrt(((Bx - Ax)*(Bx - Ax)) + ((By - Ay)*(By - Ay)));
 }
