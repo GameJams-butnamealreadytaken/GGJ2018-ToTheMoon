@@ -37,5 +37,9 @@ protected:
 	
 private:
 
+	//
+	// GUI
 	ShGUIModalDialog *	m_pQuitDialog;
+	ShGUIControl *		m_pControlHUD;
+	ShGUIControl *		m_pControlNotif;
 };

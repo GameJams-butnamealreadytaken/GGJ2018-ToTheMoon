@@ -10,6 +10,8 @@
 */
 GameStateGame::GameStateGame(void)
 : m_pQuitDialog(shNULL)
+, m_pControlHUD(shNULL)
+, m_pControlNotif(shNULL)
 {
 	// ...
 }
@@ -39,6 +41,14 @@ void GameStateGame::init(void)
 	SH_ASSERT(shNULL != pButtonNo);
 	ShGUIControlButton::AddSlotFctPtrClick(pButtonYes, (pSlotSDKButtonClick)OnButtonClickedYes);
 	ShGUIControlButton::AddSlotFctPtrClick(pButtonNo, (pSlotSDKButtonClick)OnButtonClickedNo);
+
+	//
+	// GUI
+	m_pControlHUD	= ShGUI::LoadGUIAndSSS(CShIdentifier("ingame_hud"));
+	SH_ASSERT(shNULL != m_pControlHUD);
+	m_pControlNotif	= ShGUIControl::GetElementById(CShIdentifier("text_ingame_hud_notifications"), m_pControlHUD);
+	SH_ASSERT(shNULL != m_pControlNotif);
+	ShGUIControl::Hide(m_pControlHUD, true);
 }
 
 /**
@@ -55,6 +65,10 @@ void GameStateGame::release(void)
 		ShGUI::PopModalDialog();
 	}
 	ShGUIModalDialog::Destroy(m_pQuitDialog);
+
+	//
+	// GUI
+	ShGUIControl::RemoveFromParent(m_pControlHUD);
 }
 
 /**
@@ -62,6 +76,11 @@ void GameStateGame::release(void)
 */
 void GameStateGame::entered(void)
 {
+	//
+	// GUI showing
+	ShGUIControl::Show(m_pControlHUD, true);
+	//ShGUIControl::Hide(m_pControlNotif);
+
 	load();
 }
 
@@ -70,6 +89,10 @@ void GameStateGame::entered(void)
 */
 void GameStateGame::exiting(void)
 {
+	//
+	// GUI hiding
+	ShGUIControl::Hide(m_pControlHUD, true);
+
 	unload();
 }
 
@@ -86,6 +109,8 @@ void GameStateGame::obscuring(void)
 */
 void GameStateGame::revealed(void)
 {
+	//
+	// Level
 	unload();
 	load();
 }
