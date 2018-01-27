@@ -163,15 +163,17 @@ void World::handleCreateShipMessage(CreateShipMessage * msg, char * machine, cha
 
 	Ship * ship = createShipInternal(msg->shipId, 0.0f, 0.0f);
 	assert(nullptr != ship);
-	if (m_pListener)
-	{
-		m_pListener->onShipCreated(ship);
-	}
 
 	// Set Attributes
 	ship->m_position = msg->position;
 	ship->m_target = msg->target;
 	ship->m_speed = msg->speed;
+
+	// Notify the game
+	if (m_pListener)
+	{
+		m_pListener->onShipCreated(ship);
+	}
 }
 
 /**
@@ -221,13 +223,15 @@ void World::handleCreateTransmitterMessage(CreateTransmitterMessage * msg, char 
 
 	Transmitter * transmitter = createTransmitterInternal(msg->transmitterId, 0.0f, 0.0f);
 	assert(nullptr != transmitter);
+
+	// Set Attributes
+	transmitter->m_position = msg->position;
+
+	// Notify the game
 	if (m_pListener)
 	{
 		m_pListener->onTransmitterCreate(transmitter);
 	}
-
-	// Set Attributes
-	transmitter->m_position = msg->position;
 }
 
 /**
