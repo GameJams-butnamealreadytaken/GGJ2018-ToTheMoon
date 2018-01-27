@@ -23,8 +23,10 @@ struct vec2
 
 enum MSG_ID
 {
-	HELLO		= 0x001,
-	SHIP_STATE	= 0x002
+	HELLO				= 0x001,
+	SYNC_SHIP_STATE		= 0x002,
+	CREATE_SHIP			= 0x003,
+	CREATE_TRANSMITTER	= 0x004
 };
 
 struct HelloMessage
@@ -37,11 +39,11 @@ struct HelloMessage
 	MSG_ID id;
 };
 
-struct ShipStateMessage
+struct SyncShipStateMessage
 {
-	ShipStateMessage()
+	SyncShipStateMessage()
 	{
-		id = SHIP_STATE;
+		id = SYNC_SHIP_STATE;
 	}
 
 	MSG_ID id;
@@ -52,5 +54,32 @@ struct ShipStateMessage
 	float speed;
 };
 
+struct CreateShipMessage
+{
+	CreateShipMessage()
+	{
+		id = CREATE_SHIP;
+	}
+
+	MSG_ID id;
+	unsigned int shipId;
+
+	vec2 position;
+	vec2 target;
+	float speed;
+};
+
+struct CreateTransmitterMessage
+{
+	CreateTransmitterMessage()
+	{
+		id = CREATE_TRANSMITTER;
+	}
+
+	MSG_ID id;
+	unsigned int transmitterId;
+
+	vec2 position;
+};
 
 }

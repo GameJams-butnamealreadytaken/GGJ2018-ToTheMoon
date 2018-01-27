@@ -104,14 +104,7 @@ void Ship::UpdateSprite(void)
 	ShEntity2::SetWorldRotation(m_pEntity, 0.0f, 0.0f, orientation);
 
 	// Sprite pos
+	m_vPosition.m_x = shipPos.x;
+	m_vPosition.m_y = shipPos.y;
 	ShEntity2::SetWorldPosition(m_pEntity, CShVector3(shipPos.x, shipPos.y, ShEntity2::GetWorldPositionZ(m_pEntity)));
-}
-
-/**
-* @brief GameObject::GetPosition
-*/
-CShVector2 Ship::GetShipPosition(void)
-{
-	const Network::vec2 & shipPos = m_pNetworkShip->getPosition();
-	return(CShVector2(shipPos.x, shipPos.y));
 }
