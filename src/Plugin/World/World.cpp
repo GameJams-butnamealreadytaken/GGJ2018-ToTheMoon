@@ -2,7 +2,7 @@
 
 #include "GameObjects/Projectile/ProjectileManager.h"
 
-#define TEST 0
+#define TEST 1
 
 /**
 * @brief Constructor
@@ -96,6 +96,15 @@ void World::Release(void)
 	}
 	m_apShip.Empty();
 
+	int nTransmitterCount = m_apTransmitter.GetCount();
+	for (int i = 0; i < nTransmitterCount; ++i)
+	{
+		m_apTransmitter[i]->Release();
+		SH_SAFE_DELETE(m_apTransmitter[i]);
+	}
+	m_apTransmitter.Empty();
+	
+
 	m_projectileManager.Release();
 	m_explosionManager.Release();
 
@@ -142,24 +151,29 @@ void World::Update(float dt)
 #endif //TEST
 
 	//
+	// Update ships
+	int iShipCount = m_apShip.GetCount();
+	for (int iShip = 0; iShip < iShipCount; ++iShip)
+	{
+		Ship * pShip = m_apShip[iShip];
+		pShip->Update(dt);
+
+		if (pShip == m_pShip)
+		{
+			ShCamera* pCamera = ShCamera::GetCamera2D();
+			CShVector2 shipPos = m_pShip->GetPosition2();
+			ShCamera::SetPosition2(pCamera, shipPos);
+			ShCamera::SetTarget(pCamera, CShVector3(shipPos, 0.0f));
+		}
+	}
+
+	//
 	// Update Transmitters
 	int iTransmitterCount = m_apTransmitter.GetCount();
 	for (int iTransmitter = 0; iTransmitter < iTransmitterCount; ++iTransmitter)
 	{
 		Transmitter * pTransmitter = m_apTransmitter[iTransmitter];
 		pTransmitter->Update(dt);
-	}
-
-	//
-	// Update ship
-	if (m_pShip)
-	{
-		m_pShip->Update(dt);
-
-		ShCamera* pCamera = ShCamera::GetCamera2D();
-		CShVector2 shipPos = m_pShip->GetPosition2();
-		ShCamera::SetPosition2(pCamera, shipPos);
-		ShCamera::SetTarget(pCamera, CShVector3(shipPos, 0.0f));
 	}
 }
 

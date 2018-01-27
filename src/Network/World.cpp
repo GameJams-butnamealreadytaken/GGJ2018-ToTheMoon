@@ -303,7 +303,7 @@ Ship * World::findShip(const uuid_t & uuid)
 	{
 #if WIN32
 		RPC_STATUS status;
-		if(UuidCompare(&uuid, &m_aShips[i].m_uuid, &status) == 0)
+		if(UuidCompare((uuid_t*)(&uuid), &m_aShips[i].m_uuid, &status) == 0)
 #else // WIN32
 		if (uuid_compare(uuid, m_aShips[i].m_uuid) == 0)
 #endif // WIN32
