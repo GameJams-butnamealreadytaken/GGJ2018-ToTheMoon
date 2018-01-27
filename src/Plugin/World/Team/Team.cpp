@@ -60,7 +60,7 @@ void Team::AddTransmitter(Transmitter * pTransmitter)
 		for (int i = 0; i < nTransCount; ++i)
 		{
 			CShVector2 & transPos = m_apTransmitter[i]->GetPosition2();
-			if (1000.0f > ComputeVecteurNorme(newPos.m_x, newPos.m_y, transPos.m_x, transPos.m_y))
+			if (1500.0f > ComputeVecteurNorme(newPos.m_x, newPos.m_y, transPos.m_x, transPos.m_y))
 			{
 				AddNeighbour(pTransmitter, m_apTransmitter[i]);
 			}
@@ -72,6 +72,7 @@ void Team::AddTransmitter(Transmitter * pTransmitter)
 	if (GetVictoryCondition())
 	{
 		// warn the world
+		SH_TRACE("ntm");
 	}
 }
 
@@ -113,11 +114,12 @@ bool Team::GetVictoryCondition(void)
 */
 bool Team::CheckNeighboorList(Transmitter * pTrans, CShArray<int> & transList_done)
 {
-	if (!transList_done.Find(pTrans->GetId()))
+	if (-1 == transList_done.Find(pTrans->GetId()))
 	{
 		transList_done.Add(pTrans->GetId());
 		CShVector2 & newPos = pTrans->GetPosition2();
-		if (2000.0f < ComputeVecteurNorme(newPos.m_x, newPos.m_y, m_endPoint.m_x, m_endPoint.m_y))
+		// Linked to end point
+		if (2000.0f > ComputeVecteurNorme(newPos.m_x, newPos.m_y, m_endPoint.m_x, m_endPoint.m_y))
 		{
 			return(true);
 		}
@@ -125,7 +127,7 @@ bool Team::CheckNeighboorList(Transmitter * pTrans, CShArray<int> & transList_do
 		int nNeighbourCount = pTrans->GetNeighbourCount();
 		for (int j = 0; j < nNeighbourCount; ++j)
 		{
-			if (CheckNeighboorList(pTrans, transList_done))
+			if (CheckNeighboorList(pTrans->GetNeighbour(j), transList_done))
 			{
 				return(true);
 			}
