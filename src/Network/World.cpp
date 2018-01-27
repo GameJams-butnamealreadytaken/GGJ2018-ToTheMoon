@@ -20,12 +20,14 @@ namespace Network
  */
 World::World(float size_x, float size_y) 
 : m_ShipCount(0)
-, m_halfSize(size_x, size_y)
 , m_TransmitterCount(0)
+, m_halfSize(size_x, size_y)
 , m_pListener(nullptr)
 {
 	memset(m_aShips, 0, sizeof(m_aShips));
 	memset(m_aOwnedShips, 0, sizeof(m_aOwnedShips));
+	memset(m_aTransmitters, 0, sizeof(m_aTransmitters));
+	memset(m_aOwnedTransmitters, 0, sizeof(m_aOwnedTransmitters));
 }
 
 /**
@@ -161,15 +163,17 @@ void World::handleCreateShipMessage(CreateShipMessage * msg, char * machine, cha
 
 	Ship * ship = createShipInternal(msg->shipId, 0.0f, 0.0f);
 	assert(nullptr != ship);
-	if (m_pListener)
-	{
-		m_pListener->onShipCreated(ship);
-	}
 
 	// Set Attributes
 	ship->m_position = msg->position;
 	ship->m_target = msg->target;
 	ship->m_speed = msg->speed;
+
+	// Notify the game
+	if (m_pListener)
+	{
+		m_pListener->onShipCreated(ship);
+	}
 }
 
 /**
@@ -217,7 +221,17 @@ void World::handleCreateTransmitterMessage(CreateTransmitterMessage * msg, char 
 	printf("CREATE_TRANSMITTER from %s:%s\n", machine, service);
 	fflush(stdout);
 
-	// TODO
+	Transmitter * transmitter = createTransmitterInternal(msg->transmitterId, 0.0f, 0.0f);
+	assert(nullptr != transmitter);
+
+	// Set Attributes
+	transmitter->m_position = msg->position;
+
+	// Notify the game
+	if (m_pListener)
+	{
+		m_pListener->onTransmitterCreate(transmitter);
+	}
 }
 
 /**
@@ -232,14 +246,27 @@ void World::handleDestroyTransmitterMessage(DestroyTransmitterMessage * msg, cha
 }
 
 /**
- * @brief handleSyncTransmitterStateMessage
+ * @brief World::handleSyncTransmitterStateMessage
  */
-void handleSyncTransmitterStateMessage(DestroyTransmitterMessage * msg, char * machine, char * service)
+void World::handleSyncTransmitterStateMessage(SyncTransmitterStateMessage * msg, char * machine, char * service)
 {
 	printf("SYNC_TRANSMITTER_STATE from %s:%s\n", machine, service);
 	fflush(stdout);
 
-	// TODO
+	Transmitter * transmitter = findTransmitter(msg->transmitterId);
+
+	if (!transmitter)
+	{
+		transmitter = createTransmitterInternal(msg->transmitterId, 0.0f, 0.0f);
+		assert(nullptr != transmitter);
+		if (m_pListener)
+		{
+			m_pListener->onTransmitterCreate(transmitter);
+		}
+	}
+
+	// Set Attributes
+	transmitter->m_position = msg->position;
 }
 
 /**
@@ -255,6 +282,13 @@ void World::update(float dt)
 		ship.update(dt, m_network);
 
 		ship.clampPosition(m_halfSize);
+	}
+
+	for (unsigned int i = 0; i < m_TransmitterCount; ++i)
+	{
+		Transmitter & transmitter = m_aTransmitters[i];
+
+		transmitter.update(dt, m_network);
 	}
 
 	//
@@ -328,6 +362,14 @@ void World::update(float dt)
 					handleDestroyTransmitterMessage((DestroyTransmitterMessage*)MSG, machine, service);
 				}
 				break;
+
+				case TRANSMITTER_SYNC_STATE:
+				{
+					static_assert(sizeof(SyncTransmitterStateMessage) < MAX_MESSAGE_SIZE, "DestroyTransmitterMessage is too big !");
+					assert(sizeof(SyncTransmitterStateMessage) == size);
+					handleSyncTransmitterStateMessage((SyncTransmitterStateMessage*)MSG, machine, service);
+				}
+				break;
 			}
 		}
 	}
@@ -362,7 +404,14 @@ Ship * World::createShip(float x, float y)
 
 	m_network.SendMessageToAllClients(message);
 
-	m_aOwnedShips[0] = ship; // FIXME !
+	for (int i = 0; i < MAX_SHIPS; ++i)
+	{
+		if (nullptr == m_aOwnedShips[i])
+		{
+			m_aOwnedShips[i] = ship;
+			break;
+		}
+	}
 
 	return(ship);
 }
@@ -423,27 +472,88 @@ Ship * World::findShip(const uuid_t & uuid)
 * @param y
 * @return new Transmitter
 */
-Transmitter * World::createTransmitter(void)
-{
-	return(createTransmitter(0.0f, 0.0f));
-}
-
-/**
-* @brief Create Transmitter
-* @param x
-* @param y
-* @return new Transmitter
-*/
 Transmitter * World::createTransmitter(float x, float y)
 {
-	Transmitter * transmitter = m_aTransmitters + m_TransmitterCount;
+	uuid_t uuid;
+#if __gnu_linux__
+	uuid_generate(uuid);
+#else
+	UuidCreate(&uuid);
+#endif // __gnu_linux__
 
-	++m_TransmitterCount;
+	Transmitter * transmitter = createTransmitterInternal(uuid, x, y);
 
-	*transmitter = Transmitter(x, y);
+	CreateTransmitterMessage message;
+#if __gnu_linux__
+	uuid_copy(message.transmitterId, uuid);
+#else
+	memcpy(&message.transmitterId, (void*)&uuid, sizeof(uuid_t));
+#endif // __gnu_linux__
+	message.position = vec2(x, y);
+
+	m_network.SendMessageToAllClients(message);
+
+	for (int i = 0; i < MAX_TRANSMITTERS; ++i)
+	{
+		if (nullptr == m_aOwnedTransmitters[i])
+		{
+			m_aOwnedTransmitters[i] = transmitter;
+			break;
+		}
+	}
 
 	return(transmitter);
 }
 
+/**
+ * @brief createTransmitterInternal
+ * @param uuid
+ * @param x
+ * @param y
+ * @return
+ */
+Transmitter * World::createTransmitterInternal(const uuid_t & uuid, float x, float y)
+{
+#if ENABLE_CHECKS
+	{
+		Transmitter * existingTransmitter = findTransmitter(uuid);
+		assert(existingTransmitter == nullptr);
+	}
+#endif // ENABLE_CHECKS
+
+	Transmitter * transmitter = m_aTransmitters + m_TransmitterCount;
+
+	++m_TransmitterCount;
+
+	*transmitter = Transmitter(uuid, x, y);
+
+	return(transmitter);
+}
+
+/**
+ * @brief World::findTransmitter
+ * @param uuid
+ * @return
+ */
+Transmitter * World::findTransmitter(const uuid_t & uuid)
+{
+	Transmitter * ship = nullptr;
+
+	for (int i = 0; i < m_ShipCount; ++i)
+	{
+#if WIN32
+		RPC_STATUS status;
+		if(UuidCompare((uuid_t*)(&uuid), &m_aTransmitters[i].m_uuid, &status) == 0)
+#else // WIN32
+		if (uuid_compare(uuid, m_aTransmitters[i].m_uuid) == 0)
+#endif // WIN32
+		{
+			ship = m_aTransmitters+i;
+			break;
+		}
+	}
+
+	return(ship);
+}
 
 }

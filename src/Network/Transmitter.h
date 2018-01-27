@@ -5,6 +5,8 @@
 namespace Network
 {
 
+class NetworkHelper;
+
 class Transmitter
 {
 	friend class World;
@@ -14,7 +16,7 @@ public:
 	//
 	// Constructor / Destructor
 	Transmitter(void);
-	Transmitter(float x, float y);
+	Transmitter(const uuid_t & id, float x, float y);
 	~Transmitter(void);
 
 	//
@@ -28,9 +30,11 @@ protected:
 
 	//
 	// Update
-	void update(float dt);
+	void update(float dt, NetworkHelper & network);
 
 private:
+
+	uuid_t m_uuid;
 
 	vec2 m_position;
 

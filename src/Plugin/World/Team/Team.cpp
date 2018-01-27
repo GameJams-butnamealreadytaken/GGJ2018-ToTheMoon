@@ -23,8 +23,9 @@
 /**
 * @brief Team::Initialize
 */
-void Team::Initialize(const CShVector2 & startPoint, const CShVector2 & endPoint)
+void Team::Initialize(const CShIdentifier & levelIdentifier, const CShVector2 & startPoint, const CShVector2 & endPoint)
 {
+	m_levelIdentifier = levelIdentifier;
 	m_startPoint = startPoint;
 	m_endPoint = endPoint;
 }
@@ -59,7 +60,7 @@ void Team::AddTransmitter(Transmitter * pTransmitter)
 		for (int i = 0; i < nTransCount; ++i)
 		{
 			CShVector2 & transPos = m_apTransmitter[i]->GetPosition2();
-			if (10.0f < ComputeVecteurNorme(newPos.m_x, newPos.m_y, transPos.m_x, transPos.m_y))
+			if (1000.0f > ComputeVecteurNorme(newPos.m_x, newPos.m_y, transPos.m_x, transPos.m_y))
 			{
 				AddNeighbour(pTransmitter, m_apTransmitter[i]);
 			}
@@ -95,7 +96,7 @@ bool Team::GetVictoryCondition(void)
 		Transmitter * pTrans = m_apTransmitter[i];
 		CShVector2 & newPos = pTrans->GetPosition2();
 		// Linked to start point
-		if (20 < ComputeVecteurNorme(newPos.m_x, newPos.m_y, m_startPoint.m_x, m_startPoint.m_y))
+		if (2000.0f > ComputeVecteurNorme(newPos.m_x, newPos.m_y, m_startPoint.m_x, m_startPoint.m_y))
 		{
 			if (CheckNeighboorList(pTrans, transList_done))
 			{
@@ -116,7 +117,7 @@ bool Team::CheckNeighboorList(Transmitter * pTrans, CShArray<int> & transList_do
 	{
 		transList_done.Add(pTrans->GetId());
 		CShVector2 & newPos = pTrans->GetPosition2();
-		if (20 < ComputeVecteurNorme(newPos.m_x, newPos.m_y, m_endPoint.m_x, m_endPoint.m_y))
+		if (2000.0f < ComputeVecteurNorme(newPos.m_x, newPos.m_y, m_endPoint.m_x, m_endPoint.m_y))
 		{
 			return(true);
 		}
@@ -147,10 +148,8 @@ float Team::ComputeVecteurNorme(float Ax, float Ay, float Bx, float By)
 */
 void Team::AddNeighbour(Transmitter * pTransmitterFrom, Transmitter * pTransmitterTo)
 {
-	ShPrimitiveSegment * pSegment = new ShPrimitiveSegment();
-	ShPrimitiveSegment::SetP1(pSegment, pTransmitterFrom->GetPosition2());
-	ShPrimitiveSegment::SetP2(pSegment, pTransmitterTo->GetPosition2());
-
+	ShPrimitiveSegment * pSegment = ShPrimitiveSegment::Create(m_levelIdentifier, CShIdentifier("Transpalette"), CShVector3(pTransmitterFrom->GetPosition2(), 5.0f), CShVector3(pTransmitterTo->GetPosition2(), 5.0f), CShRGBAf());
+	
 	if (m_iTeamId == 0)
 	{
 		ShPrimitiveSegment::SetColor(pSegment, CShRGBAf(1.0f, 0.0f, 0.0f, 1.0f));
@@ -164,8 +163,8 @@ void Team::AddNeighbour(Transmitter * pTransmitterFrom, Transmitter * pTransmitt
 		SH_ASSERT_ALWAYS();
 	}
 
+	ShPrimitiveSegment::Set2d(pSegment, true);
+
 	pTransmitterFrom->AddNeighbour(pTransmitterTo, pSegment);
 	pTransmitterTo->AddNeighbour(pTransmitterFrom, pSegment);
 }
-
-

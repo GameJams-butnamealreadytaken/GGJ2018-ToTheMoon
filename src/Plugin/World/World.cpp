@@ -1,9 +1,11 @@
 #include "World.h"
 
+#include "MiniMap/MiniMap.h"
 #include "GameObjects/Transmitter/Transmitter.h"
 #include "GameObjects/Ship/Ship.h"
 #include "GameObjects/Planet/Planet.h"
 #include "Team/Team.h"
+
 
 #define TEST 0
 
@@ -11,15 +13,16 @@
 * @brief Constructor
 */
 /*explicit*/ World::World(void) 
-	: m_levelIdentifier()
-	, m_world(INFINITY, INFINITY)
-	, m_pUser(shNULL)
-	, m_explosionManager()
-	, m_projectileManager()
-	, m_apTransmitter()
-	, m_apShip()
-	, m_pShip(shNULL)
-	, m_aTeam()
+: m_levelIdentifier()
+, m_world(5.0f * 2048.0f, 5.0f * 1152.0f)
+, m_pMiniMap(shNULL)
+, m_pUser(shNULL)
+, m_explosionManager()
+, m_projectileManager()
+, m_apTransmitter()
+, m_apShip()
+, m_pShip(shNULL)
+, m_aTeam()
 {
 	// ...
 }
@@ -41,6 +44,7 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 
 	m_world.init();
 	m_world.setListener(this);
+	m_pMiniMap->Initialize(this);
 	m_explosionManager.Initialize(levelIdentifier);
 	m_projectileManager.Initialize(levelIdentifier);
 
@@ -81,10 +85,10 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 	CreateShip(0.0f, 0.0f);
 
 	m_aTeam.Empty();
-	int nTeam = 2; // get nbTeam from Network
-	for (int i = 0; i < nTeam; ++i)
+	for (int i = 0; i < 2; ++i)
 	{
 		Team * pTeam = new Team(i);
+		pTeam->Initialize(m_levelIdentifier, m_aPlanet[i]->GetPosition2(), m_aPlanet[i + 2]->GetPosition2());
 		m_aTeam.Add(pTeam);
 	}
 
@@ -125,6 +129,7 @@ void World::Release(void)
 	m_projectileManager.Release();
 	m_explosionManager.Release();
 
+	m_pMiniMap->Release();
 	m_world.release();
 }
 
@@ -134,6 +139,7 @@ void World::Release(void)
 void World::Update(float dt)
 {
 	m_world.update(dt);
+	m_pMiniMap->Update(dt);
 
 	//
 	// Update planets
@@ -187,6 +193,39 @@ void World::Update(float dt)
 		}
 	}
 }
+
+/**
+* @brief World::GetShipCount
+*/
+int	World::GetShipCount(void)
+{
+	return(m_apShip.GetCount());
+}
+
+/**
+* @brief World::GetShip
+*/
+Ship * World::GetShip(int iShip)
+{
+	return(m_apShip[iShip]);
+}
+
+/**
+* @brief World::GetTransmitterCount
+*/
+int	World::GetTransmitterCount(void)
+{
+	return(m_apTransmitter.GetCount());
+}
+
+/**
+* @brief World::GetTransmitter
+*/
+Transmitter * World::GetTransmitter(int iTransmitter)
+{
+	return(m_apTransmitter[iTransmitter]);
+}
+
 
 /**
 * @brief World::OnTouchDown

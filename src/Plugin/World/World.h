@@ -13,6 +13,7 @@ class Planet;
 class Ship;
 class Transmitter;
 class Team;
+class MiniMap;
 
 class World : public Network::WorldListener
 {
@@ -26,6 +27,12 @@ public:
 	void		Release				(void);
 
 	void		Update				(float dt);
+
+	int				GetShipCount		(void);
+	Ship *			GetShip				(int iShip);
+
+	int				GetTransmitterCount	(void);
+	Transmitter *	GetTransmitter		(int iTransmitter);
 
 	//
 	// Touch Events
@@ -44,6 +51,8 @@ private:
 
 	CShIdentifier					m_levelIdentifier;
 	Network::World					m_world;
+
+	MiniMap *						m_pMiniMap;
 
 	ShUser *						m_pUser;
 

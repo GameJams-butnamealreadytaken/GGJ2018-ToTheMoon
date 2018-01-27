@@ -12,7 +12,7 @@ public:
 	explicit		Team				(int teamId);
 	virtual			~Team				(void);
 
-	virtual void	Initialize			(const CShVector2 & startPoint, const CShVector2 & endPoint);
+	virtual void	Initialize			(const CShIdentifier & levelIdentifier, const CShVector2 & startPoint, const CShVector2 & endPoint);
 	virtual void	Release				(void);
 
 	virtual void	Update				(float dt);
@@ -26,6 +26,8 @@ private:
 	void			AddNeighbour		(Transmitter * pTransmitter1, Transmitter * pTransmitter2);
 	bool			CheckNeighboorList	(Transmitter * pTrans, CShArray<int> & transList_done);
 private:
+
+	CShIdentifier					m_levelIdentifier;
 
 	int								m_iTeamId;
 

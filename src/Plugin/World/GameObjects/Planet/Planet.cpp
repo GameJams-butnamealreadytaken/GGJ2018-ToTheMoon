@@ -6,7 +6,7 @@ extern bool g_bDisableAnimations;
  * @brief Constructor
  */
 Planet::Planet(EPlanet planet, ShEntity2 * pEntity)
-: GameObject(pEntity, CShVector2(0.0f, 0.0f))
+: GameObject(pEntity, ShEntity2::GetWorldPosition2(pEntity))
 {
 	if (!g_bDisableAnimations)
 	{
@@ -14,25 +14,25 @@ Planet::Planet(EPlanet planet, ShEntity2 * pEntity)
 		{
 			case e_planet_moon:
 			{
-				m_animationManager = AnimatedSpriteManager(pEntity, CShString("ggj"), CShString("moon"), CShVector2(0.0f, 0.0f), 0.03f, 96, false, false);
+				m_animationManager = AnimatedSpriteManager(pEntity, CShString("ggj"), CShString("moon"), CShVector2(0.5f, 0.5f), 0.03f, 96, false, false);
 			}
 			break;
 
 			case e_planet_earth:
 			{
-				m_animationManager = AnimatedSpriteManager(pEntity, CShString("ggj"), CShString("earth"), CShVector2(0.0f, 0.0f), 0.03f, 96, false, false);
+				m_animationManager = AnimatedSpriteManager(pEntity, CShString("ggj"), CShString("earth"), CShVector2(0.5f, 0.5f), 0.03f, 96, false, false);
 			}
 			break;
 
 			case e_planet_jupiter:
 			{
-				m_animationManager = AnimatedSpriteManager(pEntity, CShString("ggj"), CShString("jupiter"), CShVector2(0.0f, 0.0f), 0.03f, 96, false, false);
+				m_animationManager = AnimatedSpriteManager(pEntity, CShString("ggj"), CShString("jupiter"), CShVector2(0.5f, 0.5f), 0.03f, 96, false, false);
 			}
 			break;
 
 			case e_planet_mars:
 			{
-				m_animationManager = AnimatedSpriteManager(pEntity, CShString("ggj"), CShString("mars"), CShVector2(0.0f, 0.0f), 0.03f, 96, false, false);
+				m_animationManager = AnimatedSpriteManager(pEntity, CShString("ggj"), CShString("mars"), CShVector2(0.5f, 0.5f), 0.03f, 96, false, false);
 			}
 			break;
 

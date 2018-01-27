@@ -70,21 +70,6 @@ struct PingMessage
 	MSG_ID id;
 };
 
-struct SyncShipStateMessage
-{
-	SyncShipStateMessage()
-	{
-		id = SHIP_SYNC_STATE;
-	}
-
-	MSG_ID id;
-	uuid_t shipId;
-
-	vec2 position;
-	vec2 target;
-	float speed;
-};
-
 struct CreateShipMessage
 {
 	CreateShipMessage()
@@ -111,6 +96,21 @@ struct DestroyShipMessage
 	uuid_t shipId;
 };
 
+struct SyncShipStateMessage
+{
+	SyncShipStateMessage()
+	{
+		id = SHIP_SYNC_STATE;
+	}
+
+	MSG_ID id;
+	uuid_t shipId;
+
+	vec2 position;
+	vec2 target;
+	float speed;
+};
+
 struct CreateTransmitterMessage
 {
 	CreateTransmitterMessage()
@@ -119,7 +119,7 @@ struct CreateTransmitterMessage
 	}
 
 	MSG_ID id;
-	unsigned int transmitterId;
+	uuid_t transmitterId;
 
 	vec2 position;
 };
@@ -132,7 +132,20 @@ struct DestroyTransmitterMessage
 	}
 
 	MSG_ID id;
-	unsigned int transmitterId;
+	uuid_t transmitterId;
+};
+
+struct SyncTransmitterStateMessage
+{
+	SyncTransmitterStateMessage()
+	{
+		id = TRANSMITTER_SYNC_STATE;
+	}
+
+	MSG_ID id;
+	uuid_t transmitterId;
+
+	vec2 position;
 };
 
 }

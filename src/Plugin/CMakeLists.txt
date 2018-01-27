@@ -31,6 +31,10 @@ source_group("Sound\\SoundManager" FILES ${SOURCES_SoundManager})
 set(SOURCES_World World/World.cpp World/World.h)
 source_group("World" FILES ${SOURCES_World})
 
+# MiniMap files
+set(SOURCES_MiniMap World/MiniMap/MiniMap.cpp World/MiniMap/MiniMap.h)
+source_group("World\\MiniMap" FILES ${SOURCES_MiniMap}) 
+
 # GameObject files
 set(SOURCES_GameObject World/GameObjects/GameObject.cpp World/GameObjects/GameObject.h)
 source_group("World\\GameObject" FILES ${SOURCES_GameObject})
@@ -78,6 +82,7 @@ ${SOURCES_Factory}
 ${SOURCES_AnimatedSpriteManager}
 ${SOURCES_SoundManager}
 ${SOURCES_World}
+${SOURCES_MiniMap}
 ${SOURCES_GameObject}
 ${SOURCES_Planet}
 ${SOURCES_Explosion}
