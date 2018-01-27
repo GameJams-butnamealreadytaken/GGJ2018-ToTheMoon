@@ -3,9 +3,9 @@
 #include "GameObjects/Transmitter/Transmitter.h"
 #include "GameObjects/Ship/Ship.h"
 #include "GameObjects/Planet/Planet.h"
-#include "Team\Team.h"
+#include "Team/Team.h"
 
-#define TEST 1
+#define TEST 0
 
 /**
 * @brief Constructor
