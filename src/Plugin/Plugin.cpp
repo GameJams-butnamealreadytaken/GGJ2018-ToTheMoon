@@ -27,9 +27,6 @@ PluginGGJ2018::~PluginGGJ2018(void)
  */
 void PluginGGJ2018::OnPlayStart(const CShIdentifier & levelIdentifier)
 {
-	ShCamera * pCurrentCamera = ShCamera::GetCamera2D();
-	const CShVector2 & viewport = ShCamera::GetViewport(pCurrentCamera);
-
 	m_levelIdentifier = levelIdentifier;
 
 	g_soundManager.Initialize();
