@@ -32,6 +32,8 @@ public:
 
 	virtual void		Update					(float dt) SH_ATTRIBUTE_OVERRIDE;
 
+	virtual void		OnHit					(GameObject* pObject);
+
 	EShipType			GetType					(void);
 
 	void				SetTarget				(const CShVector2 & newTarget, float fSpeed);

@@ -12,6 +12,7 @@ public:
 	enum ETransmiterState
 	{
 		IDLE,
+		HIT,
 		APPEAR,
 		DESTROYED,
 		OFF,
@@ -27,7 +28,9 @@ public:
 
 	virtual void		Update				(float dt) SH_ATTRIBUTE_OVERRIDE;
 
+	virtual void		OnHit				(GameObject* pObject);
 private:
 
 	float				m_fRadius;
+	int					m_iLife;
 };
