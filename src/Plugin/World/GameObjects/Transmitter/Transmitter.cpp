@@ -16,8 +16,8 @@ Transmitter::Transmitter(ShEntity2 * pEntity, const CShVector2 & vPosition)
 {
 	if (!g_bDisableAnimations)
 	{
-		m_animationManagerDeploy = AnimatedSpriteManager(pEntity, CShString("ggj"), CShString("transmitter"), CShVector2(0.0f, 0.0f), 0.03f, 75, false, true);
-		m_animationManagerIdle = AnimatedSpriteManager(pEntity, CShString("ggj"), CShString("transmitter_idle_red"), CShVector2(0.0f, 0.0f), 0.03f, 75, false, false);
+		m_animationManagerDeploy = AnimatedSpriteManager(pEntity, CShString("ggj"), CShString("transmitter"), CShVector2(0.5f, 0.5f), 0.03f, 75, false, true);
+		m_animationManagerIdle = AnimatedSpriteManager(pEntity, CShString("ggj"), CShString("transmitter_idle_red"), CShVector2(0.5f, 0.5f), 0.03f, 75, false, false);
 	}
 
 	SetState((int)OFF);

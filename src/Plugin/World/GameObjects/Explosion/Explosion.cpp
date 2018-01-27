@@ -10,7 +10,7 @@ Explosion::Explosion(ShEntity2 * pEntity)
 {
 	if (!g_bDisableAnimations)
 	{
-		m_animationManager = AnimatedSpriteManager(pEntity, CShString("ggj"), CShString("explosion"), CShVector2(0.0f, 0.0f), 0.1f, 9, false, true);
+		m_animationManager = AnimatedSpriteManager(pEntity, CShString("ggj"), CShString("explosion"), CShVector2(0.5f, 0.5f), 0.1f, 9, false, true);
 	}
 
 	SetState((int)OFF);
