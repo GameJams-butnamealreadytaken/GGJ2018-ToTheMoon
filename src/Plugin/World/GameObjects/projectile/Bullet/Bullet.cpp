@@ -3,8 +3,8 @@
 /**
  * @brief Constructor
  */
-Bullet::Bullet(ShEntity2 * pEntity, const CShVector2 & vPosition)
-: Projectile(pEntity, vPosition)
+Bullet::Bullet(ShEntity2 * pEntity)
+: Projectile(pEntity, CShVector2(0.0f,0.0f))
 {
 
 }

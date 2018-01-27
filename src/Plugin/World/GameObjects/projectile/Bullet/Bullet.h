@@ -9,7 +9,7 @@ class Bullet : public Projectile
 {
 public:
 
-	explicit								Bullet				(ShEntity2 * pEntity, const CShVector2 & vPosition);
+	explicit								Bullet				(ShEntity2 * pEntity);
 	virtual									~Bullet				(void);
 
 	void									Initialize			(void);
