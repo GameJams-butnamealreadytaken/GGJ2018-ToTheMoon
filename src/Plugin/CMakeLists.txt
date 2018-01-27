@@ -67,6 +67,10 @@ source_group("World\\GameObject\\Ship" FILES ${SOURCES_Ship})
 set(SOURCES_Transmitter World/GameObjects/Transmitter/Transmitter.cpp World/GameObjects/Transmitter/Transmitter.h)
 source_group("World\\GameObject\\Transmitter" FILES ${SOURCES_Transmitter})
 
+# Team files
+set(SOURCES_Team World/Team/Team.cpp World/Team/Team.h)
+source_group("World\\Team" FILES ${SOURCES_Team})
+
 # Put everything together before adding platform-specific files
 set(SOURCES 
 ${SOURCES_Plugin} 
@@ -83,6 +87,7 @@ ${SOURCES_ProjectileManager}
 ${SOURCES_Bullet}
 ${SOURCES_Ship}
 ${SOURCES_Transmitter}
+${SOURCES_Team}
 )
 
 # Compile to use it on Runtime

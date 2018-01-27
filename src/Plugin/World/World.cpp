@@ -1,6 +1,9 @@
 #include "World.h"
 
-#include "GameObjects/Projectile/ProjectileManager.h"
+#include "GameObjects/Transmitter/Transmitter.h"
+#include "GameObjects/Ship/Ship.h"
+#include "GameObjects/Planet/Planet.h"
+#include "Team\Team.h"
 
 #define TEST 1
 
@@ -15,6 +18,7 @@
 	, m_apTransmitter()
 	, m_apShip()
 	, m_pShip(shNULL)
+	, m_aTeam()
 {
 	// ...
 }
@@ -79,6 +83,13 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 	// Create player's Ship
 	CreateShip(0.0f, 0.0f);
 
+	m_aTeam.Empty();
+	int nTeam = 2; // get nbTeam from Network
+	for (int i = 0; i < nTeam; ++i)
+	{
+		Team * pTeam = new Team(i);
+		m_aTeam.Add(pTeam);
+	}
 }
 
 /**
@@ -96,6 +107,13 @@ void World::Release(void)
 	}
 	m_apShip.Empty();
 
+	int nTeamCount = m_aTeam.GetCount();
+	for (int i = 0; i < nTeamCount; ++i)
+	{
+		m_aTeam[i]->Release();
+	}
+	m_aTeam.Empty();
+
 	int nTransmitterCount = m_apTransmitter.GetCount();
 	for (int i = 0; i < nTransmitterCount; ++i)
 	{
@@ -103,7 +121,6 @@ void World::Release(void)
 		SH_SAFE_DELETE(m_apTransmitter[i]);
 	}
 	m_apTransmitter.Empty();
-	
 
 	m_projectileManager.Release();
 	m_explosionManager.Release();

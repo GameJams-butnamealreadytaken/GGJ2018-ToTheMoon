@@ -46,6 +46,8 @@
 */
 /*virtual*/ void AnimatedSpriteManager::Update(float dt)
 {
+	shClamp(dt, 0.0f, 0.05f);
+
 	if (m_bOn)
 	{
 		m_fTime += dt;

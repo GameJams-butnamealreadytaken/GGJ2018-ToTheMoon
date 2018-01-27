@@ -32,6 +32,8 @@
 _logs/
 bin/tmp/
 bin/Generic/Resources/SpritesTemp/*
+bin/Generic/Resources/Sprites_on_2/*
+bin/Generic/Resources/Sprites_on_4/*
 build/
 *.user
 Generate_GGJ2018.bat
