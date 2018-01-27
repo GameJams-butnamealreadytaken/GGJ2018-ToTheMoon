@@ -237,6 +237,15 @@ Ship * World::createShip(float x, float y)
 
 	*ship = Ship(x, y);
 
+
+	CreateShipMessage message;
+	message.shipId = 0;
+	message.position = vec2(x, y);
+	message.target = vec2(x, y);
+	message.speed = 0.0f;
+
+	m_network.BroadcastMessage(message);
+
 	return(ship);
 }
 
