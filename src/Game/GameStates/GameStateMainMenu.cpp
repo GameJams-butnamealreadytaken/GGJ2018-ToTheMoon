@@ -7,7 +7,6 @@
  */
 GameStateMainMenu::GameStateMainMenu(void)
 : m_eCurrentState(IDLE)
-, m_pControlBackground(shNULL)
 , m_pControlMainMenu(shNULL)
 , m_pControlMainMenuContent1(shNULL)
 {
@@ -36,9 +35,7 @@ void GameStateMainMenu::init(void)
 	//
 	// GUI
 	{
-		m_pControlBackground		= ShGUI::LoadGUIAndSSS(CShIdentifier("background"), shNULL);
-		SH_ASSERT(shNULL != m_pControlBackground);
-		m_pControlMainMenu			= ShGUI::LoadGUIAndSSS(CShIdentifier("main_menu_background"), m_pControlBackground);
+		m_pControlMainMenu			= ShGUI::LoadGUIAndSSS(CShIdentifier("main_menu_background"), shNULL);
 		SH_ASSERT(shNULL != m_pControlMainMenu);
 
 		ShGUIControl * pControlMainMenuContent = ShGUIControl::GetElementById(CShIdentifier("panel_main_menu_content"), m_pControlMainMenu);
@@ -71,7 +68,6 @@ void GameStateMainMenu::release(void)
 	// GUI
 	ShGUIControl::RemoveFromParent(m_pControlMainMenuContent1);
 	ShGUIControl::RemoveFromParent(m_pControlMainMenu);
-	ShGUIControl::RemoveFromParent(m_pControlBackground);
 }
 
 /**
@@ -98,7 +94,6 @@ void GameStateMainMenu::obscuring(void)
 
 	//
 	// GUI
-	ShGUIControl::Hide(m_pControlBackground, true);
 	ShGUIControl::Hide(m_pControlMainMenu, true);
 	ShGUIControl::Hide(m_pControlMainMenuContent1, true);
 }
@@ -114,7 +109,6 @@ void GameStateMainMenu::revealed(void)
 	// GUI
 	ShGUIControl::Show(m_pControlMainMenuContent1, true);
 	ShGUIControl::Show(m_pControlMainMenu, true);
-	ShGUIControl::Show(m_pControlBackground, true);
 }
 
 /**

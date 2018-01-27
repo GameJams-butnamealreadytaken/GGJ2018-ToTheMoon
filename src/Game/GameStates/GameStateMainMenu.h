@@ -46,7 +46,6 @@ private:
 
 	EState				m_eCurrentState;
 	
-	ShGUIControl *		m_pControlBackground;
 	ShGUIControl *		m_pControlMainMenu;
 	ShGUIControl *		m_pControlMainMenuContent1;
 
