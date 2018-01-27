@@ -1,4 +1,4 @@
-#include "Transmiter.h"
+#include "Transmitter.h"
 
 #define RADIUS 100.0f
 #define LIFE 10
@@ -6,7 +6,7 @@
 /**
  * @brief Constructor
  */
-Transmiter::Transmiter(ShEntity2 * pEntity, const CShVector2 & vPosition)
+Transmitter::Transmitter(ShEntity2 * pEntity, const CShVector2 & vPosition)
 : GameObject(pEntity, vPosition)
 , m_fRadius(RADIUS)
 , m_pTransmitter(shNULL)
@@ -17,7 +17,7 @@ Transmiter::Transmiter(ShEntity2 * pEntity, const CShVector2 & vPosition)
 /**
  * @brief Destructor
  */
-Transmiter::~Transmiter(void)
+Transmitter::~Transmitter(void)
 {
 	// ...
 }
@@ -25,7 +25,7 @@ Transmiter::~Transmiter(void)
 /**
 * @brief Initialize
 */
-void Transmiter::Initialize(Network::World & world)
+void Transmitter::Initialize(Network::World & world)
 {
 	m_pTransmitter = world.createTransmitter();
 	SetShow(true);
@@ -34,7 +34,7 @@ void Transmiter::Initialize(Network::World & world)
 /**
 * @brief Release
 */
-void Transmiter::Release(void)
+void Transmitter::Release(void)
 {
 	m_pTransmitter = shNULL;
 }
@@ -42,7 +42,7 @@ void Transmiter::Release(void)
 /**
 * @brief Start
 */
-void Transmiter::Start(const CShVector2 & vPosition)
+void Transmitter::Start(const CShVector2 & vPosition)
 {
 	SetPosition2(vPosition);
 	SetState((int)APPEAR);
@@ -52,7 +52,7 @@ void Transmiter::Start(const CShVector2 & vPosition)
 /**
 * @brief Update
 */
-void Transmiter::Update(float dt)
+void Transmitter::Update(float dt)
 {
 	GameObject::Update(dt);
 
@@ -101,7 +101,7 @@ void Transmiter::Update(float dt)
 /**
 * @brief OnHit
 */
-/*virtual*/ void Transmiter::OnHit(GameObject* pObject)
+/*virtual*/ void Transmitter::OnHit(GameObject* pObject)
 {
 	m_iLife -= 1; // TODO
 
