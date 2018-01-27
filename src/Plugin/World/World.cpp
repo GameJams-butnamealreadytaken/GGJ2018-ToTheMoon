@@ -105,11 +105,11 @@ void World::Update(float dt)
 		m_pShip->Update(dt);
 
 		ShCamera* pCamera = ShCamera::GetCamera2D();
-		ShCamera::SetPosition2(pCamera, m_pShip->GetPosition2());
-		ShCamera::SetTarget(pCamera, CShVector3(m_pShip->GetPosition2(), 0.0f));
+		CShVector2 shipPos = m_pShip->GetShipPosition();
+		ShCamera::SetPosition2(pCamera, shipPos);
+		ShCamera::SetTarget(pCamera, CShVector3(shipPos, 0.0f));
 	}
 }
-
 
 /**
 * @brief World::OnTouchDown
