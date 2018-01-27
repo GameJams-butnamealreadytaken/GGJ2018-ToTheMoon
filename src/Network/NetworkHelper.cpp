@@ -13,6 +13,7 @@
 #	include <arpa/inet.h>
 #	include <netdb.h>
 #	include <unistd.h>
+#	include <uuid/uuid.h>
 #endif // WIN32
 
 #include <assert.h>
@@ -25,6 +26,9 @@
 #define BRD_HELO_PORT	(PORT)
 
 static_assert(sizeof(uuid_t) == 16, "Size of 'uuid_t' must be 16");
+
+namespace Network
+{
 
 /**
  * @brief Constructor
@@ -60,12 +64,12 @@ bool NetworkHelper::InitSocket(void)
 		return(false);
 	}
 
-	struct sockaddr_in si;
+	sockaddr_in si;
 	si.sin_family = AF_INET;
 	si.sin_port = htons(PORT);
 	si.sin_addr.s_addr = htonl(INADDR_ANY);
 
-	if (bind(m_sock, (struct sockaddr*)&si, sizeof(si)) <0)
+	if (bind(m_sock, (sockaddr*)&si, sizeof(si)) <0)
 	{
 		CloseSocket();
 		return(false);
@@ -108,7 +112,7 @@ void NetworkHelper::CloseSocket(void)
  */
 bool NetworkHelper::BroadcastMessage(void * msg, unsigned int size)
 {
-	struct sockaddr_in addr;
+	sockaddr_in addr;
 	addr.sin_family = AF_INET;
 	addr.sin_port = htons(BRD_HELO_PORT);
 	addr.sin_addr.s_addr = inet_addr(BRD_HELO_ADDR);
@@ -133,9 +137,9 @@ bool NetworkHelper::SendMessageToAllClients(void * msg, unsigned int size)
 	for (int i = 0; i < m_iClientCount; ++i)
 	{
 #if WIN32
-		/*SSIZE_T size =*/ sendto(m_sock, (const char*)msg, size, 0, (sockaddr*)m_pClients+i, sizeof(struct sockaddr_in));
+		/*SSIZE_T size =*/ sendto(m_sock, (const char*)msg, size, 0, (sockaddr*)m_pClients+i, sizeof(sockaddr_in));
 #else // WIN32
-		/*ssize_t size =*/ sendto(m_sock, (void*)msg, size, 0, (sockaddr*)m_pClients+i, sizeof(struct sockaddr_in));
+		/*ssize_t size =*/ sendto(m_sock, (void*)msg, size, 0, (sockaddr*)m_pClients+i, sizeof(sockaddr_in));
 #endif // WIN32
 	}
 
@@ -150,7 +154,7 @@ bool NetworkHelper::SendMessageToAllClients(void * msg, unsigned int size)
  */
 bool NetworkHelper::SendMessageToMachine(void * msg, unsigned int size, char * machine)
 {
-	struct sockaddr_in addr;
+	sockaddr_in addr;
 	addr.sin_family = AF_INET;
 	addr.sin_port = htons(PORT);
 	addr.sin_addr.s_addr = inet_addr(machine);
@@ -185,14 +189,14 @@ bool NetworkHelper::Receive(char * buffer, unsigned int & size, char * machine, 
 		memset(&sender, 0, sizeof(sender));
 
 #if WIN32
-		size = recvfrom(m_sock, buffer, size, 0, (struct sockaddr*)&sender, &sendsize);
+		size = recvfrom(m_sock, buffer, size, 0, (sockaddr*)&sender, &sendsize);
 #else // WIN32
-		size = recvfrom(m_sock, buffer, size, 0, (struct sockaddr*)&sender, &sendsize);
+		size = recvfrom(m_sock, buffer, size, 0, (sockaddr*)&sender, &sendsize);
 #endif // WIN32
 
 		if (machine && service)
 		{
-			int res = getnameinfo((struct sockaddr*)&sender, sendsize, machine, NI_MAXHOST, service, NI_MAXSERV, NI_NUMERICHOST|NI_NUMERICSERV);
+			int res = getnameinfo((sockaddr*)&sender, sendsize, machine, NI_MAXHOST, service, NI_MAXSERV, NI_NUMERICHOST|NI_NUMERICSERV);
 			assert(res == 0);
 		}
 
@@ -212,9 +216,9 @@ void NetworkHelper::RegisterClient(char * machine)
 
 	m_iClientCount++;
 
-	m_pClients = (struct sockaddr_in *)realloc(m_pClients, sizeof(struct sockaddr_in) * m_iClientCount);
+	m_pClients = (sockaddr_in *)realloc(m_pClients, sizeof(sockaddr_in) * m_iClientCount);
 
-	struct sockaddr_in & addr = m_pClients[index];
+	sockaddr_in & addr = m_pClients[index];
 	addr.sin_family = AF_INET;
 	addr.sin_port = htons(PORT);
 	addr.sin_addr.s_addr = inet_addr(machine);
@@ -323,6 +327,7 @@ void NetworkHelper::RegisterClient(char * machine)
 
 	return(strcmp(szBroadcast, "") > 0);
 #else // WIN32
+#if 0
 	int sock = socket(AF_INET, SOCK_DGRAM, 0);
 
 	
@@ -374,5 +379,9 @@ void NetworkHelper::RegisterClient(char * machine)
 	close(sock);
 
 	return(true);
+#endif
+	return(false);
 #endif // WIN32
+}
+
 }

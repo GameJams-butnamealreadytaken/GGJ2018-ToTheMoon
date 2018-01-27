@@ -1,5 +1,7 @@
 #include "Ship.h"
 
+#include "NetworkHelper.h"
+
 #include <string.h> // memcpy
 
 namespace Network
@@ -8,9 +10,13 @@ namespace Network
 /**
  * @brief Default constructor
  */
-Ship::Ship(void) : m_position(0.0f, 0.0f), m_target(0.0f, 0.0f), m_speed(0.0f)
+Ship::Ship(void) : m_position(0.0f, 0.0f), m_target(0.0f, 0.0f), m_speed(0.0f), m_bNeedSync(false)
 {
+#if __gnu_linux__
+	uuid_clear(m_uuid);
+#else
 	memset(&m_uuid, 0, sizeof(uuid_t));
+#endif // __gnu_linux__
 }
 
 /**
@@ -19,7 +25,7 @@ Ship::Ship(void) : m_position(0.0f, 0.0f), m_target(0.0f, 0.0f), m_speed(0.0f)
  * @param x
  * @param y
  */
-Ship::Ship(const uuid_t & id, float x, float y) : m_position(x, y), m_target(x, y), m_speed(0.0f)
+Ship::Ship(const uuid_t & id, float x, float y) : m_position(x, y), m_target(x, y), m_speed(0.0f), m_bNeedSync(false)
 {
 #if __gnu_linux__
 	uuid_copy(m_uuid, id);
@@ -40,7 +46,7 @@ Ship::~Ship(void)
  * @brief update
  * @param delta time in seconds
  */
-void Ship::update(float dt)
+void Ship::update(float dt, NetworkHelper & network)
 {
 	vec2 direction;
 	direction.x = m_target.x - m_position.x;
@@ -48,6 +54,23 @@ void Ship::update(float dt)
 
 	m_position.x += direction.x * m_speed * dt;
 	m_position.y += direction.y * m_speed * dt;
+
+	if (m_bNeedSync)
+	{
+		SyncShipStateMessage message;
+#if __gnu_linux__
+		uuid_copy(message.shipId, m_uuid);
+#else
+		memcpy(&message.shipId, (void*)&m_uuid, sizeof(uuid_t));
+#endif // __gnu_linux__
+		message.position = m_position;
+		message.target = m_target;
+		message.speed = m_speed;
+
+		network.SendMessageToAllClients(message);
+
+		m_bNeedSync = false;
+	}
 }
 
 /**
