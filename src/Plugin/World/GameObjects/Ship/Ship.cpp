@@ -5,8 +5,6 @@
  */
 Ship::Ship(ShEntity2 * pEntity, const CShVector2 & vPosition)
 	: GameObject(pEntity, vPosition)
-	, m_target()
-	, m_fSpeed(5.0f)
 {
 	SetState((int)IDLE);
 }
@@ -22,9 +20,10 @@ Ship::~Ship(void)
 /**
 * @brief Initialize
 */
-void Ship::Initialize(EShipType type)
+void Ship::Initialize(EShipType type, Network::Ship * pNetworkShipIN)
 {
 	m_type = type;
+	pNetworkShip = pNetworkShipIN;
 }
 
 /**
@@ -49,8 +48,8 @@ void Ship::Update(float dt)
 
 	case TRAVEL:
 		{
-			AdjustDirectionToTarget();
-			ShEntity2::Translate(m_pEntity, CShVector3(m_orientation, ShEntity2::GetWorldPositionZ(m_pEntity)));
+			// check if is on target
+			// setSpeed à 0 & setState à Idle si pos, FIGHT sinon
 		}
 		break;
 
@@ -70,28 +69,12 @@ Ship::EShipType Ship::GetType(void)
 	return(m_type);
 }
 
-void Ship::SetTarget(const CShVector2 & newTarget)
+/**
+* @brief SetTarget
+*/
+void Ship::SetTarget(const CShVector2 & newTarget, float fSpeed)
 {
-	m_target = newTarget;
+	pNetworkShip->setTarget(newTarget.m_x, newTarget.m_y);
+	pNetworkShip->setSpeed(fSpeed);
 	SetState((int)TRAVEL);
-}
-
-void Ship::AdjustDirectionToTarget(void)
-{
-	// rotation sprite
-	CShVector2 curentPos = ShEntity2::GetWorldPosition2(m_pEntity);
-	float direction = atan2(m_target.m_x - curentPos.m_x, m_target.m_y - curentPos.m_y) * 180 / SHC_PI;
-	bool needPI = false;
-	float orientation = (-direction + 90)*SHC_DEG2RAD;
-
-	ShEntity2::SetWorldRotation(m_pEntity, 0.0f, 0.0f, orientation);
-
-	float u_x = m_target.m_x - curentPos.m_x, u_y = m_target.m_y - curentPos.m_y;
-
-	float u = sqrt((u_x*u_x) + (u_y*u_y));
-	float v_x = (1 / u) * u_x;
-	float v_y = (1 / u) * u_y;
-
-	m_orientation.m_x = v_x;
-	m_orientation.m_y = v_y;
 }
