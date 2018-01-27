@@ -5,6 +5,8 @@
 
 #include "../GameObject.h"
 
+#include "../../../../Network/World.h"
+
 class Ship : public GameObject
 {
 public:
@@ -32,17 +34,12 @@ public:
 
 	EShipType			GetType					(void);
 
-	void				SetTarget				(const CShVector2 & newTarget);
-
-private:
-	void				AdjustDirectionToTarget	(void);
+	void				SetTarget				(const CShVector2 & newTarget, float fSpeed);
 
 private:
 
 	EShipType	m_type;
 
-	CShVector2	m_target;
-	CShVector2	m_orientation;
+	Network::Ship * pNetworkShip;
 
-	float		m_fSpeed;
 };
