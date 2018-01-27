@@ -35,7 +35,7 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 	m_levelIdentifier = levelIdentifier;
 
 	m_world.init();
-
+	m_world.setListener(this);
 	m_explosionManager.Initialize(levelIdentifier);
 	m_projectileManager.Initialize(levelIdentifier);
 
