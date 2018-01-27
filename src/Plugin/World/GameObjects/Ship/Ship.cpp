@@ -21,10 +21,10 @@ Ship::~Ship(void)
 /**
 * @brief Initialize
 */
-void Ship::Initialize(EShipType type, Network::World & world)
+void Ship::Initialize(EShipType type, Network::Ship * pNetworkShip)
 {
 	m_type = type;
-	m_pNetworkShip = world.createShip();
+	m_pNetworkShip = pNetworkShip;
 	m_pNetworkShip->setSpeed(0.0f);
 	SetShow(true);
 }
