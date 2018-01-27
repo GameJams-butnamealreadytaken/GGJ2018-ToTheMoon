@@ -24,20 +24,23 @@ public:
 		FIGHT,
 	};
 
-						Ship					(ShEntity2 * pEntity, const CShVector2 & vPosition);
-	virtual				~Ship					(void);
+								Ship					(ShEntity2 * pEntity, const CShVector2 & vPosition);
+	virtual						~Ship					(void);
 
-	void				Initialize				(EShipType type, Network::World world);
-	void				Release					(void);
+	void						Initialize				(EShipType type, Network::World world);
+	void						Release					(void);
 
-	virtual void		Update					(float dt) SH_ATTRIBUTE_OVERRIDE;
+	virtual void				Update					(float dt) SH_ATTRIBUTE_OVERRIDE;
 
-	EShipType			GetType					(void);
+	virtual void				OnHit					(GameObject* pObject);
+	virtual GameObject::EType	GetType					(void) { return(e_type_ship); }
 
-	void				SetTarget				(float x, float y, float fSpeed);
+	void						SetTarget				(float x, float y, float fSpeed);
+
+	EShipType					GetShipType				(void);
 
 private:
-	void				UpdateSprite			(void);
+	void						UpdateSprite			(void);
 
 private:
 

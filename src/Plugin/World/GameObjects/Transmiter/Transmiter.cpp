@@ -1,6 +1,7 @@
 #include "Transmiter.h"
 
 #define RADIUS 100.0f
+#define LIFE 10
 
 /**
  * @brief Constructor
@@ -68,6 +69,12 @@ void Transmiter::Update(float dt)
 		}
 		break;
 
+		case HIT:
+		{
+			SetState((int)IDLE);
+		}
+		break;
+
 		case IDLE:
 		{
 
@@ -86,5 +93,22 @@ void Transmiter::Update(float dt)
 			}
 		}
 		break;
+	}
+}
+
+/**
+* @brief OnHit
+*/
+/*virtual*/ void Transmiter::OnHit(GameObject* pObject)
+{
+	m_iLife -= 1; // TODO
+
+	if (m_iLife <= 0)
+	{
+		SetState(DESTROYED);
+	}
+	else
+	{
+		SetState((int)HIT);
 	}
 }
