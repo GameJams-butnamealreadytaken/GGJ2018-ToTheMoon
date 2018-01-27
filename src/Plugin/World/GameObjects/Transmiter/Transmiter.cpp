@@ -7,10 +7,9 @@
  */
 Transmiter::Transmiter(ShEntity2 * pEntity, const CShVector2 & vPosition)
 : GameObject(pEntity, vPosition)
-, m_eState(IDLE)
 , m_fRadius(RADIUS)
 {
-	// ...
+	SetState((int)OFF);
 }
 
 /**
@@ -55,7 +54,14 @@ void Transmiter::Update(float dt)
 	{
 		case APPEAR:
 		{
-
+			if (m_fStateTime < 1.0f)
+			{
+				ShEntity2::SetAlpha(m_pEntity, m_fStateTime);
+			}
+			else
+			{
+				SetState((int)IDLE);
+			}
 		}
 		break;
 
@@ -67,7 +73,14 @@ void Transmiter::Update(float dt)
 
 		case DESTROYED:
 		{
-
+			if (m_fStateTime < 1.0f)
+			{
+				ShEntity2::SetAlpha(m_pEntity, 1.0f - m_fStateTime);
+			}
+			else
+			{
+				SetState((int)OFF);
+			}
 		}
 		break;
 	}
