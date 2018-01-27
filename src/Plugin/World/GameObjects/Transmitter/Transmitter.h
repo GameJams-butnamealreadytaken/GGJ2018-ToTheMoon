@@ -24,7 +24,7 @@ public:
 	explicit			Transmitter			(ShEntity2 * pEntity, const CShVector2 & vPosition);
 	virtual				~Transmitter		(void);
 
-	void				Initialize			(const Network::Transmitter * pNetworkTransmitter);
+	void				Initialize			(const Network::Transmitter * pNetworkTransmitter, int id);
 	void				Release				(void);
 
 	void				Start				(const CShVector2 & vPosition);
@@ -37,10 +37,17 @@ public:
 	void				AddNeighbour		(Transmitter * pTrans);
 	void				RemoveNeighbour		(Transmitter * pTrans);
 
+	int					GetNeighbourCount	(void);
+	Transmitter *		GetNeighbour		(int id);
+
+	int					GetId				(void);
+
 private:
 
 	AnimatedSpriteManager	m_animationManagerDeploy;
 	AnimatedSpriteManager	m_animationManagerIdle;
+
+	int						m_id;
 
 	float					m_fRadius;
 	int						m_iLife;
