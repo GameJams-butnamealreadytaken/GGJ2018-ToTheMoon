@@ -234,13 +234,14 @@ void World::CreateShip(float x, float y, const Network::Ship * pNetworkShip /*= 
 {
 	ShEntity2* pEntity = ShEntity2::Create(m_levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("image_white"), CShVector3(x, y, 2.0f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(10.0f, 10.0f, 1.0f));
 	SH_ASSERT(shNULL != pEntity);
-	m_pShip = new Ship(pEntity, CShVector2(x, y));
+	Ship * pShip = new Ship(pEntity, CShVector2(x, y));
 	if (shNULL == pNetworkShip)
 	{
 		pNetworkShip = m_world.createShip(x, y);
+		m_pShip = pShip;
 	}
-	m_pShip->Initialize(Ship::BASE, pNetworkShip);
-	m_apShip.Add(m_pShip);
+	pShip->Initialize(Ship::BASE, pNetworkShip);
+	m_apShip.Add(pShip);
 }
 
 /**
