@@ -6,9 +6,12 @@
 #include <net/if.h>
 #include <arpa/inet.h>
 #include <netdb.h>
+#include <unistd.h>
 #endif // __gnu_linux__
 
 #include <string.h> // memset
+
+#define BRD_HELO_PORT (8123)
 
 namespace Network
 {
@@ -27,6 +30,54 @@ World::World(float size_x, float size_y) : m_ShipCount(0), m_halfSize(size_x, si
 World::~World(void)
 {
 	// ...
+}
+
+/**
+ * @brief Initialize
+ * @return
+ */
+bool World::init(void)
+{
+	int sock = socket(AF_INET, SOCK_DGRAM, 0);
+
+	if (sock == -1)
+	{
+		return(false);
+	}
+
+	bool enable = true;
+	if (setsockopt(sock, SOL_SOCKET, SO_BROADCAST, (char*)&enable, sizeof(bool)) < 0)
+	{
+		close(sock);
+		return(false);
+	}
+
+	struct sockaddr_in addr;
+	addr.sin_family = AF_INET;
+	addr.sin_port = htons(BRD_HELO_PORT);
+	addr.sin_addr.s_addr = inet_addr("192.168.1.255");
+
+	unsigned int MSG [1024];
+
+	ssize_t size = sendto(sock, MSG, sizeof(MSG), 0, (sockaddr *)&addr, sizeof(addr));
+
+	if (size < 0)
+	{
+		close(sock);
+		return(false);
+	}
+
+	close(sock);
+
+	return(true);
+}
+
+/**
+ * @brief Release
+ */
+void World::release()
+{
+
 }
 
 /**

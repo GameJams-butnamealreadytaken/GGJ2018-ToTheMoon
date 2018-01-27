@@ -17,6 +17,11 @@ public:
 	~World(void);
 
 	//
+	// Initialize
+	bool init();
+	void release();
+
+	//
 	// Update
 	void update(float dt);
 
