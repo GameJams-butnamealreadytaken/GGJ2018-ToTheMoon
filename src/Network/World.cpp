@@ -35,9 +35,10 @@ namespace Network
  * @brief Constructor
  */
 World::World(float size_x, float size_y) 
-	: m_ShipCount(0)
-	, m_halfSize(size_x, size_y)
-	, m_TransmitterCount(0)
+: m_ShipCount(0)
+, m_halfSize(size_x, size_y)
+, m_TransmitterCount(0)
+, m_pListener(nullptr)
 {
 	memset(m_aShips, 0, sizeof(m_aShips));
 
