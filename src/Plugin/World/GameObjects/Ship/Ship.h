@@ -27,7 +27,7 @@ public:
 								Ship					(ShEntity2 * pEntity, const CShVector2 & vPosition);
 	virtual						~Ship					(void);
 
-	void						Initialize				(EShipType type, Network::Ship * pNetworkShip);
+	void						Initialize				(const EShipType type, const Network::Ship * pNetworkShip);
 	void						Release					(void);
 
 	virtual void				Update					(float dt) SH_ATTRIBUTE_OVERRIDE;

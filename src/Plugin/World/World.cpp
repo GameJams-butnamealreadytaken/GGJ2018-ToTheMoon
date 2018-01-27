@@ -212,41 +212,49 @@ void World::OnTouchMove(int iTouch, float positionX, float positionY)
 /**
 * @brief World::onShipCreated
 */
-/*virtual*/ void World::onShipCreated(const Network::Ship * ship)
+/*virtual*/ void World::onShipCreated(const Network::Ship * pShip)
 {
-	CreateShip(0.0f, 0.0f);
+	Network::vec2 pos = pShip->getPosition();
+	CreateShip(pos.x, pos.y, pShip);
 }
 
 /**
 * @brief World::onTransmitterCreate
 */
-/*virtual*/ void World::onTransmitterCreate(const Network::Transmitter * ship)
+/*virtual*/ void World::onTransmitterCreate(const Network::Transmitter * pTrans)
 {
-	CreateTransmitter(0.0f, 0.0f);
+	Network::vec2 pos = pTrans->getPosition();
+	CreateTransmitter(pos.x, pos.y, pTrans);
 }
 
 /**
 * @brief World::CreateShip
 */
-void World::CreateShip(float x, float y)
+void World::CreateShip(float x, float y, const Network::Ship * pNetworkShip /*= shNULL*/)
 {
 	ShEntity2* pEntity = ShEntity2::Create(m_levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("image_white"), CShVector3(x, y, 2.0f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(10.0f, 10.0f, 1.0f));
 	SH_ASSERT(shNULL != pEntity);
 	m_pShip = new Ship(pEntity, CShVector2(x, y));
-	Network::Ship * pShip = m_world.createShip(x, y);
-	m_pShip->Initialize(Ship::BASE, pShip);
+	if (shNULL == pNetworkShip)
+	{
+		pNetworkShip = m_world.createShip(x, y);
+	}
+	m_pShip->Initialize(Ship::BASE, pNetworkShip);
 	m_apShip.Add(m_pShip);
 }
 
 /**
 * @brief World::CreateTransmitter
 */
-void World::CreateTransmitter(float x, float y)
+void World::CreateTransmitter(float x, float y, const Network::Transmitter * pNetworkTrans /*= shNULL*/)
 {
 	ShEntity2* pEntity = ShEntity2::Create(m_levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("transmiter"), CShVector3(x, y, 2.01f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
 	SH_ASSERT(shNULL != pEntity);
 	Transmitter * pTrans = new Transmitter(pEntity, CShVector2(x, y));
-	Network::Transmitter * pNetworkTrans = m_world.createTransmitter(x, y);
+	if (shNULL == pNetworkTrans)
+	{
+		pNetworkTrans = m_world.createTransmitter(x, y);
+	}
 	pTrans->Initialize(pNetworkTrans);
 	m_apTransmitter.Add(pTrans);
 }

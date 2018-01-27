@@ -25,9 +25,9 @@ Transmitter::~Transmitter(void)
 /**
 * @brief Initialize
 */
-void Transmitter::Initialize(Network::Transmitter * pNetworkTransmitter)
+void Transmitter::Initialize(const Network::Transmitter * pNetworkTransmitter)
 {
-	m_pTransmitter = pNetworkTransmitter;
+	m_pTransmitter = const_cast<Network::Transmitter *>(pNetworkTransmitter);
 	SetShow(true);
 }
 
