@@ -11,8 +11,8 @@ public:
 
 	//
 	// Constructor / Destructor
-							PluginGGJ2018	(void);
-	virtual					~PluginGGJ2018	(void);
+							PluginGGJ2018		(void);
+	virtual					~PluginGGJ2018		(void);
 
 	//
 	// Play/Stop
@@ -32,7 +32,9 @@ public:
 
 private:
 
-	CShIdentifier m_levelIdentifier;
+	CShIdentifier	m_levelIdentifier;
 
-	World		  m_world;
+	World			m_world;
+
+	float			m_fTouchRatio;
 };

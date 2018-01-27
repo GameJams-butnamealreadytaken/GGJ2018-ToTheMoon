@@ -9,6 +9,7 @@ const CShIdentifier plugin_identifier("PluginGGJ2018");
  */
 PluginGGJ2018::PluginGGJ2018(void)
 : CShPlugin(plugin_identifier)
+, m_fTouchRatio(3.0f)
 {
 	// ...
 }
@@ -28,6 +29,12 @@ PluginGGJ2018::~PluginGGJ2018(void)
 void PluginGGJ2018::OnPlayStart(const CShIdentifier & levelIdentifier)
 {
 	m_levelIdentifier = levelIdentifier;
+
+	const CShVector2 & viewport = ShCamera::GetViewport(ShCamera::GetCamera2D());
+	float ratio_x = viewport.m_x / ShDisplay::GetWidth();
+	float ratio_y = viewport.m_y / ShDisplay::GetHeight();
+	
+	m_fTouchRatio = shMax(ratio_x, ratio_y, 2.0f);
 
 	g_soundManager.Initialize();
 	g_soundManager.PlayMusic(SoundManager::e_sound_music_game);
@@ -71,9 +78,8 @@ void PluginGGJ2018::OnPostUpdate(float dt)
  */
 void PluginGGJ2018::OnTouchDown(int iTouch, float positionX, float positionY)
 {
-	m_world.OnTouchDown(iTouch, positionX, positionY);
+	m_world.OnTouchDown(iTouch, positionX * m_fTouchRatio, positionY * m_fTouchRatio);
 }
-
 
 /**
  * @brief PluginGGJ2018::OnTouchUp
@@ -83,7 +89,7 @@ void PluginGGJ2018::OnTouchDown(int iTouch, float positionX, float positionY)
  */
 void PluginGGJ2018::OnTouchUp(int iTouch, float positionX, float positionY)
 {
-	m_world.OnTouchUp(iTouch, positionX, positionY);
+	m_world.OnTouchUp(iTouch, positionX * m_fTouchRatio, positionY * m_fTouchRatio);
 }
 
 /**
@@ -94,5 +100,5 @@ void PluginGGJ2018::OnTouchUp(int iTouch, float positionX, float positionY)
  */
 void PluginGGJ2018::OnTouchMove(int iTouch, float positionX, float positionY)
 {
-	m_world.OnTouchMove(iTouch, positionX, positionY);
+	m_world.OnTouchMove(iTouch, positionX * m_fTouchRatio, positionY * m_fTouchRatio);
 }
