@@ -17,5 +17,9 @@ set(SOURCES ${SOURCES_Network} ${SOURCES_World} ${SOURCES_Ship})
 
 add_library(Network STATIC ${SOURCES})
 
+if(CMAKE_SYSTEM_NAME MATCHES "Windows")
+	target_link_libraries(Network INTERFACE ws2_32.lib)
+endif(CMAKE_SYSTEM_NAME MATCHES "Windows")
+
 set_property(TARGET Network APPEND PROPERTY COMPILE_DEFINITIONS "${SHSDK_COMPILE_DEFINITIONS} -fno-exceptions -fno-rtti")
 set_property(TARGET Network APPEND PROPERTY COMPILE_FLAGS "${SHSDK_COMPILE_FLAGS} -fPIC")
