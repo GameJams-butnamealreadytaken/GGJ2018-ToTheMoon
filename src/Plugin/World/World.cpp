@@ -188,7 +188,7 @@ void World::OnTouchDown(int iTouch, float positionX, float positionY)
 
 
 #if TEST
-	m_explosionManager.Start(CShVector2(worldPosition.m_x, worldPosition.m_y));
+	//m_explosionManager.Start(CShVector2(worldPosition.m_x, worldPosition.m_y));
 	CreateTransmitter(worldPosition.m_x, worldPosition.m_y);
 #endif //TEST
 }

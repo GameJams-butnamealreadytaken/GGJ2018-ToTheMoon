@@ -1,5 +1,7 @@
 #include "Transmitter.h"
 
+extern bool g_bDisableAnimations;
+
 #define RADIUS 100.0f
 #define LIFE 10
 
@@ -11,7 +13,11 @@ Transmitter::Transmitter(ShEntity2 * pEntity, const CShVector2 & vPosition)
 , m_fRadius(RADIUS)
 , m_pTransmitter(shNULL)
 {
-	m_animationManagerDeploy = AnimatedSpriteManager(pEntity, CShString("ggj"), CShString("transmitter"), CShVector2(0.0f, 0.0f), 0.03f, 75, false, true);
+	if (!g_bDisableAnimations)
+	{
+		m_animationManagerDeploy = AnimatedSpriteManager(pEntity, CShString("ggj"), CShString("transmitter"), CShVector2(0.0f, 0.0f), 0.03f, 75, false, true);
+	}
+
 	SetState((int)OFF);
 }
 
@@ -64,11 +70,18 @@ void Transmitter::Update(float dt)
 	{
 		case APPEAR:
 		{
-			if (!m_animationManagerDeploy.IsPlaying())
+			if (g_bDisableAnimations)
 			{
+
 				SetState((int)IDLE);
 			}
-			
+			else
+			{
+				if (!m_animationManagerDeploy.IsPlaying())
+				{
+					SetState((int)IDLE);
+				}
+			}
 		}
 		break;
 
