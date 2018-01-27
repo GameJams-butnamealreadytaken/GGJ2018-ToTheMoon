@@ -89,7 +89,11 @@ void World::handleHelloMessage(HelloMessage * msg, char * machine, char * servic
 		if (m_aOwnedShips[i])
 		{
 			SyncShipStateMessage response;
+#if __gnu_linux__
 			uuid_copy(response.shipId, m_aOwnedShips[i]->m_uuid);
+#else
+			memcpy(&response.shipId, (void*)&m_aOwnedShips[i]->m_uuid, sizeof(uuid_t));
+#endif // __gnu_linux__
 			response.position = vec2(0.0f, 0.0f);
 			response.target = vec2(0.0f, 0.0f);
 			response.speed = 0.0f;
@@ -112,7 +116,12 @@ void World::handleSyncShipStateMessage(SyncShipStateMessage * msg, char * machin
 
 	for (int i = 0; i < MAX_SHIPS; ++i)
 	{
+#if WIN32
+		RPC_STATUS status;
+		if(UuidCompare(&msg->shipId, &m_aShips[i].m_uuid, &status) == 0)
+#else // WIN32
 		if (uuid_compare(msg->shipId, m_aShips[i].m_uuid))
+#endif // WIN32
 		{
 			ship = m_aShips+i;
 			break;
