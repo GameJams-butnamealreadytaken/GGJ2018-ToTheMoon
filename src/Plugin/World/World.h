@@ -7,9 +7,12 @@
 
 #include "GameObjects/Explosion/ExplosionManager.h"
 #include "GameObjects/Projectile/ProjectileManager.h"
-#include "GameObjects/Transmitter/Transmitter.h"
-#include "GameObjects/Ship/Ship.h"
-#include "GameObjects/Planet/Planet.h"
+
+class ProjectileManager;
+class Planet;
+class Ship;
+class Transmitter;
+class Team;
 
 class World : public Network::WorldListener
 {
@@ -50,4 +53,5 @@ private:
 	CShArray<Ship *>				m_apShip;
 	Ship *							m_pShip;
 
+	CShArray<Team *>				m_aTeam;
 };
