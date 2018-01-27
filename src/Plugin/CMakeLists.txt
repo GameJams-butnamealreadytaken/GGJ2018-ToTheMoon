@@ -31,6 +31,10 @@ source_group("World" FILES ${SOURCES_World})
 set(SOURCES_GameObject World/GameObjects/GameObject.cpp World/GameObjects/GameObject.h)
 source_group("World\\GameObject" FILES ${SOURCES_GameObject})
 
+# Projectile files
+set(SOURCES_Projectile World/GameObjects/Projectile/Projectile.cpp World/GameObjects/Projectile/Projectile.h)
+source_group("World\\GameObject\\Projectile" FILES ${SOURCES_Projectile})
+
 # Ship files
 set(SOURCES_Ship World/GameObjects/Ship/Ship.cpp World/GameObjects/Ship/Ship.h)
 source_group("World\\GameObject\\Ship" FILES ${SOURCES_Ship})
@@ -46,6 +50,7 @@ ${SOURCES_Factory}
 ${SOURCES_SoundManager}
 ${SOURCES_World}
 ${SOURCES_GameObject}
+${SOURCES_Projectile}
 ${SOURCES_Ship}
 ${SOURCES_Transmiter}
 )
