@@ -87,7 +87,7 @@ void Ship::clampPosition(const vec2 & halfSize)
 	}
 	else if (m_position.x < -halfSize.x)
 	{
-		m_position.x = halfSize.x;
+		m_position.x = -halfSize.x;
 	}
 
 	//
@@ -98,7 +98,7 @@ void Ship::clampPosition(const vec2 & halfSize)
 	}
 	else if (m_position.y < -halfSize.y)
 	{
-		m_position.y = halfSize.y;
+		m_position.y = -halfSize.y;
 	}
 }
 
