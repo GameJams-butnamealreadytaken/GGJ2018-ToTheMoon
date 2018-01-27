@@ -37,6 +37,9 @@ public:
 	void				SetTarget				(const CShVector2 & newTarget, float fSpeed);
 
 private:
+	void				UpdateSprite			(void);
+
+private:
 
 	EShipType	m_type;
 
