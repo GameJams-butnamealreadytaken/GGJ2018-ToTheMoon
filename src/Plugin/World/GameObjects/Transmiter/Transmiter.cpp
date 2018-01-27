@@ -51,7 +51,9 @@ void Transmiter::Start(const CShVector2 & vPosition)
 */
 void Transmiter::Update(float dt)
 {
-	switch (m_eState)
+	GameObject::Update(dt);
+
+	switch (m_iState)
 	{
 		case APPEAR:
 		{

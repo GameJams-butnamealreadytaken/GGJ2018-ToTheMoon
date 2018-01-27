@@ -29,6 +29,5 @@ public:
 
 private:
 
-	ETransmiterState	m_eState;
 	float				m_fRadius;
 };
