@@ -10,13 +10,6 @@ extern bool g_bDisableAnimations;
 , m_fStateTime(0.0f)
 , m_pEntity(pEntity)
 , m_vPosition(vPosition)
-, m_bAnimated(false)
-, m_aSprite()
-, m_iCurrentAnimationSprite(0.0f)
-, m_fAnimationInterFrameTime(0.0f)
-, m_fAnimationTime(0.0f)
-, m_bPlayAnimationOnlyOnce(false)
-, m_bAnimationEnded(false)
 {
 	ShEntity2::SetShow(pEntity, false);
 }
@@ -46,61 +39,11 @@ void GameObject::Release(void)
 }
 
 /**
-* @brief GameObject::Animate
-*/
-void GameObject::Animate(int iSpriteCount, char* szSpriteLibrary, char* szSpriteName, float fAnimationInterFrameTime, bool bPlayOnce /* = false */)
-{
-	if (!g_bDisableAnimations)
-	{
-		m_bAnimated = true;
-		m_fAnimationInterFrameTime = fAnimationInterFrameTime;
-		m_bAnimationEnded = false;
-		m_bPlayAnimationOnlyOnce = bPlayOnce;
-
-		for (int iFrame = 0; iFrame < iSpriteCount; ++iFrame)
-		{
-			char szEntityName[1024];
-			sprintf(szEntityName, "%s_%02d", szSpriteName, iFrame + 1);
-			ShSprite* pSprite = ShSprite::Find(CShIdentifier(szSpriteLibrary), CShIdentifier(szEntityName));
-			m_aSprite.Add(pSprite);
-		}
-	}
-}
-
-/**
 * @brief GameObject::Update
 */
 void GameObject::Update(float dt)
 {
 	m_fStateTime += dt;
-
-	shClamp(dt, 0.0f, 0.05f);
-
-	if (!g_bDisableAnimations)
-	{
-		if (m_bAnimated && !m_bAnimationEnded)
-		{
-			m_fAnimationTime += dt;
-
-			if (m_fAnimationTime > m_fAnimationInterFrameTime)
-			{
-				m_iCurrentAnimationSprite++;
-
-				if (m_iCurrentAnimationSprite == m_aSprite.GetCount())
-				{
-					if (m_bPlayAnimationOnlyOnce)
-					{
-						m_bAnimationEnded = true;
-					}
-
-					m_iCurrentAnimationSprite = 0;
-				}
-
-				ShEntity2::SetSprite(m_pEntity, m_aSprite[m_iCurrentAnimationSprite]);
-				m_fAnimationTime = m_fAnimationTime - m_fAnimationInterFrameTime;
-			}
-		}
-	}
 }
 
 /**

@@ -22,7 +22,6 @@ public:
 	virtual void	Initialize			(void);
 	virtual void	Release				(void);
 
-	virtual void	Animate				(int iSpriteCount, char * szSpriteLibrary, char * szSpriteName, float fAnimationInterFrameTime, bool bPlayOnce = false);
 	virtual void	Update				(float dt);
 
 	virtual void	OnHit				(GameObject* pObject) = 0;
@@ -44,14 +43,6 @@ protected:
 	ShEntity2 *				m_pEntity;
 	CShVector2				m_vPosition;
 
-	CShArray<ShSprite*>		m_aSprite;
-
-	bool					m_bAnimationEnded;
-
 private:
-	bool					m_bAnimated;
-	int						m_iCurrentAnimationSprite;
-	float					m_fAnimationInterFrameTime;
-	float					m_fAnimationTime;
-	bool					m_bPlayAnimationOnlyOnce;
+
 };
