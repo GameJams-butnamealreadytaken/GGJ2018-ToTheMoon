@@ -16,6 +16,7 @@ Transmitter::Transmitter(ShEntity2 * pEntity, const CShVector2 & vPosition)
 	if (!g_bDisableAnimations)
 	{
 		m_animationManagerDeploy = AnimatedSpriteManager(pEntity, CShString("ggj"), CShString("transmitter"), CShVector2(0.0f, 0.0f), 0.03f, 75, false, true);
+		m_animationManagerIdle = AnimatedSpriteManager(pEntity, CShString("ggj"), CShString("transmitter_idle_red"), CShVector2(0.0f, 0.0f), 0.03f, 75, false, false);
 	}
 
 	SetState((int)OFF);
@@ -75,13 +76,13 @@ void Transmitter::Update(float dt)
 		{
 			if (g_bDisableAnimations)
 			{
-
 				SetState((int)IDLE);
 			}
 			else
 			{
 				if (!m_animationManagerDeploy.IsPlaying())
 				{
+					m_animationManagerIdle.Play();
 					SetState((int)IDLE);
 				}
 			}
@@ -96,7 +97,10 @@ void Transmitter::Update(float dt)
 
 		case IDLE:
 		{
-
+			if (!g_bDisableAnimations)
+			{
+				m_animationManagerIdle.Update(dt);
+			}
 		}
 		break;
 
