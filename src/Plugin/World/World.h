@@ -30,8 +30,8 @@ public:
 	void		OnTouchUp			(int iTouch, float positionX, float positionY);
 	void		OnTouchMove			(int iTouch, float positionX, float positionY);
 	
-	virtual void onShipCreated		(const Ship * ship);
-	virtual void onTransmitterCreate(const Transmitter * ship);
+	virtual void onShipCreated		(const Network::Ship * ship);
+	virtual void onTransmitterCreate(const Network::Transmitter * ship);
 
 private:
 	void		CreateShip			(float x, float y);
