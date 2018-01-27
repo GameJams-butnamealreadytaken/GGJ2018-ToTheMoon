@@ -33,8 +33,9 @@ Transmitter::~Transmitter(void)
 /**
 * @brief Initialize
 */
-void Transmitter::Initialize(const Network::Transmitter * pNetworkTransmitter)
+void Transmitter::Initialize(const Network::Transmitter * pNetworkTransmitter, int id)
 {
+	m_id = id;
 	m_pTransmitter = const_cast<Network::Transmitter *>(pNetworkTransmitter);
 	SetShow(true);
 }
@@ -152,4 +153,20 @@ void Transmitter::RemoveNeighbour(Transmitter * pTrans)
 {
 	SH_ASSERT(shNULL != pTrans);
 	m_aNeighbour.RemoveAll(pTrans);
+}
+
+int Transmitter::GetNeighbourCount(void)
+{
+	return(m_aNeighbour.GetCount());
+}
+
+Transmitter * Transmitter::GetNeighbour(int id)
+{
+	SH_ASSERT(id < m_aNeighbour.GetCount());
+	return(m_aNeighbour[id]);
+}
+
+int Transmitter::GetId(void)
+{
+	return(m_id);
 }
