@@ -4,7 +4,7 @@
  * @brief Constructor
  */
 Bullet::Bullet(ShEntity2 * pEntity, const CShVector2 & vPosition)
-: GameObject(pEntity, vPosition)
+: Projectile(pEntity, vPosition)
 {
 
 }

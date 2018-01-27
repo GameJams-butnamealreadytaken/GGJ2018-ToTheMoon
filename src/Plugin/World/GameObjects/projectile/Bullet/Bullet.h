@@ -3,9 +3,9 @@
 #include "ShSDK/ShSDK.h"
 #include "ShEngineExt/ShEngineExt.h"
 
-#include "../../GameObject.h"
+#include "../../projectile/Projectile.h"
 
-class Bullet : public GameObject
+class Bullet : public Projectile
 {
 public:
 
@@ -21,6 +21,5 @@ public:
 	virtual GameObject::EType				GetType				(void) { return(GameObject::e_type_bullet);  }
 
 protected:
-	CShVector2								m_vSpeed;
-	CShVector2								m_vDestination;
+
 };
