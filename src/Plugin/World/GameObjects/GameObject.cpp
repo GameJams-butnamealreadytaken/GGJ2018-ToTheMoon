@@ -63,6 +63,8 @@ void GameObject::Animate(int iSpriteCount, char* szSpriteLibrary, char* szSprite
 */
 void GameObject::Update(float dt)
 {
+	m_fStateTime += dt;
+
 	if (m_bAnimated)
 	{
 		m_fAnimationTime += dt;
