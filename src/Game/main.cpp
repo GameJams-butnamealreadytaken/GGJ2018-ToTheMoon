@@ -6,6 +6,9 @@ bool g_bDisableAnimations = false;
 
 
 #if SH_PC
+
+#include <shellapi.h>
+
 void ParseArgumentsWindows(void)
 {
 	int nArgs = 0;
@@ -42,7 +45,7 @@ void ParseArguments(int argc, char ** argv)
 #if SH_PC
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int)
 {
-	ParseArguments();
+	ParseArgumentsWindows();
 #else
 int main(int argc, char ** argv)
 {
