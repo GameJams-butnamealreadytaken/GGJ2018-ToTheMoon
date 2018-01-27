@@ -34,7 +34,7 @@ public:
 	virtual void		OnHit				(GameObject* pObject);
 	virtual GameObject::EType GetType		(void)	{ return(e_type_transmitter); }
 
-	void				AddNeighbour		(Transmitter * pTrans);
+	void				AddNeighbour		(Transmitter * pTrans, ShPrimitiveSegment * pSegment);
 	void				RemoveNeighbour		(Transmitter * pTrans);
 
 	int					GetNeighbourCount	(void);
@@ -52,6 +52,6 @@ private:
 	float					m_fRadius;
 	int						m_iLife;
 
-	Network::Transmitter *	m_pTransmitter;
-	CShArray<Transmitter *>	m_aNeighbour;
+	Network::Transmitter *			m_pTransmitter;
+	CShArray<Transmitter *>			m_aNeighbour;
 };

@@ -12,6 +12,7 @@ Transmitter::Transmitter(ShEntity2 * pEntity, const CShVector2 & vPosition)
 : GameObject(pEntity, vPosition)
 , m_fRadius(RADIUS)
 , m_pTransmitter(shNULL)
+, m_aNeighbour()
 {
 	if (!g_bDisableAnimations)
 	{
@@ -140,7 +141,7 @@ void Transmitter::Update(float dt)
 /**
 * @brief AddNeighbour
 */
-void Transmitter::AddNeighbour(Transmitter * pTrans)
+void Transmitter::AddNeighbour(Transmitter * pTrans, ShPrimitiveSegment * pSegment)
 {
 	SH_ASSERT(shNULL != pTrans);
 	m_aNeighbour.Add(pTrans);
