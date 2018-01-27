@@ -43,10 +43,10 @@ void Projectile::Start(const CShVector2 & vPosition, const CShVector2 & vDestina
 {
 	SetState((int)ON);
 	SetShow(true);
-	SetPosition2(vPosition);
 	m_fSpeed = fSpeed;
 	m_vDestination = vDestination;
-	m_vStartPosition = GetPosition2();
+	m_vStartPosition = vPosition;
+	SetPosition2(vPosition);
 	m_fCompletion = 0.0f;
 }
 

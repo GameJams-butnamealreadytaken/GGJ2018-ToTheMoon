@@ -36,7 +36,7 @@ void ProjectileManager::Initialize(const CShIdentifier & levelIdentifier)
 			{
 				case e_projectile_bullet:
 				{
-					pEntity = ShEntity2::Create(levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("bullet"), CShVector3(0.0f, 0.0f, 0.1f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
+					pEntity = ShEntity2::Create(levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("bullet"), CShVector3(0.0f, 0.0f, 1.2f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
 					m_apProjectile[iProjectile][j] = new Bullet(pEntity);
 				}
 				break;
