@@ -4,8 +4,19 @@
 * @brief Constructor
 */
 /*explicit*/ AnimatedSpriteManager::AnimatedSpriteManager(void)
+: m_apSprite()
+, m_strSpriteLibrary()
+, m_strSpriteName()
+, m_fInterFrameTime(0.0f)
+, m_iFrameCount(0)
+, m_bReversed(false)
+, m_bPlayOnlyOnce(false)
+, m_bOn(false)
+, m_iCurrentSprite(0)
+, m_pEntity(shNULL)
+, m_vPivot()
 {
-
+	// ...
 }
 
 /**
