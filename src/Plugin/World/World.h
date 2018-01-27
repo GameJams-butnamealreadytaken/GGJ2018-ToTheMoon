@@ -29,6 +29,8 @@ public:
 	void		OnTouchUp			(int iTouch, float positionX, float positionY);
 	void		OnTouchMove			(int iTouch, float positionX, float positionY);
 
+	virtual void OnShipCreated		(Network::Ship* pShip);
+
 private:
 
 	CShIdentifier					m_levelIdentifier;

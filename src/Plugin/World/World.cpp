@@ -2,7 +2,7 @@
 
 #include "GameObjects/Projectile/ProjectileManager.h"
 
-#define TEST 0
+#define TEST 1
 
 /**
 * @brief Constructor
@@ -211,4 +211,13 @@ void World::OnTouchUp(int iTouch, float positionX, float positionY)
 void World::OnTouchMove(int iTouch, float positionX, float positionY)
 {
 
+}
+
+/**
+* @brief World::OnShipCreated
+*/
+/*virtual*/ void World::OnShipCreated(Network::Ship* pShip)
+{
+	//m_apShip.Add(new Ship(pShip));
+	//m_apShip[0]->Initialize()
 }
