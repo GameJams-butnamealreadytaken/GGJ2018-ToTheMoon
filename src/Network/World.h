@@ -4,6 +4,8 @@
 
 #include "Ship.h"
 
+struct sockaddr;
+
 namespace Network
 {
 
@@ -36,6 +38,9 @@ protected:
 	void releaseSocket(void);
 
 	bool broadcastHelloMessage(void);
+
+	void handleHelloMessage(HelloMessage * msg, struct ::sockaddr* sender, unsigned int sendsize);
+	void handleShipStateMessage(ShipStateMessage * msg, struct ::sockaddr * sender, unsigned int sendsize);
 
 private:
 

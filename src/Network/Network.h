@@ -21,4 +21,36 @@ struct vec2
 	float y;
 };
 
+enum MSG_ID
+{
+	HELLO		= 0x001,
+	SHIP_STATE	= 0x002
+};
+
+struct HelloMessage
+{
+	HelloMessage()
+	{
+		id = HELLO;
+	}
+
+	MSG_ID id;
+};
+
+struct ShipStateMessage
+{
+	ShipStateMessage()
+	{
+		id = SHIP_STATE;
+	}
+
+	MSG_ID id;
+	unsigned int shipId;
+
+	vec2 position;
+	vec2 target;
+	float speed;
+};
+
+
 }
