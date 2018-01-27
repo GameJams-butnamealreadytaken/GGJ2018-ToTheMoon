@@ -214,7 +214,7 @@ void World::OnTouchMove(int iTouch, float positionX, float positionY)
 */
 /*virtual*/ void World::onShipCreated(const Ship * ship)
 {
-	
+	CreateShip(0.0f, 0.0f);
 }
 
 /**
@@ -222,7 +222,7 @@ void World::OnTouchMove(int iTouch, float positionX, float positionY)
 */
 /*virtual*/ void World::onTransmitterCreate(const Transmitter * ship)
 {
-
+	CreateTransmitter(0.0f, 0.0f);
 }
 
 /**
