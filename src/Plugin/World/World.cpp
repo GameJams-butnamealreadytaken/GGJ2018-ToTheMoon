@@ -12,7 +12,7 @@
 	, m_world(INFINITY, INFINITY)
 	, m_explosionManager()
 	, m_projectileManager()
-	, m_apTransmiter()
+	, m_apTransmitter()
 	, m_apShip()
 	, m_pShip(shNULL)
 {
@@ -147,12 +147,12 @@ void World::Update(float dt)
 #endif //TEST
 
 	//
-	// Update Transmiters
-	int iTransmiterCount = m_apTransmiter.GetCount();
-	for (int iTransmiter = 0; iTransmiter < iTransmiterCount; ++iTransmiter)
+	// Update Transmitters
+	int iTransmitterCount = m_apTransmitter.GetCount();
+	for (int iTransmitter = 0; iTransmitter < iTransmitterCount; ++iTransmitter)
 	{
-		Transmiter * pTransmiter = m_apTransmiter[iTransmiter];
-		pTransmiter->Update(dt);
+		Transmitter * pTransmitter = m_apTransmitter[iTransmitter];
+		pTransmitter->Update(dt);
 	}
 
 	//

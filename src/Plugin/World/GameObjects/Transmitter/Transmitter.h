@@ -7,11 +7,11 @@
 
 #include "../../../../Network/World.h"
 
-class Transmiter : public GameObject
+class Transmitter : public GameObject
 {
 public:
 
-	enum ETransmiterState
+	enum ETransmitterState
 	{
 		IDLE,
 		HIT,
@@ -20,8 +20,8 @@ public:
 		OFF,
 	};
 
-	explicit			Transmiter			(ShEntity2 * pEntity, const CShVector2 & vPosition);
-	virtual				~Transmiter			(void);
+	explicit			Transmitter			(ShEntity2 * pEntity, const CShVector2 & vPosition);
+	virtual				~Transmitter		(void);
 
 	void				Initialize			(Network::World & world);
 	void				Release				(void);
@@ -31,7 +31,7 @@ public:
 	virtual void		Update				(float dt) SH_ATTRIBUTE_OVERRIDE;
 
 	virtual void		OnHit				(GameObject* pObject);
-	virtual GameObject::EType GetType		(void)	{ return(e_type_transmiter); }
+	virtual GameObject::EType GetType		(void)	{ return(e_type_transmitter); }
 private:
 
 	float					m_fRadius;
