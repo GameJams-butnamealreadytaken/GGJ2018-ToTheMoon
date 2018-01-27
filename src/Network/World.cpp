@@ -159,23 +159,29 @@ bool World::broadcastHelloMessage(void)
  */
 void World::handleHelloMessage(HelloMessage * msg, struct sockaddr* sender, unsigned int sendsize)
 {
-	ShipStateMessage response;
-	response.shipId = 0;
-	response.position = vec2(0.0f, 0.0f);
-	response.target = vec2(0.0f, 0.0f);
-	response.speed = 0.0f;
+	char machine[NI_MAXHOST];
+	char service[NI_MAXSERV];
 
-	struct sockaddr_in addr;
-	addr.sin_family = AF_INET;
-	addr.sin_port = htons(BRD_HELO_PORT);
-	addr.sin_addr.s_addr = inet_addr(BRD_HELO_ADDR); // FIXME : respond only to sender !
+	if (0 == getnameinfo(sender, sendsize, machine, NI_MAXHOST, service, NI_MAXSERV, NI_NUMERICHOST|NI_NUMERICSERV))
+	{
+		ShipStateMessage response;
+		response.shipId = 0;
+		response.position = vec2(0.0f, 0.0f);
+		response.target = vec2(0.0f, 0.0f);
+		response.speed = 0.0f;
+
+		struct sockaddr_in addr;
+		addr.sin_family = AF_INET;
+		addr.sin_port = htons(BRD_HELO_PORT);
+		addr.sin_addr.s_addr = inet_addr(machine);
 #if WIN32
-	SSIZE_T size = sendto(m_sock, (const char*)&response, sizeof(ShipStateMessage), 0, (sockaddr*)&addr, sizeof(addr));
+		SSIZE_T size = sendto(m_sock, (const char*)&response, sizeof(ShipStateMessage), 0, (sockaddr*)&addr, sizeof(addr));
 #else // WIN32
-	ssize_t size = sendto(m_sock, (void*)&response, sizeof(ShipStateMessage), 0, (sockaddr*)&addr, sizeof(addr));
+		ssize_t size = sendto(m_sock, (void*)&response, sizeof(ShipStateMessage), 0, (sockaddr*)&addr, sizeof(addr));
 #endif // WIN32
 	
-	assert(size > 0);
+		assert(size > 0);
+	}
 }
 
 /**
