@@ -26,12 +26,8 @@ void ExplosionManager::Initialize(const CShIdentifier & levelIdentifier)
 
 	for (int iExplosion = 0; iExplosion < POOL_EXPLOSION; ++iExplosion)
 	{
-		switch (iExplosion)
-		{
-			ShEntity2* pEntity = ShEntity2::Create(levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("explosion_01"), CShVector3(0.0f, 0.0f, 0.1f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
-			m_apExplosion[iExplosion] = new Explosion(pEntity);
-		}
-			
+			ShEntity2* pEntity = ShEntity2::Create(levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("explosion_01"), CShVector3(0.0f, 0.0f, 10.0f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
+			m_apExplosion[iExplosion] = new Explosion(pEntity);	
 	}
 }
 
