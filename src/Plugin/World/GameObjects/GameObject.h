@@ -13,6 +13,7 @@ public:
 		e_type_transmiter,
 		e_type_bullet,
 		e_type_explosion,
+		e_type_planet,
 	};
 
 	explicit		GameObject			(ShEntity2* pEntity, const CShVector2 & vPosition);

@@ -6,7 +6,7 @@
 Explosion::Explosion(ShEntity2 * pEntity)
 : GameObject(pEntity, CShVector2(0.0f, 0.0f))
 {
-	Animate(10, "ggj", "explosion", 0.1f, true);
+	Animate(9, "ggj", "explosion", 0.1f, true);
 	SetState((int)OFF);
 }
 
