@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.1)
 
 # Network files
-set(SOURCES_Network Network.h)
+set(SOURCES_Network )
 source_group("Network" FILES ${SOURCES_Network})
 
 # World files
