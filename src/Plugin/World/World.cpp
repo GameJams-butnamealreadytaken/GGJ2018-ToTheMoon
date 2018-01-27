@@ -176,11 +176,14 @@ void World::Update(float dt)
 		pTransmitter->Update(dt);
 	}
 
+	//
+	// Plugin Inputs
 	if (m_pUser)
 	{
 		if (ShUser::HasTriggeredAction(m_pUser, CShIdentifier("beacon")))
 		{
-			CreateTransmitter(0.0f, 0.0f);
+			CShVector2 & shipPos = m_pShip->GetPosition2();
+			CreateTransmitter(shipPos.m_x, shipPos.m_y);
 		}
 	}
 }
