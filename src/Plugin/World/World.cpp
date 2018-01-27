@@ -3,7 +3,7 @@
 #include "GameObjects/Transmitter/Transmitter.h"
 #include "GameObjects/Ship/Ship.h"
 #include "GameObjects/Planet/Planet.h"
-#include "Team\Team.h"
+#include "Team/Team.h"
 
 #define TEST 1
 
@@ -141,7 +141,6 @@ void World::Update(float dt)
 	{
 		m_aPlanet[iPlanet]->Update(dt);
 	}
-	
 
 	//
 	// Update explosion manager
@@ -150,7 +149,7 @@ void World::Update(float dt)
 	//
 	// Update projectile manager
 	m_projectileManager.Update(dt);
-	
+
 #if TEST
 	{
 		static float x = 0.0f;

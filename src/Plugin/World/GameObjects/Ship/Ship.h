@@ -42,7 +42,7 @@ public:
 private:
 	void						UpdateSprite			(void);
 
-	float						computeVecteurNorme		(float Ax, float Ay, float Bx, float By);
+	float						ComputeVecteurNorme		(float Ax, float Ay, float Bx, float By);
 
 private:
 
