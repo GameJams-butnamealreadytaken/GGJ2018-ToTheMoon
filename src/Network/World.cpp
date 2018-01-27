@@ -82,7 +82,7 @@ bool World::broadcastHelloMessage(void)
 void World::handleHelloMessage(HelloMessage * msg, char * machine, char * service)
 {
 	printf("HELLO from %s:%s\n", machine, service);
-
+#if 0 // tmp disable
 	SyncShipStateMessage response;
 	response.shipId = 0;
 	response.position = vec2(0.0f, 0.0f);
@@ -90,6 +90,8 @@ void World::handleHelloMessage(HelloMessage * msg, char * machine, char * servic
 	response.speed = 0.0f;
 
 	m_network.SendMessageToMachine(response, machine);
+#endif // 0
+	m_network.RegisterClient(machine);
 }
 
 /**
@@ -237,14 +239,17 @@ Ship * World::createShip(float x, float y)
 
 	*ship = Ship(x, y);
 
-
 	CreateShipMessage message;
-	message.shipId = 0;
+#if __gnu_linux__
+	uuid_generate(message.shipId);
+#else
+#	error "Implement me !"
+#endif // __gnu_linux__
 	message.position = vec2(x, y);
 	message.target = vec2(x, y);
 	message.speed = 0.0f;
 
-	m_network.BroadcastMessage(message);
+	m_network.SendMessageToAllClients(message);
 
 	return(ship);
 }

@@ -24,6 +24,16 @@ public:
 
 	//
 	// Send to all known clients
+	bool SendMessageToAllClients(void * msg, unsigned int size);
+
+	template<typename T>
+	bool SendMessageToAllClients(const T & msg)
+	{
+		return(SendMessageToAllClients((void*)&msg, sizeof(T)));
+	}
+
+	//
+	// Send to the specified machine
 	bool SendMessageToMachine(void * msg, unsigned int size, char * machine);
 
 	template<typename T>
@@ -38,7 +48,12 @@ public:
 
 	//
 	// ...
+	void RegisterClient(char * machine);
+
+	//
+	// ...
 	static bool discoverNetwork(char * szBroadcast, int iLength);
+
 
 protected:
 
@@ -46,4 +61,7 @@ protected:
 private:
 
 	int m_sock;
+
+	struct sockaddr_in * m_pClients;
+	unsigned int m_iClientCount;
 };

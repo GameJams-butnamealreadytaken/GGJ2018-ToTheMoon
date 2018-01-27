@@ -17,6 +17,7 @@
 
 #include <assert.h>
 #include <string.h> // memset
+#include <malloc.h>
 
 #define PORT (8123)
 
@@ -29,6 +30,8 @@
 NetworkHelper::NetworkHelper(void)
 {
 	m_sock = -1;
+	m_pClients = nullptr;
+	m_iClientCount = 0;
 }
 
 /**
@@ -118,6 +121,26 @@ bool NetworkHelper::BroadcastMessage(void * msg, unsigned int size)
 }
 
 /**
+ * @brief NetworkHelper::SendMessageToAllClients
+ * @param msg
+ * @param size
+ * @return
+ */
+bool NetworkHelper::SendMessageToAllClients(void * msg, unsigned int size)
+{
+	for (int i = 0; i < m_iClientCount; ++i)
+	{
+#if WIN32
+		/*SSIZE_T size =*/ sendto(m_sock, (const char*)msg, size, 0, (sockaddr*)m_pClients+i, sizeof(struct sockaddr_in));
+#else // WIN32
+		/*ssize_t size =*/ sendto(m_sock, (void*)msg, size, 0, (sockaddr*)m_pClients+i, sizeof(struct sockaddr_in));
+#endif // WIN32
+	}
+
+	return(true);
+}
+
+/**
  * @brief NetworkHelper::SendMessage
  * @param msg
  * @param size
@@ -175,6 +198,24 @@ bool NetworkHelper::Receive(char * buffer, unsigned int & size, char * machine, 
 	}
 
 	return(false);
+}
+
+/**
+ * @brief NetworkHelper::RegisterClient
+ * @param machine
+ */
+void NetworkHelper::RegisterClient(char * machine)
+{
+	unsigned int index = m_iClientCount;
+
+	m_iClientCount++;
+
+	m_pClients = (struct sockaddr_in *)realloc(m_pClients, sizeof(struct sockaddr_in) * m_iClientCount);
+
+	struct sockaddr_in & addr = m_pClients[index];
+	addr.sin_family = AF_INET;
+	addr.sin_port = htons(PORT);
+	addr.sin_addr.s_addr = inet_addr(machine);
 }
 
 /**

@@ -1,5 +1,9 @@
 #pragma once
 
+#if __gnu_linux__
+#	include <uuid/uuid.h>
+#endif // __gnu_linux__
+
 namespace Network
 {
 
@@ -47,7 +51,7 @@ struct SyncShipStateMessage
 	}
 
 	MSG_ID id;
-	unsigned int shipId;
+	uuid_t shipId;
 
 	vec2 position;
 	vec2 target;
@@ -62,7 +66,7 @@ struct CreateShipMessage
 	}
 
 	MSG_ID id;
-	unsigned int shipId;
+	uuid_t shipId;
 
 	vec2 position;
 	vec2 target;
