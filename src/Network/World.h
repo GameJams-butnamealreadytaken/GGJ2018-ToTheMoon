@@ -34,8 +34,8 @@ public:
 
 	//
 	// Create Ship
-	Ship * createShip	(void);
 	Ship * createShip	(float x, float y);
+	Ship * findShip		(const uuid_t & uuid);
 
 	//
 	// Create Transmitter
@@ -48,6 +48,8 @@ public:
 	}
 
 protected:
+
+	Ship * createShipInternal(const uuid_t & uuid, float x, float y);
 
 	bool broadcastHelloMessage(void);
 

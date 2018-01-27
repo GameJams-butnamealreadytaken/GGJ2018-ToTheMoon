@@ -15,10 +15,11 @@ Ship::Ship(void) : m_position(0.0f, 0.0f), m_target(0.0f, 0.0f), m_speed(0.0f)
 
 /**
  * @brief Constructor
+ * @param id
  * @param x
  * @param y
  */
-Ship::Ship(uuid_t id, float x, float y) : m_position(x, y), m_target(x, y), m_speed(0.0f)
+Ship::Ship(const uuid_t & id, float x, float y) : m_position(x, y), m_target(x, y), m_speed(0.0f)
 {
 #if __gnu_linux__
 	uuid_copy(m_uuid, id);
