@@ -1,15 +1,15 @@
 #include "World.h"
 
-#include "GameObjects/projectile/ProjectileManager.h"
+#include "GameObjects/Projectile/ProjectileManager.h"
 
-#define TEST 1
+#define TEST 0
 
 /**
 * @brief Constructor
 */
 /*explicit*/ World::World(void) 
 	: m_levelIdentifier()
-	, m_world(1000.0f, 1000.0f)
+	, m_world(INFINITY, INFINITY)
 	, m_explosionManager()
 	, m_projectileManager()
 	, m_apTransmiter()

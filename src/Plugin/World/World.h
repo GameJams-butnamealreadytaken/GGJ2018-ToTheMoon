@@ -5,7 +5,7 @@
 #include "../../Network/World.h"
 
 #include "GameObjects/Explosion/ExplosionManager.h"
-#include "GameObjects/projectile/ProjectileManager.h"
+#include "GameObjects/Projectile/ProjectileManager.h"
 #include "GameObjects/Transmiter/Transmiter.h"
 #include "GameObjects/Ship/Ship.h"
 
