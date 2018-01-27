@@ -78,11 +78,7 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 	//
 	// Create player's Ship
 	{
-		ShEntity2* pEntity = ShEntity2::Create(levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("image_white"), CShVector3(0.0f, 0.0f, 2.0f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(10.0f, 10.0f, 1.0f));
-		SH_ASSERT(shNULL != pEntity);
-		m_pShip = new Ship(pEntity, CShVector2(0.0f,0.0f));
-		m_pShip->Initialize(Ship::BASE, m_world);
-		m_apShip.Add(m_pShip);
+		CreateShip(0.0f, 0.0f);
 	}
 }
 
@@ -221,9 +217,24 @@ void World::OnTouchMove(int iTouch, float positionX, float positionY)
 
 }
 
+/**
+* @brief World::CreateShip
+*/
+void World::CreateShip(float x, float y)
+{
+	ShEntity2* pEntity = ShEntity2::Create(m_levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("image_white"), CShVector3(x, y, 2.0f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(10.0f, 10.0f, 1.0f));
+	SH_ASSERT(shNULL != pEntity);
+	m_pShip = new Ship(pEntity, CShVector2(x, y));
+	m_pShip->Initialize(Ship::BASE, m_world);
+	m_apShip.Add(m_pShip);
+}
+
+/**
+* @brief World::CreateTransmitter
+*/
 void World::CreateTransmitter(float x, float y)
 {
-	ShEntity2* pEntity = ShEntity2::Create(m_levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("transmiter"), CShVector3(0.0f, 0.0f, 2.0f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
+	ShEntity2* pEntity = ShEntity2::Create(m_levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("transmiter"), CShVector3(x, y, 2.0f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
 	SH_ASSERT(shNULL != pEntity);
 	Transmitter * pTrans = new Transmitter(pEntity, CShVector2(x, y));
 	pTrans->Initialize(m_world);

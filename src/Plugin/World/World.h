@@ -31,6 +31,7 @@ public:
 
 
 private:
+	void		CreateShip			(float x, float y);
 	void		CreateTransmitter	(float x, float y);
 
 private:
