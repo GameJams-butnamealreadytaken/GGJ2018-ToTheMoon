@@ -129,14 +129,26 @@ void World::Update(float dt)
 */
 void World::OnTouchDown(int iTouch, float positionX, float positionY)
 {
+	ShCamera * pCamera = ShCamera::GetCamera2D();
+
+	const CShVector2 & viewport = ShCamera::GetViewport(pCamera);
+
+	CShVector2 screenPos(0.0f, 0.0f);
+	screenPos.m_x = positionX + viewport.m_x * 0.5f;
+	screenPos.m_y = (viewport.m_y - positionY) - viewport.m_y * 0.5f;
+
+	CShRay3 ray = ShCamera::Unproject(pCamera, screenPos);
+
+	CShVector3 worldPosition = ray.GetOrigin();
+
 	// Set new ship target
 	if (shNULL != m_pShip)
 	{
-		m_pShip->SetTarget(positionX, positionY, 5.0f); // todo move speed on her right place
+		m_pShip->SetTarget(worldPosition.m_x, worldPosition.m_y, 5.0f); // todo move speed on her right place
 	}
 
 #if TEST
-	m_explosionManager.Start(CShVector2(positionX, positionY));
+	m_explosionManager.Start(CShVector2(worldPosition.m_x, worldPosition.m_y));
 #endif //TEST
 }
 
