@@ -2,12 +2,30 @@
 
 #include "application.h"
 
+bool g_bDisableAnimations = false;
+
+#if SH_LINUX
+void ParseArguments(int argc, char ** argv)
+{
+	for (int i = 0; i < argc; ++i)
+	{
+		if (!strcmp(argv[i], "--disable-animations"))
+		{
+			g_bDisableAnimations = true;
+		}
+	}
+}
+#endif // SH_LINUX
+
 #if SH_PC
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int)
+{
 #else
 int main(int argc, char ** argv)
-#endif
 {
+	ParseArguments(argc, argv);
+#endif
+
 	ShApplication::SetOnPreInitialize(OnPreInitialize);
 	ShApplication::SetOnPostInitialize(OnPostInitialize);
 	ShApplication::SetOnPreUpdate(OnPreUpdate);
