@@ -96,6 +96,15 @@ void World::Release(void)
 	}
 	m_apShip.Empty();
 
+	int nTransmitterCount = m_apTransmitter.GetCount();
+	for (int i = 0; i < nTransmitterCount; ++i)
+	{
+		m_apTransmitter[i]->Release();
+		SH_SAFE_DELETE(m_apTransmitter[i]);
+	}
+	m_apTransmitter.Empty();
+	
+
 	m_projectileManager.Release();
 	m_explosionManager.Release();
 
