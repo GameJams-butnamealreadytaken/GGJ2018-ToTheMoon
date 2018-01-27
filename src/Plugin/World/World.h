@@ -5,8 +5,6 @@
 #include "../../Network/World.h"
 #include "../../Network/WorldListener.h"
 
-#include "../World/MiniMap/MiniMap.h"
-
 #include "GameObjects/Explosion/ExplosionManager.h"
 #include "GameObjects/Projectile/ProjectileManager.h"
 
@@ -29,6 +27,12 @@ public:
 	void		Release				(void);
 
 	void		Update				(float dt);
+
+	int				GetShipCount		(void);
+	Ship *			GetShip				(int iShip);
+
+	int				GetTransmitterCount	(void);
+	Transmitter *	GetTransmitter		(int iTransmitter);
 
 	//
 	// Touch Events

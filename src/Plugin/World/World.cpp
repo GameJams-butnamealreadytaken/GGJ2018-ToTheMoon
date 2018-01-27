@@ -1,9 +1,11 @@
 #include "World.h"
 
+#include "MiniMap/MiniMap.h"
 #include "GameObjects/Transmitter/Transmitter.h"
 #include "GameObjects/Ship/Ship.h"
 #include "GameObjects/Planet/Planet.h"
 #include "Team/Team.h"
+
 
 #define TEST 0
 
@@ -191,6 +193,39 @@ void World::Update(float dt)
 		}
 	}
 }
+
+/**
+* @brief World::GetShipCount
+*/
+int	World::GetShipCount(void)
+{
+	return(m_apShip.GetCount());
+}
+
+/**
+* @brief World::GetShip
+*/
+Ship * World::GetShip(int iShip)
+{
+	return(m_apShip[iShip]);
+}
+
+/**
+* @brief World::GetTransmitterCount
+*/
+int	World::GetTransmitterCount(void)
+{
+	return(m_apTransmitter.GetCount());
+}
+
+/**
+* @brief World::GetTransmitter
+*/
+Transmitter * World::GetTransmitter(int iTransmitter)
+{
+	return(m_apTransmitter[iTransmitter]);
+}
+
 
 /**
 * @brief World::OnTouchDown
