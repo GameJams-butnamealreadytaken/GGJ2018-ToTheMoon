@@ -12,13 +12,23 @@ source_group("World" FILES ${SOURCES_World})
 set(SOURCES_Ship Ship.cpp Ship.h)
 source_group("Ship" FILES ${SOURCES_Ship})
 
+# NetworkHelper files
+set(SOURCES_NetworkHelper NetworkHelper.h NetworkHelper.cpp)
+source_group("Helpers" FILES ${SOURCES_NetworkHelper})
+
 # Put everything together before adding platform-specific files
-set(SOURCES ${SOURCES_Network} ${SOURCES_World} ${SOURCES_Ship})
+set(SOURCES 
+			${SOURCES_Network} 
+			${SOURCES_World} 
+			${SOURCES_Ship}
+			${SOURCES_NetworkHelper} 
+			)
 
 add_library(Network STATIC ${SOURCES})
 
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
-	target_link_libraries(Network INTERFACE ws2_32.lib)
+	target_link_libraries(Network INTERFACE ws2_32.lib) # Sockets
+	target_link_libraries(Network INTERFACE Iphlpapi.lib) # ip retrieval
 endif(CMAKE_SYSTEM_NAME MATCHES "Windows")
 
 set_property(TARGET Network APPEND PROPERTY COMPILE_DEFINITIONS "${SHSDK_COMPILE_DEFINITIONS} -fno-exceptions -fno-rtti")
