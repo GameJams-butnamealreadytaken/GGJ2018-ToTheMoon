@@ -15,8 +15,6 @@ public:
 	void									Initialize			(void);
 	void									Release				(void);
 
-	virtual void							Update				(float dt);
-
 	virtual void							OnHit				(GameObject* pObject);
 	virtual GameObject::EType				GetType				(void) { return(GameObject::e_type_bullet);  }
 

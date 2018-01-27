@@ -34,14 +34,6 @@ void Bullet::Release(void)
 }
 
 /**
-* @brief Update
-*/
-/*virtual*/ void Bullet::Update(float dt)
-{
-
-}
-
-/**
 * @brief OnHit
 */
 /*virtual*/ void Bullet::OnHit(GameObject* pObject)
