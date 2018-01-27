@@ -9,7 +9,7 @@ class Projectile : public GameObject
 {
 public:
 
-	enum EState
+	enum EProjectileState
 	{
 		OFF,
 		ON
@@ -22,6 +22,7 @@ public:
 	void									Release				(void);
 
 	void									Start				(const CShVector2 & vPosition, const CShVector2 & vDestination, float fSpeed);
+	void									Stop				(void);
 
 	void									Update				(float dt);
 
@@ -29,7 +30,6 @@ public:
 	virtual GameObject::EType				GetType				(void) = 0;
 
 protected:
-	EState									m_eState;
 	CShVector2								m_vStartPosition;
 	CShVector2								m_vDestination;
 	float									m_fSpeed;

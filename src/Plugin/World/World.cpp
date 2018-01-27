@@ -77,6 +77,17 @@ void World::Update(float dt)
 	// Update projectile manager
 	m_projectileManager.Update(dt);
 
+	
+	static float x = 0.0f;
+	static float y = 0.0f;
+	y += dt;
+	x += dt;
+
+	if (y > 0.1f)
+	{
+		m_projectileManager.Start(ProjectileManager::e_projectile_bullet, CShVector2(0.0f, 0.0f), CShVector2(500.0f * cos(x), 500.0f * sin(x)), 5.0f);
+		y = 0.0f;
+	}
 	//
 	// Update Transmiters
 	int iTransmiterCount = m_apTransmiter.GetCount();

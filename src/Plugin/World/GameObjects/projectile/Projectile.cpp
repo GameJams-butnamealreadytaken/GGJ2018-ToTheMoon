@@ -41,12 +41,19 @@ void Projectile::Release(void)
 */
 void Projectile::Start(const CShVector2 & vPosition, const CShVector2 & vDestination, float fSpeed)
 {
+	SetState((int)ON);
+	SetShow(true);
 	SetPosition2(vPosition);
 	m_fSpeed = fSpeed;
 	m_vDestination = vDestination;
 	m_vStartPosition = GetPosition2();
 	m_fCompletion = 0.0f;
-	SetState((int)ON);
+}
+
+void Projectile::Stop(void)
+{
+	SetShow(false);
+	SetState((int)OFF);
 }
 
 /**
@@ -54,7 +61,7 @@ void Projectile::Start(const CShVector2 & vPosition, const CShVector2 & vDestina
 */
 void Projectile::Update(float dt)
 {
-	if (m_eState == ON)
+	if (m_iState == ON)
 	{
 		m_fCompletion += (dt * m_fSpeed);
 
@@ -67,6 +74,7 @@ void Projectile::Update(float dt)
 			SetPosition2(m_vDestination);
 			m_fCompletion = 1.0f;
 
+			Stop();
 			SetState((int)OFF);
 		}
 	}
