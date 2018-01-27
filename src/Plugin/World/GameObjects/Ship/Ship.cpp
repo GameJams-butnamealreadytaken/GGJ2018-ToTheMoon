@@ -64,10 +64,15 @@ void Ship::Update(float dt)
 	}
 }
 
+/*virtual*/ void Ship::OnHit(GameObject* pObject)
+{
+
+}
+
 /**
 * @brief GetType
 */
-Ship::EShipType Ship::GetType(void)
+Ship::EShipType Ship::GetShipType(void)
 {
 	return(m_type);
 }

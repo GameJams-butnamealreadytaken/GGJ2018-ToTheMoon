@@ -7,6 +7,13 @@ class GameObject
 
 public:
 
+	enum EType
+	{
+		e_type_ship,
+		e_type_transmiter,
+
+	};
+
 	explicit		GameObject			(ShEntity2* pEntity, const CShVector2 & vPosition);
 	virtual			~GameObject			(void);
 
@@ -16,6 +23,9 @@ public:
 	virtual void	Animate				(int iSpriteCount, char * szSpriteLibrary, char * szSpriteName, float fAnimationInterFrameTime);
 	virtual void	Update				(float dt);
 
+	virtual void	OnHit				(GameObject* pObject) = 0;
+	virtual EType	GetType				(void) = 0;
+
 	void			SetState			(int iState);
 
 	void			SetShow				(bool bShow);
@@ -23,9 +33,10 @@ public:
 	ShEntity2 *		GetSprite			(void);
 
 	void			SetPosition2		(const CShVector2 & vPosition);
-	CShVector2 &	GetPosition2			(void);
+	CShVector2 &	GetPosition2		(void);
 
 protected:
+	EType					m_eType;
 	int						m_iState;
 	float					m_fStateTime;
 	ShEntity2 *				m_pEntity;

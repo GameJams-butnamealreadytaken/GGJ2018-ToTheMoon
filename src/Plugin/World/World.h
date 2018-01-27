@@ -7,9 +7,6 @@
 #include "GameObjects/Transmiter/Transmiter.h"
 #include "GameObjects/Ship/Ship.h"
 
-#define POOL_TRANSMITER 50
-#define POOL_SHIP 50
-
 class World
 {
 
@@ -33,6 +30,8 @@ private:
 
 	CShIdentifier					m_levelIdentifier;
 	Network::World					m_world;
-	Transmiter*						m_apTransmiter[POOL_TRANSMITER];
-	Ship*							m_apShip[POOL_SHIP];
+	CShArray<Transmiter*>			m_apTransmiter;
+	CShArray<const Ship*>			m_apShip;
+	Ship*							m_pShip;
+
 };
