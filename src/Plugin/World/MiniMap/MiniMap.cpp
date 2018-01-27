@@ -44,6 +44,8 @@ void MiniMap::Initialize(const CShIdentifier & levelIdentifier, World * pWorld)
 	m_pEntityBackground = ShEntity2::Create(levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("minimap_background"), CShVector3(0.0f, 0.0f, 100.0f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(m_fWidth / 10.0f, m_fHeight / 10.0f, 1.0f));
 	SH_ASSERT(shNULL != m_pEntityBackground);
 
+	ShEntity2::SetWorldPosition2(m_pEntityBackground, CShVector2(ShDisplay::GetWidth() * 0.5f - ShEntity2::GetWidth(m_pEntityBackground) * 0.5f,-ShDisplay::GetHeight() * 0.5f + ShEntity2::GetWidth(m_pEntityBackground) * 0.5f));
+
 	m_vPosition = ShEntity2::GetPosition2(m_pEntityBackground);
 
 	//
@@ -81,7 +83,7 @@ void MiniMap::Release(void)
 void MiniMap::Update(float dt)
 {
 	ShCamera* pCamera = ShCamera::GetCamera2D();
-	ShEntity2::SetWorldPosition2(m_pEntityBackground, ShCamera::GetPosition2(pCamera));
+	ShEntity2::SetWorldPosition2(m_pEntityBackground, ShCamera::GetPosition2(pCamera) + CShVector2(ShCamera::GetViewport(pCamera).m_x * 0.5f - ShEntity2::GetWidth(m_pEntityBackground) * ShEntity2::GetScale(m_pEntityBackground).m_x * 0.5f, -ShCamera::GetViewport(pCamera).m_y * 0.5f + ShEntity2::GetHeight(m_pEntityBackground)  * ShEntity2::GetScale(m_pEntityBackground).m_y * 0.5f));
 	m_vPosition = ShEntity2::GetPosition2(m_pEntityBackground);
 
 	//
