@@ -45,6 +45,8 @@ private:
 	CShIdentifier					m_levelIdentifier;
 	Network::World					m_world;
 
+	ShUser *						m_pUser;
+
 	ExplosionManager				m_explosionManager;
 	ProjectileManager				m_projectileManager;
 

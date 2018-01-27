@@ -6,8 +6,9 @@
 * @brief Constructor
 */
 /*explicit*/ Team::Team(int teamId)
-	:m_iTeamId(teamId)
+	: m_iTeamId(teamId)
 	, m_apTransmitter()
+	, m_apSegment()
 {
 
 }
@@ -61,7 +62,7 @@ void Team::AddTransmitter(Transmitter * pTransmitter)
 			CShVector2 & transPos = m_apTransmitter[i]->GetPosition2();
 			if (10.0f < ComputeVecteurNorme(newPos.m_x, newPos.m_y, transPos.m_x, transPos.m_y))
 			{
-				pTransmitter->AddNeighbour(m_apTransmitter[i]);
+				AddNeighbour(pTransmitter, m_apTransmitter[i]);
 			}
 		}
 	}
@@ -133,4 +134,33 @@ float Team::ComputeVecteurNorme(float Ax, float Ay, float Bx, float By)
 {
 	return sqrt(((Bx - Ax)*(Bx - Ax)) + ((By - Ay)*(By - Ay)));
 }
+
+/**
+* @brief Team::AddNeighbour
+*/
+void Team::AddNeighbour(Transmitter * pTransmitterFrom, Transmitter * pTransmitterTo)
+{
+	pTransmitterFrom->AddNeighbour(pTransmitterTo);
+	pTransmitterTo->AddNeighbour(pTransmitterFrom);
+
+	ShPrimitiveSegment * pSegment = new ShPrimitiveSegment();
+	ShPrimitiveSegment::SetP1(pSegment, pTransmitterFrom->GetPosition2());
+	ShPrimitiveSegment::SetP2(pSegment, pTransmitterTo->GetPosition2());
+
+	if (m_iTeamId == 0)
+	{
+		ShPrimitiveSegment::SetColor(pSegment, CShRGBAf(1.0f, 0.0f, 0.0f, 1.0f));
+	}
+	else if (m_iTeamId == 1)
+	{
+		ShPrimitiveSegment::SetColor(pSegment, CShRGBAf(0.0f, 0.0f, 1.0f, 1.0f));
+	}
+	else
+	{
+		SH_ASSERT_ALWAYS();
+	}
+
+	m_apSegment.Add(pSegment);
+}
+
 

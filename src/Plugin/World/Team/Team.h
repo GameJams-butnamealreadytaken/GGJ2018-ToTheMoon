@@ -21,14 +21,16 @@ public:
 private:
 	bool			GetVictoryCondition	(void);
 	float			ComputeVecteurNorme	(float Ax, float Ay, float Bx, float By);
+	void			AddNeighbour		(Transmitter * pTransmitter1, Transmitter * pTransmitter2);
 	bool			CheckNeighboorList	(Transmitter * pTrans, CShArray<int> & transList_done);
 private:
 
 	int							m_iTeamId;
 
-	CShVector2					m_startPoint;
-	CShVector2					m_endPoint;
+	CShVector2						m_startPoint;
+	CShVector2						m_endPoint;
 
-	CShArray<Transmitter *>		m_apTransmitter;
+	CShArray<Transmitter *>			m_apTransmitter;
+	CShArray<ShPrimitiveSegment*>	m_apSegment;
 
 };
