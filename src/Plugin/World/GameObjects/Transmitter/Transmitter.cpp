@@ -51,7 +51,10 @@ void Transmitter::Release(void)
 */
 void Transmitter::Start(const CShVector2 & vPosition)
 {
-	m_animationManagerDeploy.Play();
+	if (!g_bDisableAnimations)
+	{
+		m_animationManagerDeploy.Play();
+	}
 	SetPosition2(vPosition);
 	SetState((int)APPEAR);
 	SetShow(true);
