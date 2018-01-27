@@ -81,10 +81,10 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 	CreateShip(0.0f, 0.0f);
 
 	m_aTeam.Empty();
-	int nTeam = 2; // get nbTeam from Network
-	for (int i = 0; i < nTeam; ++i)
+	for (int i = 0; i < 2; ++i)
 	{
 		Team * pTeam = new Team(i);
+		pTeam->Initialize(m_levelIdentifier, m_aPlanet[i]->GetPosition2(), m_aPlanet[i + 2]->GetPosition2());
 		m_aTeam.Add(pTeam);
 	}
 

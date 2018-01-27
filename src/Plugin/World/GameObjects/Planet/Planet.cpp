@@ -6,7 +6,7 @@ extern bool g_bDisableAnimations;
  * @brief Constructor
  */
 Planet::Planet(EPlanet planet, ShEntity2 * pEntity)
-: GameObject(pEntity, CShVector2(0.0f, 0.0f))
+: GameObject(pEntity, ShEntity2::GetWorldPosition2(pEntity))
 {
 	if (!g_bDisableAnimations)
 	{
