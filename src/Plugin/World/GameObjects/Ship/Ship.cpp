@@ -72,7 +72,7 @@ void Ship::Update(float dt)
 /**
 * @brief GetType
 */
-Ship::EShipType Ship::GetType(void)
+Ship::EShipType Ship::GetShipType(void)
 {
 	return(m_type);
 }

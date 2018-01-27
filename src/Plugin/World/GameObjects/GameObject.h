@@ -7,6 +7,13 @@ class GameObject
 
 public:
 
+	enum EType
+	{
+		e_type_ship,
+		e_type_transmiter,
+
+	};
+
 	explicit		GameObject			(ShEntity2* pEntity, const CShVector2 & vPosition);
 	virtual			~GameObject			(void);
 
@@ -17,6 +24,7 @@ public:
 	virtual void	Update				(float dt);
 
 	virtual void	OnHit				(GameObject* pObject) = 0;
+	virtual EType	GetType				(void) = 0;
 
 	void			SetState			(int iState);
 

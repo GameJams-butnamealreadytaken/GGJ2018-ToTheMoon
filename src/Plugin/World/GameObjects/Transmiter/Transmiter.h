@@ -29,6 +29,7 @@ public:
 	virtual void		Update				(float dt) SH_ATTRIBUTE_OVERRIDE;
 
 	virtual void		OnHit				(GameObject* pObject);
+	virtual GameObject::EType GetType		(void)	{ return(e_type_transmiter); }
 private:
 
 	float				m_fRadius;
