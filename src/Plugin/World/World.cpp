@@ -88,6 +88,7 @@ void World::Update(float dt)
 		m_projectileManager.Start(ProjectileManager::e_projectile_bullet, CShVector2(0.0f, 0.0f), CShVector2(500.0f * cos(x), 500.0f * sin(x)), 5.0f);
 		y = 0.0f;
 	}
+
 	//
 	// Update Transmiters
 	int iTransmiterCount = m_apTransmiter.GetCount();
@@ -102,6 +103,10 @@ void World::Update(float dt)
 	if (m_pShip)
 	{
 		m_pShip->Update(dt);
+
+		ShCamera* pCamera = ShCamera::GetCamera2D();
+		ShCamera::SetPosition2(pCamera, m_pShip->GetPosition2());
+		ShCamera::SetTarget(pCamera, CShVector3(m_pShip->GetPosition2(), 0.0f));
 	}
 }
 
