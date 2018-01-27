@@ -14,7 +14,7 @@ public:
 	//
 	// Constructor / Destructor
 	Transmitter(void);
-	Transmitter(float x, float y);
+	Transmitter(const uuid_t & id, float x, float y);
 	~Transmitter(void);
 
 	//
@@ -31,6 +31,8 @@ protected:
 	void update(float dt);
 
 private:
+
+	uuid_t m_uuid;
 
 	vec2 m_position;
 

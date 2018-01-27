@@ -39,8 +39,8 @@ public:
 
 	//
 	// Create Transmitter
-	Transmitter * createTransmitter	(void);
 	Transmitter * createTransmitter	(float x, float y);
+	Transmitter * findTransmitter	(const uuid_t & uuid);
 
 	void setListener(WorldListener * pListener)
 	{
@@ -49,6 +49,7 @@ public:
 
 protected:
 
+	Transmitter * createTransmitterInternal(const uuid_t & uuid, float x, float y);
 	Ship * createShipInternal(const uuid_t & uuid, float x, float y);
 
 	bool broadcastHelloMessage(void);
@@ -62,20 +63,26 @@ protected:
 
 	void handleCreateTransmitterMessage(CreateTransmitterMessage * msg, char * machine, char * service);
 	void handleDestroyTransmitterMessage(DestroyTransmitterMessage * msg, char * machine, char * service);
-	void handleSyncTransmitterStateMessage(DestroyTransmitterMessage * msg, char * machine, char * service);
+	void handleSyncTransmitterStateMessage(SyncTransmitterStateMessage * msg, char * machine, char * service);
 
 private:
 
+	//
+	// Ships
 	static const unsigned int MAX_SHIPS = 256;
 	Ship m_aShips [MAX_SHIPS];
 	unsigned int m_ShipCount;
-
 	Ship * m_aOwnedShips [MAX_SHIPS];
 
+	//
+	// Transmitters
 	static const unsigned int MAX_TRANSMITTERS = 2048;
 	Transmitter m_aTransmitters[MAX_TRANSMITTERS];
 	unsigned int m_TransmitterCount;
+	Transmitter * m_aOwnedTransmitters [MAX_TRANSMITTERS];
 
+	//
+	// ...
 	vec2 m_halfSize;
 
 	NetworkHelper m_network;
