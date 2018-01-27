@@ -1,5 +1,10 @@
 #pragma once
 
+struct sockaddr_in;
+
+namespace Network
+{
+
 class NetworkHelper
 {
 public:
@@ -65,3 +70,5 @@ private:
 	struct sockaddr_in * m_pClients;
 	unsigned int m_iClientCount;
 };
+
+}

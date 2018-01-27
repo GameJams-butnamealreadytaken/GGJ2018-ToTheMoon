@@ -5,6 +5,8 @@
 namespace Network
 {
 
+class NetworkHelper;
+
 class Ship
 {
 	friend class World;
@@ -27,6 +29,7 @@ public:
 	void setSpeed(float speed)
 	{
 		m_speed = speed;
+		m_bNeedSync = true;
 	}
 
 	//
@@ -40,6 +43,7 @@ public:
 	{
 		m_target.x = x;
 		m_target.y = y;
+		m_bNeedSync = true;
 	}
 
 	//
@@ -53,11 +57,12 @@ protected:
 
 	//
 	// Update
-	void update(float dt);
+	void update(float dt, NetworkHelper & network);
 
 	void clampPosition(const vec2 & halfSize);
 
 private:
+
 	uuid_t m_uuid;
 
 	vec2 m_position;
@@ -66,6 +71,7 @@ private:
 
 	float m_speed; // unit / s
 
+	bool m_bNeedSync;
 };
 
 }

@@ -171,11 +171,11 @@ void World::handleCreateTransmitterMessage(CreateTransmitterMessage * msg, char 
  */
 void World::update(float dt)
 {
-	for (unsigned int i = 0; i < MAX_SHIPS; ++i)
+	for (unsigned int i = 0; i < m_ShipCount; ++i)
 	{
 		Ship & ship = m_aShips[i];
 
-		ship.update(dt);
+		ship.update(dt, m_network);
 
 		ship.clampPosition(m_halfSize);
 	}
@@ -299,13 +299,13 @@ Ship * World::findShip(const uuid_t & uuid)
 {
 	Ship * ship = nullptr;
 
-	for (int i = 0; i < MAX_SHIPS; ++i)
+	for (int i = 0; i < m_ShipCount; ++i)
 	{
 #if WIN32
 		RPC_STATUS status;
 		if(UuidCompare((uuid_t*)(&uuid), &m_aShips[i].m_uuid, &status) == 0)
 #else // WIN32
-		if (uuid_compare(uuid, m_aShips[i].m_uuid))
+		if (uuid_compare(uuid, m_aShips[i].m_uuid) == 0)
 #endif // WIN32
 		{
 			ship = m_aShips+i;

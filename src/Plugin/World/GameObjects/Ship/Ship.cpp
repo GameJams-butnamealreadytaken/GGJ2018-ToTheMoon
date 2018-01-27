@@ -42,6 +42,8 @@ void Ship::Release(void)
 */
 void Ship::Update(float dt)
 {
+	UpdateSprite();
+
 	switch (m_iState)
 	{
 	case IDLE:
@@ -52,8 +54,6 @@ void Ship::Update(float dt)
 
 	case TRAVEL:
 		{
-			UpdateSprite();
-
 			{
 				const Network::vec2 & targetPos = m_pNetworkShip->getTarget();
 
