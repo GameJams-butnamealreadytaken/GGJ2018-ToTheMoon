@@ -5,6 +5,8 @@
 namespace Network
 {
 
+class NetworkHelper;
+
 class Transmitter
 {
 	friend class World;
@@ -28,7 +30,7 @@ protected:
 
 	//
 	// Update
-	void update(float dt);
+	void update(float dt, NetworkHelper & network);
 
 private:
 

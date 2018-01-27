@@ -37,9 +37,9 @@ Transmitter::~Transmitter(void)
  * @brief update
  * @param delta time in seconds
  */
-void Transmitter::update(float dt)
+void Transmitter::update(float dt, NetworkHelper & network)
 {
-
+	// ...
 }
 
 }
