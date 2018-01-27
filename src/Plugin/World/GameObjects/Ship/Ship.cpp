@@ -104,11 +104,18 @@ void Ship::Update(float dt)
 /**
 * @brief GetType
 */
-Ship::EShipType Ship::GetShipType(void)
+Ship::EShipType Ship::GetShipType(void) const
 {
 	return(m_type);
 }
 
+/**
+* @brief GetType
+*/
+unsigned int Ship::GetTeam(void) const
+{
+	return(m_pNetworkShip->getTeam());
+}
 /**
 * @brief SetTarget
 */
