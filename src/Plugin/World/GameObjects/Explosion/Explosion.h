@@ -15,7 +15,7 @@ public:
 		ON
 	};
 
-	explicit								Explosion			(ShEntity2 * pEntity, const CShVector2 & vPosition);
+	explicit								Explosion			(ShEntity2 * pEntity);
 	virtual									~Explosion			(void);
 
 	void									Initialize			(void);
@@ -26,7 +26,7 @@ public:
 
 	void									Update				(float dt);
 
-	virtual void							OnHit				(GameObject* pObject) = 0;
+	virtual void							OnHit				(GameObject* pObject) { }
 	virtual GameObject::EType				GetType(void)		{ return(GameObject::e_type_explosion); }
 
 protected:

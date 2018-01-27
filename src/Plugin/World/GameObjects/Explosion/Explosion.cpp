@@ -3,8 +3,8 @@
 /**
  * @brief Constructor
  */
-Explosion::Explosion(ShEntity2 * pEntity, const CShVector2 & vPosition)
-: GameObject(pEntity, vPosition)
+Explosion::Explosion(ShEntity2 * pEntity)
+: GameObject(pEntity, CShVector2(0.0f, 0.0f))
 {
 	SetState((int)OFF);
 }
