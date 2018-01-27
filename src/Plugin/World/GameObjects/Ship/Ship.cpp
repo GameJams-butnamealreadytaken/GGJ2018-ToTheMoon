@@ -88,11 +88,14 @@ void Ship::SetTarget(float x, float y, float fSpeed)
 	SetState((int)TRAVEL);
 }
 
+/**
+* @brief GameObject::UpdateSprite
+*/
 void Ship::UpdateSprite(void)
 {
 	// Sprite rotation
-	Network::vec2 shipPos = pNetworkShip->getPosition();
-	Network::vec2 targetPos = pNetworkShip->getTarget();
+	const Network::vec2 & shipPos = pNetworkShip->getPosition();
+	const Network::vec2 & targetPos = pNetworkShip->getTarget();
 	
 	float direction = atan2(targetPos.x - shipPos.x, targetPos.y - shipPos.y) * 180 / SHC_PI;
 	float orientation = (-direction + 90)*SHC_DEG2RAD;
@@ -101,4 +104,13 @@ void Ship::UpdateSprite(void)
 
 	// Sprite pos
 	ShEntity2::SetWorldPosition(m_pEntity, CShVector3(shipPos.x, shipPos.y, ShEntity2::GetWorldPositionZ(m_pEntity)));
+}
+
+/**
+* @brief GameObject::GetPosition
+*/
+CShVector2 Ship::GetShipPosition(void)
+{
+	const Network::vec2 & shipPos = pNetworkShip->getPosition();
+	return(CShVector2(shipPos.x, shipPos.y));
 }
