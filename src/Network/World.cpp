@@ -219,7 +219,15 @@ void World::handleCreateTransmitterMessage(CreateTransmitterMessage * msg, char 
 	printf("CREATE_TRANSMITTER from %s:%s\n", machine, service);
 	fflush(stdout);
 
-	// TODO
+	Transmitter * transmitter = createTransmitterInternal(msg->transmitterId, 0.0f, 0.0f);
+	assert(nullptr != transmitter);
+	if (m_pListener)
+	{
+		m_pListener->onTransmitterCreate(transmitter);
+	}
+
+	// Set Attributes
+	transmitter->m_position = msg->position;
 }
 
 /**
