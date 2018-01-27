@@ -54,9 +54,15 @@ protected:
 	bool broadcastHelloMessage(void);
 
 	void handleHelloMessage(HelloMessage * msg, char * machine, char * service);
-	void handleSyncShipStateMessage(SyncShipStateMessage * msg, char * machine, char * service);
+	void handlePingMessage(PingMessage * msg, char * machine, char * service);
+
 	void handleCreateShipMessage(CreateShipMessage * msg, char * machine, char * service);
+	void handleDestroyShipMessage(DestroyShipMessage * msg, char * machine, char * service);
+	void handleSyncShipStateMessage(SyncShipStateMessage * msg, char * machine, char * service);
+
 	void handleCreateTransmitterMessage(CreateTransmitterMessage * msg, char * machine, char * service);
+	void handleDestroyTransmitterMessage(DestroyTransmitterMessage * msg, char * machine, char * service);
+	void handleSyncTransmitterStateMessage(DestroyTransmitterMessage * msg, char * machine, char * service);
 
 private:
 

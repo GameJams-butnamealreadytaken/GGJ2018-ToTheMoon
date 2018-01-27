@@ -5,6 +5,7 @@
 
 #include "../GameObject.h"
 
+#include "../Projectile/ProjectileManager.h"
 #include "../../../../Network/World.h"
 
 class Ship : public GameObject
@@ -27,7 +28,7 @@ public:
 								Ship					(ShEntity2 * pEntity, const CShVector2 & vPosition);
 	virtual						~Ship					(void);
 
-	void						Initialize				(const EShipType type, const Network::Ship * pNetworkShip);
+	void						Initialize				(const EShipType type, const Network::Ship * pNetworkShip, ProjectileManager * pProjectileManager);
 	void						Release					(void);
 
 	virtual void				Update					(float dt) SH_ATTRIBUTE_OVERRIDE;
@@ -40,13 +41,16 @@ public:
 	EShipType					GetShipType				(void);
 
 private:
-	void						UpdateSprite			(void);
+	void						UpdateSprite			(const Network::vec2 & shipPos, const Network::vec2 & targetPos, float fAngle);
 
 	float						ComputeVecteurNorme		(float Ax, float Ay, float Bx, float By);
 
 private:
 
-	EShipType	m_type;
+	EShipType			m_type;
 
-	Network::Ship * m_pNetworkShip;
+	Network::Ship *		m_pNetworkShip;
+
+	ProjectileManager *	m_pProjectileManager;
+	float				m_fFireRate;
 };

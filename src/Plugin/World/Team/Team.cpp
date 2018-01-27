@@ -7,6 +7,7 @@
 */
 /*explicit*/ Team::Team(int teamId)
 	:m_iTeamId(teamId)
+	, m_apTransmitter()
 {
 
 }
@@ -22,9 +23,10 @@
 /**
 * @brief Team::Initialize
 */
-void Team::Initialize(void)
+void Team::Initialize(const CShVector2 & startPoint, const CShVector2 & endPoint)
 {
-
+	m_startPoint = startPoint;
+	m_endPoint = endPoint;
 }
 
 /**
@@ -77,6 +79,50 @@ void Team::AddTransmitter(Transmitter * pTransmitter)
 */
 bool Team::GetVictoryCondition(void)
 {
+	CShArray<int> transList_done;
+
+	int nTransCount = m_apTransmitter.GetCount();
+	for (int i = 0; i < nTransCount; ++i)
+	{
+		Transmitter * pTrans = m_apTransmitter[i];
+		CShVector2 & newPos = pTrans->GetPosition2();
+		// Linked to start point
+		if (20 < ComputeVecteurNorme(newPos.m_x, newPos.m_y, m_startPoint.m_x, m_startPoint.m_y))
+		{
+			if (CheckNeighboorList(pTrans, transList_done))
+			{
+				return(true);
+			}
+		}
+	}
+
+	return(false);
+}
+
+/**
+* @brief Team::CheckNeighboorList
+*/
+bool Team::CheckNeighboorList(Transmitter * pTrans, CShArray<int> & transList_done)
+{
+	if (!transList_done.Find(pTrans->GetId()))
+	{
+		transList_done.Add(pTrans->GetId());
+		CShVector2 & newPos = pTrans->GetPosition2();
+		if (20 < ComputeVecteurNorme(newPos.m_x, newPos.m_y, m_endPoint.m_x, m_endPoint.m_y))
+		{
+			return(true);
+		}
+
+		int nNeighbourCount = pTrans->GetNeighbourCount();
+		for (int j = 0; j < nNeighbourCount; ++j)
+		{
+			if (CheckNeighboorList(pTrans, transList_done))
+			{
+				return(true);
+			}
+		}
+	}
+
 	return(false);
 }
 

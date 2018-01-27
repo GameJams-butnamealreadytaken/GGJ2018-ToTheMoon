@@ -6,6 +6,8 @@
 #	include <rpc.h>
 #endif // __gnu_linux__
 
+#define CURRENT_NETWORK_VERSION (0xFF0001)
+
 namespace Network
 {
 
@@ -29,10 +31,19 @@ struct vec2
 
 enum MSG_ID
 {
-	HELLO				= 0x001,
-	SYNC_SHIP_STATE		= 0x002,
-	CREATE_SHIP			= 0x003,
-	CREATE_TRANSMITTER	= 0x004
+	// Service messages
+	HELLO					= 0x0001,
+	PING					= 0x0002,
+
+	// Ship messages
+	SHIP_CREATE				= 0x0011,
+	SHIP_DESTROY			= 0x0012,
+	SHIP_SYNC_STATE			= 0x0013,
+
+	// Transmitter messages
+	TRANSMITTER_CREATE		= 0x0101,
+	TRANSMITTER_DESTROY		= 0x0102,
+	TRANSMITTER_SYNC_STATE	= 0x0103,
 };
 
 struct HelloMessage
@@ -40,17 +51,30 @@ struct HelloMessage
 	HelloMessage()
 	{
 		id = HELLO;
+		version = CURRENT_NETWORK_VERSION;
 	}
 
 	MSG_ID id;
 	uuid_t helloId;
+
+	unsigned int version;
+};
+
+struct PingMessage
+{
+	PingMessage()
+	{
+		id = PING;
+	}
+
+	MSG_ID id;
 };
 
 struct SyncShipStateMessage
 {
 	SyncShipStateMessage()
 	{
-		id = SYNC_SHIP_STATE;
+		id = SHIP_SYNC_STATE;
 	}
 
 	MSG_ID id;
@@ -65,7 +89,7 @@ struct CreateShipMessage
 {
 	CreateShipMessage()
 	{
-		id = CREATE_SHIP;
+		id = SHIP_CREATE;
 	}
 
 	MSG_ID id;
@@ -76,17 +100,39 @@ struct CreateShipMessage
 	float speed;
 };
 
+struct DestroyShipMessage
+{
+	DestroyShipMessage()
+	{
+		id = SHIP_DESTROY;
+	}
+
+	MSG_ID id;
+	uuid_t shipId;
+};
+
 struct CreateTransmitterMessage
 {
 	CreateTransmitterMessage()
 	{
-		id = CREATE_TRANSMITTER;
+		id = TRANSMITTER_CREATE;
 	}
 
 	MSG_ID id;
 	unsigned int transmitterId;
 
 	vec2 position;
+};
+
+struct DestroyTransmitterMessage
+{
+	DestroyTransmitterMessage()
+	{
+		id = TRANSMITTER_DESTROY;
+	}
+
+	MSG_ID id;
+	unsigned int transmitterId;
 };
 
 }
