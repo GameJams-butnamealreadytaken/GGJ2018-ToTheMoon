@@ -20,7 +20,7 @@ Ship::~Ship(void)
 /**
 * @brief Initialize
 */
-void Ship::Initialize(EShipType type, Network::World world)
+void Ship::Initialize(EShipType type, Network::World & world)
 {
 	m_type = type;
 	pNetworkShip = world.createShip();
@@ -92,8 +92,6 @@ void Ship::UpdateSprite(void)
 {
 	// Sprite rotation
 	Network::vec2 shipPos = pNetworkShip->getPosition();
-	shipPos.x = 0;
-	shipPos.y = 0;
 	Network::vec2 targetPos = pNetworkShip->getTarget();
 	
 	float direction = atan2(targetPos.x - shipPos.x, targetPos.y - shipPos.y) * 180 / SHC_PI;
