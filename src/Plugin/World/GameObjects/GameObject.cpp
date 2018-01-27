@@ -13,6 +13,8 @@
 , m_iCurrentAnimationSprite(0.0f)
 , m_fAnimationInterFrameTime(0.0f)
 , m_fAnimationTime(0.0f)
+, m_bPlayAnimationOnlyOnce(false)
+, m_bAnimationEnded(false)
 {
 	ShEntity2::SetShow(pEntity, false);
 }
@@ -44,10 +46,12 @@ void GameObject::Release(void)
 /**
 * @brief GameObject::Animate
 */
-void GameObject::Animate(int iSpriteCount, char* szSpriteLibrary, char* szSpriteName, float fAnimationInterFrameTime)
+void GameObject::Animate(int iSpriteCount, char* szSpriteLibrary, char* szSpriteName, float fAnimationInterFrameTime, bool bPlayOnce /* = false */)
 {
 	m_bAnimated = true;
 	m_fAnimationInterFrameTime = fAnimationInterFrameTime;
+	m_bAnimationEnded = false;
+	m_bPlayAnimationOnlyOnce = bPlayOnce;
 
 	for (int iFrame = 0; iFrame < iSpriteCount; ++iFrame)
 	{
@@ -65,7 +69,7 @@ void GameObject::Update(float dt)
 {
 	m_fStateTime += dt;
 
-	if (m_bAnimated)
+	if (m_bAnimated && !m_bAnimationEnded)
 	{
 		m_fAnimationTime += dt;
 
@@ -75,11 +79,16 @@ void GameObject::Update(float dt)
 
 			if (m_iCurrentAnimationSprite == m_aSprite.GetCount())
 			{
+				if (m_bPlayAnimationOnlyOnce)
+				{
+					m_bAnimationEnded = true;
+				}
+
 				m_iCurrentAnimationSprite = 0;
 			}
 
 			ShEntity2::SetSprite(m_pEntity, m_aSprite[m_iCurrentAnimationSprite]);
-			m_fAnimationTime = 0.0f;
+			m_fAnimationTime = m_fAnimationTime - m_fAnimationInterFrameTime;
 		}
 	}
 }
