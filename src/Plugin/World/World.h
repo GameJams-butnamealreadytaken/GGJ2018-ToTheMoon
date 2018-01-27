@@ -3,13 +3,15 @@
 #include "ShSDK/ShSDK.h"
 
 #include "../../Network/World.h"
+#include "../../Network/WorldListener.h"
 
 #include "GameObjects/Explosion/ExplosionManager.h"
 #include "GameObjects/Projectile/ProjectileManager.h"
-#include "GameObjects/Transmiter/Transmiter.h"
+#include "GameObjects/Transmitter/Transmitter.h"
 #include "GameObjects/Ship/Ship.h"
+#include "GameObjects/Planet/Planet.h"
 
-class World
+class World : public Network::WorldListener
 {
 
 public:
@@ -27,6 +29,13 @@ public:
 	void		OnTouchDown			(int iTouch, float positionX, float positionY);
 	void		OnTouchUp			(int iTouch, float positionX, float positionY);
 	void		OnTouchMove			(int iTouch, float positionX, float positionY);
+	
+	virtual void onShipCreated		(const Network::Ship * ship);
+	virtual void onTransmitterCreate(const Network::Transmitter * ship);
+
+private:
+	void		CreateShip			(float x, float y);
+	void		CreateTransmitter	(float x, float y);
 
 private:
 
@@ -36,7 +45,8 @@ private:
 	ExplosionManager				m_explosionManager;
 	ProjectileManager				m_projectileManager;
 
-	CShArray<Transmiter *>			m_apTransmiter;
+	Planet*							m_aPlanet[4];
+	CShArray<Transmitter *>			m_apTransmitter;
 	CShArray<Ship *>				m_apShip;
 	Ship *							m_pShip;
 

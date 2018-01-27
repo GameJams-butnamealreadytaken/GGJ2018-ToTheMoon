@@ -1,5 +1,7 @@
 #include "World.h"
 
+#include "WorldListener.h"
+
 #include <stdio.h>
 #include <assert.h>
 
@@ -32,7 +34,11 @@ namespace Network
 /**
  * @brief Constructor
  */
-World::World(float size_x, float size_y) : m_ShipCount(0), m_halfSize(size_x, size_y)
+World::World(float size_x, float size_y) 
+: m_ShipCount(0)
+, m_halfSize(size_x, size_y)
+, m_TransmitterCount(0)
+, m_pListener(nullptr)
 {
 	memset(m_aShips, 0, sizeof(m_aShips));
 
@@ -159,29 +165,35 @@ bool World::broadcastHelloMessage(void)
  */
 void World::handleHelloMessage(HelloMessage * msg, struct sockaddr* sender, unsigned int sendsize)
 {
-	ShipStateMessage response;
-	response.shipId = 0;
-	response.position = vec2(0.0f, 0.0f);
-	response.target = vec2(0.0f, 0.0f);
-	response.speed = 0.0f;
+	char machine[NI_MAXHOST];
+	char service[NI_MAXSERV];
 
-	struct sockaddr_in addr;
-	addr.sin_family = AF_INET;
-	addr.sin_port = htons(BRD_HELO_PORT);
-	addr.sin_addr.s_addr = inet_addr(BRD_HELO_ADDR); // FIXME : respond only to sender !
+	if (0 == getnameinfo(sender, sendsize, machine, NI_MAXHOST, service, NI_MAXSERV, NI_NUMERICHOST|NI_NUMERICSERV))
+	{
+		SyncShipStateMessage response;
+		response.shipId = 0;
+		response.position = vec2(0.0f, 0.0f);
+		response.target = vec2(0.0f, 0.0f);
+		response.speed = 0.0f;
+
+		struct sockaddr_in addr;
+		addr.sin_family = AF_INET;
+		addr.sin_port = htons(BRD_HELO_PORT);
+		addr.sin_addr.s_addr = inet_addr(machine);
 #if WIN32
-	SSIZE_T size = sendto(m_sock, (const char*)&response, sizeof(ShipStateMessage), 0, (sockaddr*)&addr, sizeof(addr));
+		SSIZE_T size = sendto(m_sock, (const char*)&response, sizeof(SyncShipStateMessage), 0, (sockaddr*)&addr, sizeof(addr));
 #else // WIN32
-	ssize_t size = sendto(m_sock, (void*)&response, sizeof(ShipStateMessage), 0, (sockaddr*)&addr, sizeof(addr));
+		ssize_t size = sendto(m_sock, (void*)&response, sizeof(SyncShipStateMessage), 0, (sockaddr*)&addr, sizeof(addr));
 #endif // WIN32
 	
-	assert(size > 0);
+		assert(size > 0);
+	}
 }
 
 /**
- * @brief World::handleShipStateMessage
+ * @brief World::handleSyncShipStateMessage
  */
-void World::handleShipStateMessage(ShipStateMessage * msg, struct sockaddr* sender, unsigned int sendsize)
+void World::handleSyncShipStateMessage(SyncShipStateMessage * msg, struct sockaddr* sender, unsigned int sendsize)
 {
 	Ship * ship = nullptr; // FIXME : find ship msg->shipId
 
@@ -189,12 +201,42 @@ void World::handleShipStateMessage(ShipStateMessage * msg, struct sockaddr* send
 	{
 		ship = createShip();
 		assert(nullptr != ship);
-		// TODO : callback Ship Created
+		if (m_pListener)
+		{
+			m_pListener->onShipCreated(ship);
+		}
 	}
 
+	// Set Attributes
 	ship->m_position = msg->position;
 	ship->m_target = msg->target;
 	ship->m_speed = msg->speed;
+}
+
+/**
+ * @brief World::handleCreateShipMessage
+ */
+void World::handleCreateShipMessage(CreateShipMessage * msg, struct sockaddr* sender, unsigned int sendsize)
+{
+	Ship * ship = createShip();
+	assert(nullptr != ship);
+	if (m_pListener)
+	{
+		m_pListener->onShipCreated(ship);
+	}
+
+	// Set Attributes
+	ship->m_position = msg->position;
+	ship->m_target = msg->target;
+	ship->m_speed = msg->speed;
+}
+
+/**
+ * @brief World::handleCreateTransmitterMessage
+ */
+void World::handleCreateTransmitterMessage(CreateTransmitterMessage * msg, struct sockaddr* sender, unsigned int sendsize)
+{
+	// TODO
 }
 
 /**
@@ -255,11 +297,27 @@ void World::update(float dt)
 			}
 			break;
 
-			case SHIP_STATE:
+			case SYNC_SHIP_STATE:
 			{
-				static_assert(sizeof(ShipStateMessage) < MAX_MESSAGE_SIZE, "ShipStateMessage is too big !");
-				assert(sizeof(ShipStateMessage) == size);
-				handleShipStateMessage((ShipStateMessage*)MSG, (struct sockaddr*)&sender, sendsize);
+				static_assert(sizeof(SyncShipStateMessage) < MAX_MESSAGE_SIZE, "ShipStateMessage is too big !");
+				assert(sizeof(SyncShipStateMessage) == size);
+				handleSyncShipStateMessage((SyncShipStateMessage*)MSG, (struct sockaddr*)&sender, sendsize);
+			}
+			break;
+
+			case CREATE_SHIP:
+			{
+				static_assert(sizeof(CreateShipMessage) < MAX_MESSAGE_SIZE, "ShipStateMessage is too big !");
+				assert(sizeof(CreateShipMessage) == size);
+				handleCreateShipMessage((CreateShipMessage*)MSG, (struct sockaddr*)&sender, sendsize);
+			}
+			break;
+
+			case CREATE_TRANSMITTER:
+			{
+				static_assert(sizeof(CreateTransmitterMessage) < MAX_MESSAGE_SIZE, "ShipStateMessage is too big !");
+				assert(sizeof(CreateTransmitterMessage) == size);
+				handleCreateTransmitterMessage((CreateTransmitterMessage*)MSG, (struct sockaddr*)&sender, sendsize);
 			}
 			break;
 		}
@@ -278,9 +336,21 @@ void World::update(float dt)
 				}
 				break;
 
-				case SHIP_STATE:
+				case SYNC_SHIP_STATE:
 				{
 					printf("SHIP_STATE from %s:%s\n", machine, service);
+				}
+				break;
+
+				case CREATE_SHIP:
+				{
+					printf("CREATE_SHIP from %s:%s\n", machine, service);
+				}
+				break;
+
+				case CREATE_TRANSMITTER:
+				{
+					printf("CREATE_TRANSMITTER from %s:%s\n", machine, service);
 				}
 				break;
 			}
@@ -314,5 +384,34 @@ Ship * World::createShip(float x, float y)
 
 	return(ship);
 }
+
+/**
+* @brief Create Transmitter
+* @param x
+* @param y
+* @return new Transmitter
+*/
+Transmitter * World::createTransmitter(void)
+{
+	return(createTransmitter(0.0f, 0.0f));
+}
+
+/**
+* @brief Create Transmitter
+* @param x
+* @param y
+* @return new Transmitter
+*/
+Transmitter * World::createTransmitter(float x, float y)
+{
+	Transmitter * transmitter = m_aTransmitters + m_TransmitterCount;
+
+	++m_TransmitterCount;
+
+	*transmitter = Transmitter(x, y);
+
+	return(transmitter);
+}
+
 
 }

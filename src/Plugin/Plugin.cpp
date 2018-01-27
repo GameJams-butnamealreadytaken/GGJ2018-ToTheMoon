@@ -4,6 +4,8 @@
 extern SoundManager g_soundManager;
 const CShIdentifier plugin_identifier("PluginGGJ2018");
 
+bool g_bDisableAnimations = false;
+
 /**
  * @brief Constructor
  */

@@ -2,7 +2,7 @@
 
 #include "GameObjects/Projectile/ProjectileManager.h"
 
-#define TEST 0
+#define TEST 1
 
 /**
 * @brief Constructor
@@ -12,7 +12,7 @@
 	, m_world(INFINITY, INFINITY)
 	, m_explosionManager()
 	, m_projectileManager()
-	, m_apTransmiter()
+	, m_apTransmitter()
 	, m_apShip()
 	, m_pShip(shNULL)
 {
@@ -40,14 +40,45 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 	m_projectileManager.Initialize(levelIdentifier);
 
 	//
-	// Create player's Ship
+	// Create Planets
 	{
-		ShEntity2* pEntity = ShEntity2::Create(m_levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("image_white"), CShVector3(0.0f, 0.0f, 2.0f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(10.0f, 10.0f, 1.0f));
-		SH_ASSERT(shNULL != pEntity);
-		m_pShip = new Ship(pEntity, CShVector2(0.0f,0.0f));
-		m_pShip->Initialize(Ship::BASE, m_world);
-		m_apShip.Add(m_pShip);
+		//
+		// Moon
+		{
+			ShEntity2* pEntity = ShEntity2::Create(levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("moon_01"), CShVector3(0.0f, 0.0f, 99.0f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
+			m_aPlanet[0] = new Planet(Planet::e_planet_moon, pEntity);
+			m_aPlanet[0]->SetPosition2(CShVector2(-700.0f, -700.0f));
+		}
+
+		//
+		// Earth
+		{
+			ShEntity2* pEntity = ShEntity2::Create(levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("earth_01"), CShVector3(0.0f, 0.0f, 99.0f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
+			m_aPlanet[1] = new Planet(Planet::e_planet_earth, pEntity);
+			m_aPlanet[1]->SetPosition2(CShVector2(700.0f, -700.0f));
+		}
+
+		//
+		// Mars
+		{
+			ShEntity2* pEntity = ShEntity2::Create(levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("mars_01"), CShVector3(0.0f, 0.0f, 99.0f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
+			m_aPlanet[2] = new Planet(Planet::e_planet_mars, pEntity);
+			m_aPlanet[2]->SetPosition2(CShVector2(-700.0f, 700.0f));
+		}
+
+		//
+		// Jupiter
+		{
+			ShEntity2* pEntity = ShEntity2::Create(levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("jupiter_01"), CShVector3(0.0f, 0.0f, 99.0f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
+			m_aPlanet[3] = new Planet(Planet::e_planet_jupiter, pEntity);
+			m_aPlanet[3]->SetPosition2(CShVector2(700.0f, 700.0f));
+		}
 	}
+
+	//
+	// Create player's Ship
+	CreateShip(0.0f, 0.0f);
+
 }
 
 /**
@@ -79,6 +110,14 @@ void World::Update(float dt)
 	m_world.update(dt);
 
 	//
+	// Update planets
+	for (int iPlanet = 0; iPlanet < 4; ++iPlanet) 
+	{
+		m_aPlanet[iPlanet]->Update(dt);
+	}
+	
+
+	//
 	// Update explosion manager
 	m_explosionManager.Update(dt);
 
@@ -103,12 +142,12 @@ void World::Update(float dt)
 #endif //TEST
 
 	//
-	// Update Transmiters
-	int iTransmiterCount = m_apTransmiter.GetCount();
-	for (int iTransmiter = 0; iTransmiter < iTransmiterCount; ++iTransmiter)
+	// Update Transmitters
+	int iTransmitterCount = m_apTransmitter.GetCount();
+	for (int iTransmitter = 0; iTransmitter < iTransmitterCount; ++iTransmitter)
 	{
-		Transmiter * pTransmiter = m_apTransmiter[iTransmiter];
-		pTransmiter->Update(dt);
+		Transmitter * pTransmitter = m_apTransmitter[iTransmitter];
+		pTransmitter->Update(dt);
 	}
 
 	//
@@ -118,7 +157,7 @@ void World::Update(float dt)
 		m_pShip->Update(dt);
 
 		ShCamera* pCamera = ShCamera::GetCamera2D();
-		CShVector2 shipPos = m_pShip->GetShipPosition();
+		CShVector2 shipPos = m_pShip->GetPosition2();
 		ShCamera::SetPosition2(pCamera, shipPos);
 		ShCamera::SetTarget(pCamera, CShVector3(shipPos, 0.0f));
 	}
@@ -129,14 +168,28 @@ void World::Update(float dt)
 */
 void World::OnTouchDown(int iTouch, float positionX, float positionY)
 {
+	ShCamera * pCamera = ShCamera::GetCamera2D();
+
+	const CShVector2 & viewport = ShCamera::GetViewport(pCamera);
+
+	CShVector2 screenPos(0.0f, 0.0f);
+	screenPos.m_x = positionX + viewport.m_x * 0.5f;
+	screenPos.m_y = (viewport.m_y - positionY) - viewport.m_y * 0.5f;
+
+	CShRay3 ray = ShCamera::Unproject(pCamera, screenPos);
+
+	CShVector3 worldPosition = ray.GetOrigin();
+
 	// Set new ship target
 	if (shNULL != m_pShip)
 	{
-		m_pShip->SetTarget(positionX, positionY, 5.0f); // todo move speed on her right place
+		m_pShip->SetTarget(worldPosition.m_x, worldPosition.m_y, 5.0f); // todo move speed on her right place
 	}
 
+
 #if TEST
-	m_explosionManager.Start(CShVector2(positionX, positionY));
+	m_explosionManager.Start(CShVector2(worldPosition.m_x, worldPosition.m_y));
+	CreateTransmitter(worldPosition.m_x, worldPosition.m_y);
 #endif //TEST
 }
 
@@ -154,4 +207,46 @@ void World::OnTouchUp(int iTouch, float positionX, float positionY)
 void World::OnTouchMove(int iTouch, float positionX, float positionY)
 {
 
+}
+
+/**
+* @brief World::onShipCreated
+*/
+/*virtual*/ void World::onShipCreated(const Network::Ship * ship)
+{
+	CreateShip(0.0f, 0.0f);
+}
+
+/**
+* @brief World::onTransmitterCreate
+*/
+/*virtual*/ void World::onTransmitterCreate(const Network::Transmitter * ship)
+{
+	CreateTransmitter(0.0f, 0.0f);
+}
+
+/**
+* @brief World::CreateShip
+*/
+void World::CreateShip(float x, float y)
+{
+	ShEntity2* pEntity = ShEntity2::Create(m_levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("image_white"), CShVector3(x, y, 2.0f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(10.0f, 10.0f, 1.0f));
+	SH_ASSERT(shNULL != pEntity);
+	m_pShip = new Ship(pEntity, CShVector2(x, y));
+	Network::Ship * pShip = m_world.createShip(x, y);
+	m_pShip->Initialize(Ship::BASE, pShip);
+	m_apShip.Add(m_pShip);
+}
+
+/**
+* @brief World::CreateTransmitter
+*/
+void World::CreateTransmitter(float x, float y)
+{
+	ShEntity2* pEntity = ShEntity2::Create(m_levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("transmiter"), CShVector3(x, y, 2.01f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
+	SH_ASSERT(shNULL != pEntity);
+	Transmitter * pTrans = new Transmitter(pEntity, CShVector2(x, y));
+	Network::Transmitter * pNetworkTrans = m_world.createTransmitter(x, y);
+	pTrans->Initialize(pNetworkTrans);
+	m_apTransmitter.Add(pTrans);
 }

@@ -1,12 +1,14 @@
 #include "Explosion.h"
 
+extern bool g_bDisableAnimations;
+
 /**
  * @brief Constructor
  */
 Explosion::Explosion(ShEntity2 * pEntity)
 : GameObject(pEntity, CShVector2(0.0f, 0.0f))
 {
-	Animate(10, "ggj", "explosion", 0.1f, true);
+	Animate(9, "ggj", "explosion", 0.1f, true);
 	SetState((int)OFF);
 }
 
@@ -39,6 +41,9 @@ void Explosion::Release(void)
 */
 void Explosion::Start(const CShVector2 & vPosition)
 {
+	if (g_bDisableAnimations)
+		return;
+
 	m_bAnimationEnded = false;
 
 	SetState((int)ON);

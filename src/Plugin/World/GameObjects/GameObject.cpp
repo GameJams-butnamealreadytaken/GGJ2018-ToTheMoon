@@ -1,5 +1,7 @@
 #include "GameObject.h"
 
+extern bool g_bDisableAnimations;
+
 /**
 * @brief Constructor
 */
@@ -48,17 +50,20 @@ void GameObject::Release(void)
 */
 void GameObject::Animate(int iSpriteCount, char* szSpriteLibrary, char* szSpriteName, float fAnimationInterFrameTime, bool bPlayOnce /* = false */)
 {
-	m_bAnimated = true;
-	m_fAnimationInterFrameTime = fAnimationInterFrameTime;
-	m_bAnimationEnded = false;
-	m_bPlayAnimationOnlyOnce = bPlayOnce;
-
-	for (int iFrame = 0; iFrame < iSpriteCount; ++iFrame)
+	if (!g_bDisableAnimations)
 	{
-		char szEntityName[1024];
-		sprintf(szEntityName, "%s_%02d", szSpriteName, iFrame+1);
-		ShSprite* pSprite = ShSprite::Find(CShIdentifier(szSpriteLibrary), CShIdentifier(szEntityName));
-		m_aSprite.Add(pSprite);
+		m_bAnimated = true;
+		m_fAnimationInterFrameTime = fAnimationInterFrameTime;
+		m_bAnimationEnded = false;
+		m_bPlayAnimationOnlyOnce = bPlayOnce;
+
+		for (int iFrame = 0; iFrame < iSpriteCount; ++iFrame)
+		{
+			char szEntityName[1024];
+			sprintf(szEntityName, "%s_%02d", szSpriteName, iFrame + 1);
+			ShSprite* pSprite = ShSprite::Find(CShIdentifier(szSpriteLibrary), CShIdentifier(szEntityName));
+			m_aSprite.Add(pSprite);
+		}
 	}
 }
 
@@ -69,26 +74,31 @@ void GameObject::Update(float dt)
 {
 	m_fStateTime += dt;
 
-	if (m_bAnimated && !m_bAnimationEnded)
+	shClamp(dt, 0.0f, 0.05f);
+
+	if (!g_bDisableAnimations)
 	{
-		m_fAnimationTime += dt;
-
-		if (m_fAnimationTime > m_fAnimationInterFrameTime)
+		if (m_bAnimated && !m_bAnimationEnded)
 		{
-			m_iCurrentAnimationSprite++;
+			m_fAnimationTime += dt;
 
-			if (m_iCurrentAnimationSprite == m_aSprite.GetCount())
+			if (m_fAnimationTime > m_fAnimationInterFrameTime)
 			{
-				if (m_bPlayAnimationOnlyOnce)
+				m_iCurrentAnimationSprite++;
+
+				if (m_iCurrentAnimationSprite == m_aSprite.GetCount())
 				{
-					m_bAnimationEnded = true;
+					if (m_bPlayAnimationOnlyOnce)
+					{
+						m_bAnimationEnded = true;
+					}
+
+					m_iCurrentAnimationSprite = 0;
 				}
 
-				m_iCurrentAnimationSprite = 0;
+				ShEntity2::SetSprite(m_pEntity, m_aSprite[m_iCurrentAnimationSprite]);
+				m_fAnimationTime = m_fAnimationTime - m_fAnimationInterFrameTime;
 			}
-
-			ShEntity2::SetSprite(m_pEntity, m_aSprite[m_iCurrentAnimationSprite]);
-			m_fAnimationTime = m_fAnimationTime - m_fAnimationInterFrameTime;
 		}
 	}
 }
