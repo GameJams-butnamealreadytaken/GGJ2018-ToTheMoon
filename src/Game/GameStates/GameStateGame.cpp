@@ -79,14 +79,6 @@ void GameStateGame::load(void)
 
 	CShIdentifier levelIdentifier("game_level");
 	bool loading = ShLevel::Load(levelIdentifier);
-
-	if (!loading)
-	{
-		game.pop();
-		game.push(Game::MAIN_MENU);
-		return;
-	}
-
 	SH_ASSERT(loading);
 }
 
