@@ -107,7 +107,7 @@ void World::handleHelloMessage(HelloMessage * msg, char * machine, char * servic
 		return;
 	}
 
-	if (CURRENT_NETWORK_VERSION == msg->version)
+	if (CURRENT_NETWORK_VERSION != msg->version)
 	{
 		printf("BAD VERSION !\n");
 		return; // BAD VERSION !
