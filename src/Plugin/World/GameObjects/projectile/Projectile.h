@@ -24,5 +24,5 @@ public:
 
 protected:
 	CShVector2								m_vSpeed;
-
+	CShVector2								m_vDestination;
 };
