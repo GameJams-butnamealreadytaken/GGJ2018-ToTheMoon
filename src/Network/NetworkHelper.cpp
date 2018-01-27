@@ -8,6 +8,7 @@
 #	include <IPHlpApi.h>
 #else
 #	include <sys/socket.h>
+#	include <sys/ioctl.h>
 #	include <netinet/in.h>
 #	include <net/if.h>
 #	include <arpa/inet.h>
@@ -339,9 +340,7 @@ bool NetworkHelper::RegisterClient(char * machine)
 
 	return(strcmp(szBroadcast, "") > 0);
 #else // WIN32
-#if 0
 	int sock = socket(AF_INET, SOCK_DGRAM, 0);
-
 	
     struct ifreq *ifreq;
     struct ifconf ifconf;
@@ -361,8 +360,8 @@ bool NetworkHelper::RegisterClient(char * machine)
     printf("Listing all interfaces:\n");
     ifreq = ifconf.ifc_req;
     i = 0;
-    //while (i < ifconf.ifc_len)
-    //{
+	while (i < ifconf.ifc_len)
+  {
 #ifndef linux
         len = IFNAMSIZ + ifreq->ifr_addr.sa_len;
 #else
@@ -374,25 +373,22 @@ bool NetworkHelper::RegisterClient(char * machine)
         ifreq = (struct ifreq*)((char*)ifreq + len);
 
         i += len;
-	//}
+	}
 
-    int family;
-    struct ifreq ifreq;
+	int family;
 
     if(ioctl(sock, SIOCGIFBRDADDR, &ifreq) != 0)
     {
-        fprintf(stderr, "Could not find interface named %s", name);
-        return; /* ignore */
+		fprintf(stderr, "Could not find interface");
+		return(false); /* ignore */
     }
 
-    getnameinfo(&ifreq.ifr_broadaddr, sizeof(ifreq.ifr_broadaddr), szBroadcast, iLength, 0, 0, NI_NUMERICHOST);
-	printf("%-24s%s\n", name, host);
+	getnameinfo(&ifreq->ifr_broadaddr, sizeof(ifreq->ifr_broadaddr), szBroadcast, iLength, 0, 0, NI_NUMERICHOST);
+	printf("%-24s\n", ifreq->ifr_name);
 	
 	close(sock);
 
 	return(true);
-#endif
-	return(false);
 #endif // WIN32
 }
 

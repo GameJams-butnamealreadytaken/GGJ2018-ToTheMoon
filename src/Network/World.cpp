@@ -272,6 +272,13 @@ void World::update(float dt)
 		ship.clampPosition(m_halfSize);
 	}
 
+	for (unsigned int i = 0; i < m_TransmitterCount; ++i)
+	{
+		Transmitter & transmitter = m_aTransmitters[i];
+
+		transmitter.update(dt, m_network);
+	}
+
 	//
 	// Receive messages
 	unsigned int size = MAX_MESSAGE_SIZE;
