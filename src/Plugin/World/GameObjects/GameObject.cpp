@@ -69,6 +69,8 @@ void GameObject::Update(float dt)
 {
 	m_fStateTime += dt;
 
+	shClamp(dt, 0.0f, 0.05f);
+
 	if (m_bAnimated && !m_bAnimationEnded)
 	{
 		m_fAnimationTime += dt;
