@@ -188,11 +188,7 @@ bool NetworkHelper::Receive(char * buffer, unsigned int & size, char * machine, 
 		socklen_t sendsize = sizeof(sender);
 		memset(&sender, 0, sizeof(sender));
 
-#if WIN32
 		size = recvfrom(m_sock, buffer, size, 0, (sockaddr*)&sender, &sendsize);
-#else // WIN32
-		size = recvfrom(m_sock, buffer, size, 0, (sockaddr*)&sender, &sendsize);
-#endif // WIN32
 
 		if (machine && service)
 		{
@@ -210,8 +206,18 @@ bool NetworkHelper::Receive(char * buffer, unsigned int & size, char * machine, 
  * @brief NetworkHelper::RegisterClient
  * @param machine
  */
-void NetworkHelper::RegisterClient(char * machine)
+bool NetworkHelper::RegisterClient(char * machine)
 {
+	in_addr_t machine_addr = inet_addr(machine);
+
+	for (int i = 0; i < m_iClientCount; ++i)
+	{
+		if (m_pClients[i].sin_addr.s_addr == machine_addr)
+		{
+			return(false);
+		}
+	}
+
 	unsigned int index = m_iClientCount;
 
 	m_iClientCount++;
@@ -221,7 +227,9 @@ void NetworkHelper::RegisterClient(char * machine)
 	sockaddr_in & addr = m_pClients[index];
 	addr.sin_family = AF_INET;
 	addr.sin_port = htons(PORT);
-	addr.sin_addr.s_addr = inet_addr(machine);
+	addr.sin_addr.s_addr = machine_addr;
+
+	return(true);
 }
 
 /**

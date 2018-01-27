@@ -53,7 +53,7 @@ public:
 
 	//
 	// ...
-	void RegisterClient(char * machine);
+	bool RegisterClient(char * machine);
 
 	//
 	// ...
