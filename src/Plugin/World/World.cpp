@@ -3,7 +3,9 @@
 /**
 * @brief Constructor
 */
-/*explicit*/ World::World(void) : m_world(1000.0f, 1000.0f)
+/*explicit*/ World::World(void) 
+	: m_world(1000.0f, 1000.0f)
+	, m_pShip(shNULL)
 {
 	// ...
 }
@@ -24,25 +26,10 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 	m_levelIdentifier = levelIdentifier;
 
 	//
-	// Create transmiter
-	{
-		for (int i = 0; i < POOL_TRANSMITER; ++i)
-		{
-			ShEntity2* pEntity = ShEntity2::Create(m_levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("transmiter"), CShVector3(0.0f, 0.0f, 0.1f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
-			Transmiter * pTransmiter = new Transmiter(pEntity, CShVector2(0.0f, 0.0f));
-			m_apTransmiter[i] = pTransmiter;
-		}
-	}
-
-	//
-	// Create ship
+	// Create Ship
 	//{
-	//	for (int i = 0; i < POOL_SHIP; ++i)
-	//	{
-	//		ShEntity2* pEntity = ShEntity2::Create(m_levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("ship"), CShVector3(0.0f, 0.0f, 0.1f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
-	//		Ship * pShip = new Ship(pEntity, CShVector2(0.0f, 0.0f));
-	//		m_apShip[i] = pShip;
-	//	}
+	//	ShEntity2* pEntity = ShEntity2::Create(m_levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("ship"), CShVector3(0.0f, 0.0f, 0.1f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
+	//	m_pShip = new Ship(pEntity, CShVector2(0.0f,0.0f));
 	//}
 }
 
@@ -62,12 +49,23 @@ void World::Update(float dt)
 	m_world.update(dt);
 
 	//
-	// Update Transmiter
-	for (int iTransmiter = 0; iTransmiter < POOL_TRANSMITER; ++iTransmiter)
+	// Update Transmiters
+
+	int iTransmiterCount = m_apTransmiter.GetCount();
+	for (int iTransmiter = 0; iTransmiter < iTransmiterCount; ++iTransmiter)
 	{
 		Transmiter * pTransmiter = m_apTransmiter[iTransmiter];
 		pTransmiter->Update(dt);
 	}
+
+	//
+	// Update ships
+	//int iShipCount = m_apShip.GetCount();
+	//for (int iShip = 0; iShip < iShipCount; ++iShip)
+	//{
+	//	const Ship * pShip = m_apShip[iShip];
+	//	pShip->Update(dt);
+	//}
 }
 
 /**
