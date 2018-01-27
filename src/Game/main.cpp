@@ -2,8 +2,7 @@
 
 #include "application.h"
 
-bool g_bDisableAnimations = false;
-
+extern bool g_bDisableAnimations;
 
 #if SH_PC
 
@@ -40,7 +39,6 @@ void ParseArguments(int argc, char ** argv)
 	}
 }
 #endif // SH_LINUX
-
 
 #if SH_PC
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int)
