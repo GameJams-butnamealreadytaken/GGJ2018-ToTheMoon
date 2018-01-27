@@ -50,7 +50,6 @@ ${SOURCES_Factory}
 ${SOURCES_SoundManager}
 ${SOURCES_World}
 ${SOURCES_GameObject}
-${SOURCES_Projectile}
 ${SOURCES_Ship}
 ${SOURCES_Transmiter}
 )
