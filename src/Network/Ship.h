@@ -14,7 +14,7 @@ public:
 	//
 	// Constructor / Destructor
 	Ship(void);
-	Ship(uuid_t id, float x, float y);
+	Ship(const uuid_t & id, float x, float y);
 	~Ship(void);
 
 	//

@@ -5,7 +5,7 @@
 /**
  * @brief Constructor
  */
-Inputs::Inputs(void) : m_pUser(shNULL), m_isRestarting(false), m_isPressEnter(false)
+Inputs::Inputs(void) : m_pUser(shNULL), m_isRestarting(false), m_isPressEnter(false), m_isPressEscape(false)
 {
 	// ...
 }
@@ -44,6 +44,7 @@ void Inputs::Update(void)
 	{
 		m_isPressEnter = ShUser::HasTriggeredAction(m_pUser, CShIdentifier("validate"));
 		m_isRestarting = ShUser::HasTriggeredAction(m_pUser, CShIdentifier("reset"));
+		m_isPressEscape = ShUser::HasTriggeredAction(m_pUser, CShIdentifier("pause"));
 	}
 }
 
@@ -63,4 +64,13 @@ bool Inputs::IsRestarting(void)
 bool Inputs::IsPressEnter(void)
 {
 	return(m_isPressEnter);
+}
+
+/**
+* @brief Inputs::IsPressEscape
+* @return
+*/
+bool Inputs::IsPressEscape(void)
+{
+	return(m_isPressEscape);
 }

@@ -15,6 +15,7 @@ public:
 
 	bool		IsRestarting	(void);
 	bool		IsPressEnter	(void);
+	bool		IsPressEscape	(void);
 
 private:
 
@@ -22,5 +23,6 @@ private:
 
 	bool		m_isRestarting;
 	bool		m_isPressEnter;
+	bool		m_isPressEscape;
 };
 

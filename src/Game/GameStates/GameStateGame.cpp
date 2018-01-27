@@ -95,6 +95,13 @@ void GameStateGame::update(float dt)
 {
 	PluginGGJ2018 * pGGJ2018Instance = GetGGJ2018Plugin();
 	SH_ASSERT(shNULL != pGGJ2018Instance);
+
+	Game & game = Game::instance();
+
+	if (game.GetInputManager().IsPressEscape())
+	{
+		game.pop();
+	}
 }
 
 /**
