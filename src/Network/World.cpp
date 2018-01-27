@@ -32,7 +32,10 @@ namespace Network
 /**
  * @brief Constructor
  */
-World::World(float size_x, float size_y) : m_ShipCount(0), m_halfSize(size_x, size_y)
+World::World(float size_x, float size_y) 
+	: m_ShipCount(0)
+	, m_halfSize(size_x, size_y)
+	, m_TransmitterCount(0)
 {
 	memset(m_aShips, 0, sizeof(m_aShips));
 
@@ -320,5 +323,34 @@ Ship * World::createShip(float x, float y)
 
 	return(ship);
 }
+
+/**
+* @brief Create Transmitter
+* @param x
+* @param y
+* @return new Transmitter
+*/
+Transmitter * World::createTransmitter(void)
+{
+	return(createTransmitter(0.0f, 0.0f));
+}
+
+/**
+* @brief Create Transmitter
+* @param x
+* @param y
+* @return new Transmitter
+*/
+Transmitter * World::createTransmitter(float x, float y)
+{
+	Transmitter * transmitter = m_aTransmitters + m_TransmitterCount;
+
+	++m_TransmitterCount;
+
+	*transmitter = Transmitter(x, y);
+
+	return(transmitter);
+}
+
 
 }

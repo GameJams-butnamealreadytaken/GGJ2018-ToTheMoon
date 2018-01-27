@@ -3,6 +3,7 @@
 #include "Network.h"
 
 #include "Ship.h"
+#include "Transmitter.h"
 
 struct sockaddr;
 
@@ -32,6 +33,11 @@ public:
 	Ship * createShip	(void);
 	Ship * createShip	(float x, float y);
 
+	//
+	// Create Transmitter
+	Transmitter * createTransmitter	(void);
+	Transmitter * createTransmitter	(float x, float y);
+
 protected:
 
 	bool initSocket(void);
@@ -45,10 +51,12 @@ protected:
 private:
 
 	static const unsigned int MAX_SHIPS = 256;
-
 	Ship m_aShips [MAX_SHIPS];
-
 	unsigned int m_ShipCount;
+
+	static const unsigned int MAX_TRANSMITTERS = 2048;
+	Transmitter m_aTransmitters[MAX_TRANSMITTERS];
+	unsigned int m_TransmitterCount;
 
 	vec2 m_halfSize;
 

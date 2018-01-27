@@ -48,5 +48,5 @@ private:
 
 	EShipType	m_type;
 
-	Network::Ship * pNetworkShip;
+	Network::Ship * m_pNetworkShip;
 };

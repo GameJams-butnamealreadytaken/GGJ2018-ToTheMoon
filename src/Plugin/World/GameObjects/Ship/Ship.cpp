@@ -5,6 +5,7 @@
  */
 Ship::Ship(ShEntity2 * pEntity, const CShVector2 & vPosition)
 	: GameObject(pEntity, vPosition)
+	, m_pNetworkShip(shNULL)
 {
 	SetState((int)IDLE);
 }
@@ -23,8 +24,8 @@ Ship::~Ship(void)
 void Ship::Initialize(EShipType type, Network::World & world)
 {
 	m_type = type;
-	pNetworkShip = world.createShip();
-	pNetworkShip->setSpeed(0.0f); 
+	m_pNetworkShip = world.createShip();
+	m_pNetworkShip->setSpeed(0.0f);
 	SetShow(true);
 }
 
@@ -33,7 +34,7 @@ void Ship::Initialize(EShipType type, Network::World & world)
 */
 void Ship::Release(void)
 {
-	pNetworkShip = shNULL;
+	m_pNetworkShip = shNULL;
 }
 
 /**
@@ -83,8 +84,8 @@ Ship::EShipType Ship::GetShipType(void)
 */
 void Ship::SetTarget(float x, float y, float fSpeed)
 {
-	pNetworkShip->setTarget(x, y);
-	pNetworkShip->setSpeed(fSpeed);
+	m_pNetworkShip->setTarget(x, y);
+	m_pNetworkShip->setSpeed(fSpeed);
 	SetState((int)TRAVEL);
 }
 
@@ -94,8 +95,8 @@ void Ship::SetTarget(float x, float y, float fSpeed)
 void Ship::UpdateSprite(void)
 {
 	// Sprite rotation
-	const Network::vec2 & shipPos = pNetworkShip->getPosition();
-	const Network::vec2 & targetPos = pNetworkShip->getTarget();
+	const Network::vec2 & shipPos = m_pNetworkShip->getPosition();
+	const Network::vec2 & targetPos = m_pNetworkShip->getTarget();
 	
 	float direction = atan2(targetPos.x - shipPos.x, targetPos.y - shipPos.y) * 180 / SHC_PI;
 	float orientation = (-direction + 90)*SHC_DEG2RAD;
@@ -111,6 +112,6 @@ void Ship::UpdateSprite(void)
 */
 CShVector2 Ship::GetShipPosition(void)
 {
-	const Network::vec2 & shipPos = pNetworkShip->getPosition();
+	const Network::vec2 & shipPos = m_pNetworkShip->getPosition();
 	return(CShVector2(shipPos.x, shipPos.y));
 }

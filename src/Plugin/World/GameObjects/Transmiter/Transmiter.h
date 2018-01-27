@@ -5,6 +5,8 @@
 
 #include "../GameObject.h"
 
+#include "../../../../Network/World.h"
+
 class Transmiter : public GameObject
 {
 public:
@@ -21,7 +23,7 @@ public:
 	explicit			Transmiter			(ShEntity2 * pEntity, const CShVector2 & vPosition);
 	virtual				~Transmiter			(void);
 
-	void				Initialize			(void);
+	void				Initialize			(Network::World & world);
 	void				Release				(void);
 
 	void				Start				(const CShVector2 & vPosition);
@@ -32,6 +34,8 @@ public:
 	virtual GameObject::EType GetType		(void)	{ return(e_type_transmiter); }
 private:
 
-	float				m_fRadius;
-	int					m_iLife;
+	float					m_fRadius;
+	int						m_iLife;
+
+	Network::Transmitter *	m_pTransmitter;
 };

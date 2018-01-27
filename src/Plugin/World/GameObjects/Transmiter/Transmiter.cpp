@@ -9,6 +9,7 @@
 Transmiter::Transmiter(ShEntity2 * pEntity, const CShVector2 & vPosition)
 : GameObject(pEntity, vPosition)
 , m_fRadius(RADIUS)
+, m_pTransmitter(shNULL)
 {
 	SetState((int)OFF);
 }
@@ -24,9 +25,10 @@ Transmiter::~Transmiter(void)
 /**
 * @brief Initialize
 */
-void Transmiter::Initialize(void)
+void Transmiter::Initialize(Network::World & world)
 {
-
+	m_pTransmitter = world.createTransmitter();
+	SetShow(true);
 }
 
 /**
@@ -34,7 +36,7 @@ void Transmiter::Initialize(void)
 */
 void Transmiter::Release(void)
 {
-
+	m_pTransmitter = shNULL;
 }
 
 /**
