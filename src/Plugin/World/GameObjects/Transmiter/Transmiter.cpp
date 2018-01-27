@@ -43,6 +43,7 @@ void Transmiter::Start(const CShVector2 & vPosition)
 {
 	SetPosition2(vPosition);
 	SetState((int)APPEAR);
+	SetShow(true);
 }
 
 /**
