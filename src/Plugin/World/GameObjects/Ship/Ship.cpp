@@ -20,9 +20,10 @@ Ship::~Ship(void)
 /**
 * @brief Initialize
 */
-void Ship::Initialize(EShipType type)
+void Ship::Initialize(EShipType type, Network::Ship * pNetworkShipIN)
 {
 	m_type = type;
+	pNetworkShip = pNetworkShipIN;
 }
 
 /**
