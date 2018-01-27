@@ -8,7 +8,6 @@
 /*explicit*/ Team::Team(int teamId)
 	: m_iTeamId(teamId)
 	, m_apTransmitter()
-	, m_apSegment()
 {
 
 }
@@ -76,6 +75,14 @@ void Team::AddTransmitter(Transmitter * pTransmitter)
 }
 
 /**
+* @brief Team::RemoveTransmitter
+*/
+void Team::RemoveTransmitter(Transmitter * pTransmitter)
+{
+	//TODO
+}
+
+/**
 * @brief Team::GetVictoryCondition
 */
 bool Team::GetVictoryCondition(void)
@@ -140,9 +147,6 @@ float Team::ComputeVecteurNorme(float Ax, float Ay, float Bx, float By)
 */
 void Team::AddNeighbour(Transmitter * pTransmitterFrom, Transmitter * pTransmitterTo)
 {
-	pTransmitterFrom->AddNeighbour(pTransmitterTo);
-	pTransmitterTo->AddNeighbour(pTransmitterFrom);
-
 	ShPrimitiveSegment * pSegment = new ShPrimitiveSegment();
 	ShPrimitiveSegment::SetP1(pSegment, pTransmitterFrom->GetPosition2());
 	ShPrimitiveSegment::SetP2(pSegment, pTransmitterTo->GetPosition2());
@@ -160,7 +164,8 @@ void Team::AddNeighbour(Transmitter * pTransmitterFrom, Transmitter * pTransmitt
 		SH_ASSERT_ALWAYS();
 	}
 
-	m_apSegment.Add(pSegment);
+	pTransmitterFrom->AddNeighbour(pTransmitterTo, pSegment);
+	pTransmitterTo->AddNeighbour(pTransmitterFrom, pSegment);
 }
 
 
