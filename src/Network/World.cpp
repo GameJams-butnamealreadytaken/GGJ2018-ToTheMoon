@@ -51,7 +51,7 @@ void World::update(float dt)
  */
 Ship * World::createShip(void)
 {
-	createShip(0.0f, 0.0f);
+	return(createShip(0.0f, 0.0f));
 }
 
 /**
