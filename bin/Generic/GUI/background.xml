@@ -1,7 +1,9 @@
 <gui>
 	<sss>
-		<!-- Panel -->
-		<style identifier="panel_background" h_pivot="left" v_pivot="top" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="0" position_y="0" width="100"	height="100" color="#FFFFFFFF" sprite_library="ggj" background_image="image_background"/>
+		<style target="text"	text_color="#FF000000" font="sst_medium_28.abc"/>
+		<style target="button" 	text_color="#FFFFFFFF" font="sst_medium_28.abc"/>
+		
+		<style identifier="panel_background" h_pivot="left" v_pivot="top" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="0" position_y="0" width="100"	height="100"  sprite_library="ggj_ui" background_image="image_background" color="#FFFFFFFF"/>
 	</sss>                                         
 	<root>		
 		<panel id="panel_background">
