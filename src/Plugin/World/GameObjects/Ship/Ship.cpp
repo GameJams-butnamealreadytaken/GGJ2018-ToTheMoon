@@ -24,7 +24,8 @@ void Ship::Initialize(EShipType type, Network::World world)
 {
 	m_type = type;
 	pNetworkShip = world.createShip();
-	pNetworkShip->setSpeed(0.0f);
+	pNetworkShip->setSpeed(0.0f); 
+	SetShow(true);
 }
 
 /**
@@ -90,10 +91,12 @@ void Ship::SetTarget(float x, float y, float fSpeed)
 void Ship::UpdateSprite(void)
 {
 	// Sprite rotation
-	CShVector2 curentPos = ShEntity2::GetWorldPosition2(m_pEntity);
 	Network::vec2 shipPos = pNetworkShip->getPosition();
-	float direction = atan2(shipPos.x - curentPos.m_x, shipPos.y - curentPos.m_y) * 180 / SHC_PI;
-	bool needPI = false;
+	shipPos.x = 0;
+	shipPos.y = 0;
+	Network::vec2 targetPos = pNetworkShip->getTarget();
+	
+	float direction = atan2(targetPos.x - shipPos.x, targetPos.y - shipPos.y) * 180 / SHC_PI;
 	float orientation = (-direction + 90)*SHC_DEG2RAD;
 
 	ShEntity2::SetWorldRotation(m_pEntity, 0.0f, 0.0f, orientation);

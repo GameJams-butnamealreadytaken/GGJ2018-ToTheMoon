@@ -31,7 +31,7 @@ private:
 	CShIdentifier					m_levelIdentifier;
 	Network::World					m_world;
 	CShArray<Transmiter *>			m_apTransmiter;
-	CShArray<const Ship *>			m_apShip;
+	CShArray<Ship *>				m_apShip;
 	Ship *							m_pShip;
 
 };
