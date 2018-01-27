@@ -1,0 +1,46 @@
+<gui>
+	<sss>
+		<!-- HP -->
+		<style identifier="image_ingame_hud_hp_1" 						h_pivot="left" v_pivot="bottom" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="2" 		position_y="5.5" 	width="2"		height="3" color="#FF00FF00"/>
+		<style identifier="image_ingame_hud_hp_2" 						h_pivot="left" v_pivot="bottom" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="4.5" 	position_y="5.5" 	width="2"		height="3" color="#FF00FF00"/>
+		<style identifier="image_ingame_hud_hp_3" 						h_pivot="left" v_pivot="bottom" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="7"		position_y="5.5" 	width="2"		height="3" color="#FF00FF00"/>
+		<style identifier="image_ingame_hud_hp_4" 						h_pivot="left" v_pivot="bottom" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="9.5"	position_y="5.5" 	width="2"		height="3" color="#FF00FF00"/>
+		<style identifier="image_ingame_hud_hp_5" 						h_pivot="left" v_pivot="bottom" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="12"		position_y="5.5" 	width="2"		height="3" color="#FF00FF00"/>
+		<style identifier="text_ingame_hud_hp_label" 					h_pivot="left" v_pivot="bottom" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="14.5" 	position_y="5.5" 	width="3"		height="2.7" text_color="#FFFFFFFF" text_align="center_center"/>
+				                                                                                                                                                                                                                                
+		<!-- TC -->		                                                                                                                                                                                                                        
+		<style identifier="image_ingame_hud_transmitter_cooldown_bg" 	h_pivot="left" v_pivot="bottom" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="2"		position_y="2"		width="12"		height="3" color="#FF888888"/>
+		<style identifier="image_ingame_hud_transmitter_cooldown_fg" 	h_pivot="left" v_pivot="bottom" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="2"		position_y="2" 		width="12"		height="3" color="#FFFF0000"/>
+		<style identifier="text_ingame_hud_transmitter_cooldown_label" 	h_pivot="left" v_pivot="bottom" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="14.5" 	position_y="2" 		width="3"		height="2.7" text_color="#FFFFFFFF" text_align="center_center"/>
+			
+		<!-- Weapons -->	
+		<style identifier="imagelist_ingame_hud_weapons" 				h_pivot="left" v_pivot="bottom" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="2"		position_y="9"	 	width="12"		height="5" sprite_library="ggj_ui" background_image="image_white" color="#FF0000FF"/>
+			
+		<!-- Bonus -->	
+		<style identifier="image_ingame_hud_bonus_slot"					h_pivot="left" v_pivot="bottom" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="6"		position_y="14.5" 	width="3"		height="5" color="#FF888888" sprite_library="ggj_ui" background_image="image_white"/>
+			
+		<!-- Notifications -->	
+		<style identifier="panel_ingame_hud_notifications"				h_pivot="left" v_pivot="top" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="0"			position_y="2.5" 	width="100"		height="100"/>
+		<style identifier="text_ingame_hud_notifications"				h_pivot="left" v_pivot="top" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="0"			position_y="0" 		width="100"		height="100"/>
+	</sss>                                         
+	<root>		
+		<image id="image_ingame_hud_hp_1" sprite_library="ggj_ui" image="image_white"/>
+		<image id="image_ingame_hud_hp_2" sprite_library="ggj_ui" image="image_white"/>
+		<image id="image_ingame_hud_hp_3" sprite_library="ggj_ui" image="image_white"/>
+		<image id="image_ingame_hud_hp_4" sprite_library="ggj_ui" image="image_white"/>
+		<image id="image_ingame_hud_hp_5" sprite_library="ggj_ui" image="image_white"/>
+		<text id="text_ingame_hud_hp_label" text="HP"/>
+		
+		<image id="image_ingame_hud_transmitter_cooldown_bg" sprite_library="ggj_ui" image="image_white"/>
+		<image id="image_ingame_hud_transmitter_cooldown_fg" sprite_library="ggj_ui" image="image_white"/>
+		<text id="text_ingame_hud_transmitter_cooldown_label" text="TC"/>
+
+		<image_list id="imagelist_ingame_hud_weapons" animation="none"/>
+		
+		<image id="image_ingame_hud_bonus_slot" sprite_library="ggj_ui" image="image_white"/>
+		
+		<panel id="text_ingame_hud_notifications">
+			<text id="text_ingame_hud_notifications"/>
+		</panel>
+	</root>
+</gui>
