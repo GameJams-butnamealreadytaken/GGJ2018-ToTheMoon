@@ -10,6 +10,7 @@
 #define MAX_MESSAGE_SIZE (512)
 
 #define ENABLE_DEBUG_PRINT 0
+#define ENABLE_CHECKS 1
 
 namespace Network
 {
@@ -83,6 +84,7 @@ bool World::broadcastHelloMessage(void)
 void World::handleHelloMessage(HelloMessage * msg, char * machine, char * service)
 {
 	printf("HELLO from %s:%s\n", machine, service);
+	fflush(stdout);
 
 	for (int i = 0; i < MAX_SHIPS; ++i)
 	{
@@ -111,26 +113,13 @@ void World::handleHelloMessage(HelloMessage * msg, char * machine, char * servic
 void World::handleSyncShipStateMessage(SyncShipStateMessage * msg, char * machine, char * service)
 {
 	printf("SYNC_SHIP_STATE from %s:%s\n", machine, service);
+	fflush(stdout);
 
-	Ship * ship = nullptr; // FIXME : find ship msg->shipId
-
-	for (int i = 0; i < MAX_SHIPS; ++i)
-	{
-#if WIN32
-		RPC_STATUS status;
-		if(UuidCompare(&msg->shipId, &m_aShips[i].m_uuid, &status) == 0)
-#else // WIN32
-		if (uuid_compare(msg->shipId, m_aShips[i].m_uuid))
-#endif // WIN32
-		{
-			ship = m_aShips+i;
-			break;
-		}
-	}
+	Ship * ship = findShip(msg->shipId);
 
 	if (!ship)
 	{
-		ship = createShip();
+		ship = createShipInternal(msg->shipId, 0.0f, 0.0f);
 		assert(nullptr != ship);
 		if (m_pListener)
 		{
@@ -150,8 +139,9 @@ void World::handleSyncShipStateMessage(SyncShipStateMessage * msg, char * machin
 void World::handleCreateShipMessage(CreateShipMessage * msg, char * machine, char * service)
 {
 	printf("CREATE_SHIP from %s:%s\n", machine, service);
+	fflush(stdout);
 
-	Ship * ship = createShip();
+	Ship * ship = createShipInternal(msg->shipId, 0.0f, 0.0f);
 	assert(nullptr != ship);
 	if (m_pListener)
 	{
@@ -170,6 +160,7 @@ void World::handleCreateShipMessage(CreateShipMessage * msg, char * machine, cha
 void World::handleCreateTransmitterMessage(CreateTransmitterMessage * msg, char * machine, char * service)
 {
 	printf("CREATE_TRANSMITTER from %s:%s\n", machine, service);
+	fflush(stdout);
 
 	// TODO
 }
@@ -243,15 +234,6 @@ void World::update(float dt)
 
 /**
  * @brief Create Ship
- * @return new Ship
- */
-Ship * World::createShip(void)
-{
-	return(createShip(0.0f, 0.0f));
-}
-
-/**
- * @brief Create Ship
  * @param x
  * @param y
  * @return new Ship
@@ -265,11 +247,7 @@ Ship * World::createShip(float x, float y)
 	UuidCreate(&uuid);
 #endif // __gnu_linux__
 
-	Ship * ship = m_aShips + m_ShipCount;
-
-	++m_ShipCount;
-
-	*ship = Ship(uuid, x, y);
+	Ship * ship = createShipInternal(uuid, x, y);
 
 	CreateShipMessage message;
 #if __gnu_linux__
@@ -284,6 +262,56 @@ Ship * World::createShip(float x, float y)
 	m_network.SendMessageToAllClients(message);
 
 	m_aOwnedShips[0] = ship; // FIXME !
+
+	return(ship);
+}
+
+/**
+ * @brief Create Ship
+ * @param x
+ * @param y
+ * @return new Ship
+ */
+Ship * World::createShipInternal(const uuid_t & uuid, float x, float y)
+{
+#if ENABLE_CHECKS
+	{
+		Ship * existingShip = findShip(uuid);
+		assert(existingShip == nullptr);
+	}
+#endif // ENABLE_CHECKS
+
+	Ship * ship = m_aShips + m_ShipCount;
+
+	++m_ShipCount;
+
+	*ship = Ship(uuid, x, y);
+
+	return(ship);
+}
+
+/**
+ * @brief World::findShip
+ * @param uuid
+ * @return
+ */
+Ship * World::findShip(const uuid_t & uuid)
+{
+	Ship * ship = nullptr;
+
+	for (int i = 0; i < MAX_SHIPS; ++i)
+	{
+#if WIN32
+		RPC_STATUS status;
+		if(UuidCompare(&uuid, &m_aShips[i].m_uuid, &status) == 0)
+#else // WIN32
+		if (uuid_compare(uuid, m_aShips[i].m_uuid))
+#endif // WIN32
+		{
+			ship = m_aShips+i;
+			break;
+		}
+	}
 
 	return(ship);
 }
