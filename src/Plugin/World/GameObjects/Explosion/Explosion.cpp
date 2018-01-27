@@ -1,5 +1,7 @@
 #include "Explosion.h"
 
+extern bool g_bDisableAnimations;
+
 /**
  * @brief Constructor
  */
@@ -39,6 +41,9 @@ void Explosion::Release(void)
 */
 void Explosion::Start(const CShVector2 & vPosition)
 {
+	if (g_bDisableAnimations)
+		return;
+
 	m_bAnimationEnded = false;
 
 	SetState((int)ON);
