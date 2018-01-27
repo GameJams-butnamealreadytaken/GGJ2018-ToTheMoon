@@ -82,7 +82,8 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 
 	//
 	// Create player's Ship
-	CreateShip(0.0f, 0.0f);
+	Network::Ship * pNetworkShip = m_world.createShip(0, 0.0f, 0.0f);
+	m_pShip = CreateShip(0.0f, 0.0f, pNetworkShip);
 
 	m_aTeam.Empty();
 	for (int i = 0; i < 2; ++i)
@@ -188,8 +189,9 @@ void World::Update(float dt)
 	{
 		if (ShUser::HasTriggeredAction(m_pUser, CShIdentifier("beacon")))
 		{
-			CShVector2 & shipPos = m_pShip->GetPosition2();
-			CreateTransmitter(shipPos.m_x, shipPos.m_y);
+			CShVector2 & shipPos = m_pShip->GetPosition2();	
+			Network::Transmitter * pNetworkTrans = m_world.createTransmitter(m_pShip->GetTeam(), shipPos.m_x, shipPos.m_y);
+			CreateTransmitter(shipPos.m_x, shipPos.m_y, pNetworkTrans);
 		}
 	}
 }
@@ -294,36 +296,32 @@ void World::OnTouchMove(int iTouch, float positionX, float positionY)
 /**
 * @brief World::CreateShip
 */
-void World::CreateShip(float x, float y, const Network::Ship * pNetworkShip /*= shNULL*/)
+Ship * World::CreateShip(float x, float y, const Network::Ship * pNetworkShip)
 {
 	ShEntity2* pEntity = ShEntity2::Create(m_levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("ship"), CShVector3(x, y, 1.1f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(0.15f, 0.15f, 1.0f));
 	SH_ASSERT(shNULL != pEntity);
 	Ship * pShip = new Ship(pEntity, CShVector2(x, y));
-	if (shNULL == pNetworkShip)
-	{
-		pNetworkShip = m_world.createShip(x, y);
-		m_pShip = pShip;
-	}
 	pShip->Initialize(Ship::BASE, pNetworkShip, &m_projectileManager);
 	m_apShip.Add(pShip);
+
+	return(pShip);
 }
 
 /**
 * @brief World::CreateTransmitter
 */
-void World::CreateTransmitter(float x, float y, const Network::Transmitter * pNetworkTrans /*= shNULL*/)
+Transmitter * World::CreateTransmitter(float x, float y, const Network::Transmitter * pNetworkTrans)
 {
 	ShEntity2* pEntity = ShEntity2::Create(m_levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("transmitter_01"), CShVector3(x, y, 2.01f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(0.8f, 0.8f, 1.0f));
 	SH_ASSERT(shNULL != pEntity);
 	Transmitter * pTrans = new Transmitter(pEntity, CShVector2(x, y));
-	if (shNULL == pNetworkTrans)
-	{
-		pNetworkTrans = m_world.createTransmitter(x, y);
-	}
+
 	m_apTransmitter.Add(pTrans);
 	pTrans->Initialize(pNetworkTrans, m_apTransmitter.GetCount() - 1);
 	pTrans->Start(CShVector2(x, y));
 	
 	int teamId = 0; // get id from network transmitter
 	m_aTeam[teamId]->AddTransmitter(pTrans);
+
+	return(pTrans);
 }

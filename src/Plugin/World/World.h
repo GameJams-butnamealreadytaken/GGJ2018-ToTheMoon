@@ -20,13 +20,13 @@ class World : public Network::WorldListener
 
 public:
 
-	explicit	World				(void);
-	virtual		~World				(void);
+	explicit		World				(void);
+	virtual			~World				(void);
 
-	void		Initialize			(const CShIdentifier & levelIdentifier);
-	void		Release				(void);
+	void			Initialize			(const CShIdentifier & levelIdentifier);
+	void			Release				(void);
 
-	void		Update				(float dt);
+	void			Update				(float dt);
 
 	int				GetShipCount		(void);
 	Ship *			GetShip				(int iShip);
@@ -36,33 +36,33 @@ public:
 
 	//
 	// Touch Events
-	void		OnTouchDown			(int iTouch, float positionX, float positionY);
-	void		OnTouchUp			(int iTouch, float positionX, float positionY);
-	void		OnTouchMove			(int iTouch, float positionX, float positionY);
+	void			OnTouchDown			(int iTouch, float positionX, float positionY);
+	void			OnTouchUp			(int iTouch, float positionX, float positionY);
+	void			OnTouchMove			(int iTouch, float positionX, float positionY);
 	
-	virtual void onShipCreated		(const Network::Ship * pShip);
-	virtual void onTransmitterCreate(const Network::Transmitter * pTrans);
+	virtual void	onShipCreated			(const Network::Ship * pShip);
+	virtual void	onTransmitterCreate	(const Network::Transmitter * pTrans);
 
 private:
-	void		CreateShip			(float x, float y, const Network::Ship * pShip = shNULL);
-	void		CreateTransmitter	(float x, float y, const Network::Transmitter * = shNULL);
+	Ship *			CreateShip			(float x, float y, const Network::Ship * pShip);
+	Transmitter *	CreateTransmitter	(float x, float y, const Network::Transmitter * pTransmitter);
 
 private:
 
-	CShIdentifier					m_levelIdentifier;
-	Network::World					m_world;
+	CShIdentifier						m_levelIdentifier;
+	Network::World						m_world;
 
-	MiniMap *						m_pMiniMap;
+	MiniMap *							m_pMiniMap;
 
-	ShUser *						m_pUser;
+	ShUser *							m_pUser;
 
-	ExplosionManager				m_explosionManager;
-	ProjectileManager				m_projectileManager;
+	ExplosionManager					m_explosionManager;
+	ProjectileManager					m_projectileManager;
 
-	Planet*							m_aPlanet[4];
-	CShArray<Transmitter *>			m_apTransmitter;
-	CShArray<Ship *>				m_apShip;
-	Ship *							m_pShip;
+	Planet*								m_aPlanet[4];
+	CShArray<Transmitter *>				m_apTransmitter;
+	CShArray<Ship *>					m_apShip;
+	Ship *								m_pShip;
 
-	CShArray<Team *>				m_aTeam;
+	CShArray<Team *>					m_aTeam;
 };
