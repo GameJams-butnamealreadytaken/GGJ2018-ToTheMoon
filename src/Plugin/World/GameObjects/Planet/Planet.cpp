@@ -6,9 +6,33 @@
 Planet::Planet(EPlanet planet, ShEntity2 * pEntity)
 : GameObject(pEntity, CShVector2(0.0f, 0.0f))
 {
-	if (planet == e_planet_moon)
+	switch(planet)
 	{
-		Animate(96, "ggj", "moon", 0.5f);
+		case e_planet_moon :
+		{
+			Animate(96, "ggj", "moon", 0.5f);
+		}
+		break;	
+
+		case e_planet_earth:
+		{
+			Animate(96, "ggj", "earth", 0.5f);
+		}
+		break;
+
+		case e_planet_jupiter:
+		{
+			Animate(96, "ggj", "jupiter", 0.5f);
+		}
+		break;
+
+		case e_planet_mars:
+		{
+			Animate(96, "ggj", "mars", 0.5f);
+		}
+		break;
+
+		default: SH_ASSERT_ALWAYS(); break;
 	}
 
 	SetShow(true);
