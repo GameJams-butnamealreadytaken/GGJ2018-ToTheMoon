@@ -75,8 +75,6 @@ void GameStateGame::revealed(void)
  */
 void GameStateGame::load(void)
 {
-	Game & game = Game::instance();
-
 	CShIdentifier levelIdentifier("game_level");
 	bool loading = ShLevel::Load(levelIdentifier);
 	SH_ASSERT(loading);
