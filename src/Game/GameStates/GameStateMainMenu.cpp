@@ -197,8 +197,9 @@ void GameStateMainMenu::setState(GameStateMainMenu::EState eState)
  */
 /*static*/ bool GameStateMainMenu::OnButtonPlayClicked(ShGUIControlButton * pButton)
 {
-	//
-	// TODO FIXME : launch the game !
+	Game & game = Game::instance();
+
+	game.push(Game::GAME_LEVEL);
 	SH_TRACE("Game launched");
 
 	return(true);

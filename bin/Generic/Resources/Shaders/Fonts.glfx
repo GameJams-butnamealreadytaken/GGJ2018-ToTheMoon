@@ -23,7 +23,7 @@
 <output name="VS_OUTPUT">
 	<field name="POSITION" lname="position" type="vec4" prec="highp" />
 	<field name="TEXCOORD0" lname="texcoord" type="vec2" prec="mediump" />
-	<field name="COLOR" lname="color" type="vec4" />
+	<field name="COLOR" lname="color" type="vec4" prec="mediump" />
 </output>
 
 <code><![CDATA[
@@ -69,41 +69,5 @@ lowp vec4 ps(VS_OUTPUT vIn)
 <tech name="DefaultTechnique">
 	<vs name="vs" input="VS_INPUT" output="VS_OUTPUT" />
 	<ps name="ps" />
-</tech>
-<tech name="DefaultTechniqueSC">
-	<vs name="vs_screenspace" input="VS_INPUT_COLOR" output="VS_OUTPUT_COLOR" />
-	<ps name="psSC" />
-</tech>
-<tech name="DefaultTechnique3">
-	<vs name="vs_position4" input="VS_INPUT_POSITION4" output="VS_OUTPUT_COLOR" />
-	<ps name="ps3" />
-</tech>
-<tech name="DefaultTechniquePickBuffer">
-	<vs name="vs_position4" input="VS_INPUT_POSITION4" output="VS_OUTPUT_COLOR" />
-	<ps name="psPickBuffer" />
-</tech>
-<tech name="DefaultTechniqueFrozen">
-	<vs name="vs_position4" input="VS_INPUT_POSITION4" output="VS_OUTPUT_COLOR" />
-	<ps name="psFrozen" />
-</tech>
-<tech name="DefaultTechnique_Tile">
-	<vs name="vs" input="VS_INPUT" output="VS_OUTPUT" />
-	<ps name="ps_tile" />
-</tech>
-<tech name="DefaultTechniqueSC_Tile">
-	<vs name="vs_screenspace" input="VS_INPUT_COLOR" output="VS_OUTPUT_COLOR" />
-	<ps name="psSC_tile" />
-</tech>
-<tech name="DefaultTechnique3_Tile">
-	<vs name="vs_position4" input="VS_INPUT_POSITION4" output="VS_OUTPUT_COLOR" />
-	<ps name="ps3_tile" />
-</tech>
-<tech name="DefaultTechniquePickBuffer_Tile">
-	<vs name="vs_position4" input="VS_INPUT_POSITION4" output="VS_OUTPUT_COLOR" />
-	<ps name="psPickBuffer_tile" />
-</tech>
-<tech name="DefaultTechniqueFrozen_Tile">
-	<vs name="vs_position4" input="VS_INPUT_POSITION4" output="VS_OUTPUT_COLOR" />
-	<ps name="psFrozen_tile" />
 </tech>
 </glfx>

@@ -20,10 +20,10 @@ Ship::~Ship(void)
 /**
 * @brief Initialize
 */
-void Ship::Initialize(EShipType type, Network::Ship * pNetworkShipIN)
+void Ship::Initialize(EShipType type, Network::World world)
 {
 	m_type = type;
-	pNetworkShip = pNetworkShipIN;
+	pNetworkShip = world.createShip();
 	pNetworkShip->setSpeed(0.0f);
 }
 
@@ -80,9 +80,9 @@ Ship::EShipType Ship::GetShipType(void)
 /**
 * @brief SetTarget
 */
-void Ship::SetTarget(const CShVector2 & newTarget, float fSpeed)
+void Ship::SetTarget(float x, float y, float fSpeed)
 {
-	pNetworkShip->setTarget(newTarget.m_x, newTarget.m_y);
+	pNetworkShip->setTarget(x, y);
 	pNetworkShip->setSpeed(fSpeed);
 	SetState((int)TRAVEL);
 }

@@ -28,10 +28,11 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 	m_world.init();
 	//
 	// Create Ship
-	//{
-	//	ShEntity2* pEntity = ShEntity2::Create(m_levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("ship"), CShVector3(0.0f, 0.0f, 0.1f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
-	//	m_pShip = new Ship(pEntity, CShVector2(0.0f,0.0f));
-	//}
+	{
+		ShEntity2* pEntity = ShEntity2::Create(m_levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("transmiter"), CShVector3(0.0f, 0.0f, 0.1f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
+		m_pShip = new Ship(pEntity, CShVector2(0.0f,0.0f));
+		m_pShip->Initialize(Ship::BASE, m_world);
+	}
 }
 
 /**
@@ -74,7 +75,11 @@ void World::Update(float dt)
 */
 void World::OnTouchDown(int iTouch, float positionX, float positionY)
 {
-
+	// Set new ship target
+	if (shNULL != m_pShip)
+	{
+		m_pShip->SetTarget(positionX, positionY, 5.0f); // todo move speed on her right place
+	}
 }
 
 /**

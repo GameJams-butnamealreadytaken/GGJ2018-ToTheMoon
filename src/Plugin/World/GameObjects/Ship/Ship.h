@@ -27,7 +27,7 @@ public:
 								Ship					(ShEntity2 * pEntity, const CShVector2 & vPosition);
 	virtual						~Ship					(void);
 
-	void						Initialize				(EShipType type, Network::Ship * pNetworkShipIN);
+	void						Initialize				(EShipType type, Network::World world);
 	void						Release					(void);
 
 	virtual void				Update					(float dt) SH_ATTRIBUTE_OVERRIDE;
@@ -35,9 +35,9 @@ public:
 	virtual void				OnHit					(GameObject* pObject);
 	virtual GameObject::EType	GetType					(void) { return(e_type_ship); }
 
-	EShipType					GetShipType				(void);
+	void						SetTarget				(float x, float y, float fSpeed);
 
-	void						SetTarget				(const CShVector2 & newTarget, float fSpeed);
+	EShipType					GetShipType				(void);
 
 private:
 	void						UpdateSprite			(void);
