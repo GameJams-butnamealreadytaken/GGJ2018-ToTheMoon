@@ -14,6 +14,7 @@ public:
 		IDLE,
 		APPEAR,
 		DESTROYED,
+		OFF,
 	};
 
 	explicit			Transmiter			(ShEntity2 * pEntity, const CShVector2 & vPosition);
@@ -28,6 +29,5 @@ public:
 
 private:
 
-	ETransmiterState	m_eState;
 	float				m_fRadius;
 };

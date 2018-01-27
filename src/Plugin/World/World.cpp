@@ -3,7 +3,9 @@
 /**
 * @brief Constructor
 */
-/*explicit*/ World::World(void) : m_world(1000.0f, 1000.0f)
+/*explicit*/ World::World(void) 
+	: m_world(1000.0f, 1000.0f)
+	, m_pShip(shNULL)
 {
 	// ...
 }
@@ -23,11 +25,12 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 {
 	m_levelIdentifier = levelIdentifier;
 
-	ShEntity2* pEntity = ShEntity2::Create(m_levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj2018"), CShIdentifier("img_01"), CShVector3(0.0f, 0.0f, 0.1f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
-	GameObject * pObject = new GameObject(pEntity, CShVector2(0.0f, 0.0f));
-	pObject->Animate(3, "ggj", "img", 0.5f);
-
-	m_aGameObject.Add(pObject);
+	//
+	// Create Ship
+	//{
+	//	ShEntity2* pEntity = ShEntity2::Create(m_levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("ship"), CShVector3(0.0f, 0.0f, 0.1f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
+	//	m_pShip = new Ship(pEntity, CShVector2(0.0f,0.0f));
+	//}
 }
 
 /**
@@ -45,13 +48,24 @@ void World::Update(float dt)
 {
 	m_world.update(dt);
 
-	int iGameObject = m_aGameObject.GetCount();
+	//
+	// Update Transmiters
 
-	for (int iObject = 0; iObject < iGameObject; ++iObject)
+	int iTransmiterCount = m_apTransmiter.GetCount();
+	for (int iTransmiter = 0; iTransmiter < iTransmiterCount; ++iTransmiter)
 	{
-		GameObject * pObject = m_aGameObject[iObject];
-		pObject->Update(dt);
+		Transmiter * pTransmiter = m_apTransmiter[iTransmiter];
+		pTransmiter->Update(dt);
 	}
+
+	//
+	// Update ships
+	//int iShipCount = m_apShip.GetCount();
+	//for (int iShip = 0; iShip < iShipCount; ++iShip)
+	//{
+	//	const Ship * pShip = m_apShip[iShip];
+	//	pShip->Update(dt);
+	//}
 }
 
 /**

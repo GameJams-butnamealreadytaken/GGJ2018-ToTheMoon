@@ -14,7 +14,7 @@
 , m_fAnimationInterFrameTime(0.0f)
 , m_fAnimationTime(0.0f)
 {
-	// ...
+	ShEntity2::SetShow(pEntity, false);
 }
 
 /**
@@ -63,6 +63,8 @@ void GameObject::Animate(int iSpriteCount, char* szSpriteLibrary, char* szSprite
 */
 void GameObject::Update(float dt)
 {
+	m_fStateTime += dt;
+
 	if (m_bAnimated)
 	{
 		m_fAnimationTime += dt;
@@ -82,23 +84,43 @@ void GameObject::Update(float dt)
 	}
 }
 
+/**
+* @brief GameObject::SetState
+*/
 void GameObject::SetState(int iState)
 {
 	m_iState = iState;
 	m_fStateTime = 0.0f;
 }
 
+/**
+* @brief GameObject::SetShow
+*/
+void GameObject::SetShow(bool bShow)
+{
+	ShEntity2::SetShow(m_pEntity, bShow);
+}
+
+/**
+* @brief GameObject::GetSprite
+*/
 ShEntity2 * GameObject::GetSprite(void)
 {
 	return(m_pEntity);
 }
 
+/**
+* @brief GameObject::SetPosition2
+*/
 void GameObject::SetPosition2(const CShVector2 & vPosition)
 {
 	ShEntity2::SetPosition2(m_pEntity, vPosition);
 }
 
-CShVector2 & GameObject::GetPosition(void)
+/**
+* @brief GameObject::GetPosition
+*/
+CShVector2 & GameObject::GetPosition2(void)
 {
 	return(m_vPosition);
 }

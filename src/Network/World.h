@@ -20,6 +20,11 @@ public:
 	// Update
 	void update(float dt);
 
+	//
+	// Create Ship
+	Ship * createShip(void);
+	Ship * createShip(float x, float y);
+
 protected:
 
 private:
@@ -30,7 +35,7 @@ private:
 
 	unsigned int m_ShipCount;
 
-	vec2 m_bounds;
+	vec2 m_halfSize;
 
 };
 

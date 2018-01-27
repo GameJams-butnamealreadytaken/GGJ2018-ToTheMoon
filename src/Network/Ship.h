@@ -14,6 +14,7 @@ public:
 	//
 	// Constructor / Destructor
 	Ship(void);
+	Ship(float x, float y);
 	~Ship(void);
 
 	//
@@ -54,6 +55,7 @@ protected:
 	// Update
 	void update(float dt);
 
+	void clampPosition(const vec2 & halfSize);
 
 private:
 
