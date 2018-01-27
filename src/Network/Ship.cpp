@@ -1,24 +1,30 @@
 #include "Ship.h"
 
+#include <string.h> // memcpy
+
 namespace Network
 {
 
 /**
- * @brief Constructor
+ * @brief Default constructor
  */
 Ship::Ship(void) : m_position(0.0f, 0.0f), m_target(0.0f, 0.0f), m_speed(0.0f)
 {
-	// ...
+	memset(m_uuid, 0, sizeof(uuid_t));
 }
 
 /**
- * @brief Ship::Ship
+ * @brief Constructor
  * @param x
  * @param y
  */
-Ship::Ship(float x, float y) : m_position(x, y), m_target(x, y), m_speed(0.0f)
+Ship::Ship(uuid_t id, float x, float y) : m_position(x, y), m_target(x, y), m_speed(0.0f)
 {
-	// ...
+#if __gnu_linux__
+	uuid_copy(m_uuid, id);
+#else
+#	error "Implement me !"
+#endif // __gnu_linux__
 }
 
 /**

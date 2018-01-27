@@ -14,7 +14,7 @@ public:
 	//
 	// Constructor / Destructor
 	Ship(void);
-	Ship(float x, float y);
+	Ship(uuid_t id, float x, float y);
 	~Ship(void);
 
 	//
@@ -58,6 +58,8 @@ protected:
 	void clampPosition(const vec2 & halfSize);
 
 private:
+
+	uuid_t m_uuid;
 
 	vec2 m_position;
 

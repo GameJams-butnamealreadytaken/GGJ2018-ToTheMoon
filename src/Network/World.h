@@ -62,6 +62,8 @@ private:
 	Ship m_aShips [MAX_SHIPS];
 	unsigned int m_ShipCount;
 
+	Ship * m_aOwnedShips [MAX_SHIPS];
+
 	static const unsigned int MAX_TRANSMITTERS = 2048;
 	Transmitter m_aTransmitters[MAX_TRANSMITTERS];
 	unsigned int m_TransmitterCount;
