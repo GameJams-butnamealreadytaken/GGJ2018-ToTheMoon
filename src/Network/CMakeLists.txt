@@ -5,7 +5,7 @@ set(SOURCES_Network Network.h)
 source_group("Network" FILES ${SOURCES_Network})
 
 # World files
-set(SOURCES_World World.cpp World.h)
+set(SOURCES_World World.cpp World.h WorldListener.h)
 source_group("World" FILES ${SOURCES_World})
 
 # Ship files
