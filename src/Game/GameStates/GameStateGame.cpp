@@ -9,6 +9,7 @@
 * @brief GameStateGame::Constructor
 */
 GameStateGame::GameStateGame(void)
+: m_pQuitDialog(shNULL)
 {
 	// ...
 }
@@ -26,7 +27,18 @@ GameStateGame::~GameStateGame(void)
 */
 void GameStateGame::init(void)
 {
-	// ...
+	//
+	// GUI Dialog
+	m_pQuitDialog					= ShGUIModalDialog::Create(CShIdentifier("ingame_quit_dialog"));
+	ShGUIControl * pDialogRoot		= ShGUIModalDialog::GetRootControl(m_pQuitDialog);
+	SH_ASSERT(shNULL != pDialogRoot);
+	ShGUIControlButton * pButtonYes	= (ShGUIControlButton*)ShGUIControl::GetElementById(CShIdentifier("button_ingame_quit_dialog_main_panel_yes"), pDialogRoot);
+	ShGUIControlButton * pButtonNo	= (ShGUIControlButton*)ShGUIControl::GetElementById(CShIdentifier("button_ingame_quit_dialog_main_panel_no"), pDialogRoot);
+	
+	SH_ASSERT(shNULL != pButtonYes);
+	SH_ASSERT(shNULL != pButtonNo);
+	ShGUIControlButton::AddSlotFctPtrClick(pButtonYes, (pSlotSDKButtonClick)OnButtonClickedYes);
+	ShGUIControlButton::AddSlotFctPtrClick(pButtonNo, (pSlotSDKButtonClick)OnButtonClickedNo);
 }
 
 /**
@@ -34,7 +46,15 @@ void GameStateGame::init(void)
 */
 void GameStateGame::release(void)
 {
-	// ...
+	//
+	// GUI Dialog
+	if (ShGUI::IsModalDialogRunning())
+	{
+		//
+		// Pops current dialog
+		ShGUI::PopModalDialog();
+	}
+	ShGUIModalDialog::Destroy(m_pQuitDialog);
 }
 
 /**
@@ -89,18 +109,58 @@ void GameStateGame::unload(void)
 }
 
 /**
+* @brief GameStateGame::OnButtonClickedYes
+*/
+/*static*/ bool GameStateGame::OnButtonClickedYes(ShGUIControlButton * pButton)
+{
+	//
+	// Pops current level
+	Game & game = Game::instance();
+	game.pop();
+	
+	//
+	// Pops current dialog
+	ShGUI::PopModalDialog();
+
+	return(true);
+}
+
+/**
+* @brief GameStateGame::OnButtonClickedNo
+*/
+/*static*/ bool GameStateGame::OnButtonClickedNo(ShGUIControlButton * pButton)
+{
+	//
+	// Pops current dialog
+	ShGUI::PopModalDialog();
+	
+	return(true);
+}
+
+/**
 * @brief GameStateGame::update
 */
 void GameStateGame::update(float dt)
 {
 	PluginGGJ2018 * pGGJ2018Instance = GetGGJ2018Plugin();
 	SH_ASSERT(shNULL != pGGJ2018Instance);
-
+	
 	Game & game = Game::instance();
-
 	if (game.GetInputManager().IsPressEscape())
 	{
-		game.pop();
+		if (!ShGUI::IsModalDialogRunning())
+		{
+			//
+			// Pushes current dialog
+			GameStateGame * pGameState = static_cast<GameStateGame*>(game.get(Game::GAME_LEVEL));
+			ShGUI::PushModalDialog(pGameState->m_pQuitDialog);
+		}
+		else
+		{
+			//
+			// Pops current dialog
+			ShGUI::PopModalDialog();
+		}
 	}
 }
 
@@ -109,7 +169,10 @@ void GameStateGame::update(float dt)
  */
 void GameStateGame::touchBegin(const CShVector2 & pos_, float ratio)
 {
-	TouchDownGGJ2018Plugin(0, pos_.m_x, pos_.m_y);
+	if (!ShGUI::IsModalDialogRunning())
+	{
+		TouchDownGGJ2018Plugin(0, pos_.m_x, pos_.m_y);
+	}
 }
 
 /**
@@ -117,7 +180,10 @@ void GameStateGame::touchBegin(const CShVector2 & pos_, float ratio)
  */
 void GameStateGame::touchEnd(const CShVector2 & pos_, float ratio)
 {
-	TouchUpGGJ2018Plugin(0, pos_.m_x, pos_.m_y);
+	if (!ShGUI::IsModalDialogRunning())
+	{
+		TouchUpGGJ2018Plugin(0, pos_.m_x, pos_.m_y);
+	}
 }
 
 /**
@@ -125,5 +191,8 @@ void GameStateGame::touchEnd(const CShVector2 & pos_, float ratio)
  */
 void GameStateGame::touchMove(const CShVector2 & pos_, float ratio)
 {
-	TouchMoveGGJ2018Plugin(0, pos_.m_x, pos_.m_y);
+	if (!ShGUI::IsModalDialogRunning())
+	{
+		TouchMoveGGJ2018Plugin(0, pos_.m_x, pos_.m_y);
+	}
 }
