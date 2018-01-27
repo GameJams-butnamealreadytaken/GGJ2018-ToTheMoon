@@ -24,6 +24,7 @@ World::World(float size_x, float size_y)
 , m_pListener(nullptr)
 {
 	memset(m_aShips, 0, sizeof(m_aShips));
+	memset(m_aOwnedShips, 0, sizeof(m_aOwnedShips));
 }
 
 /**
@@ -233,15 +234,22 @@ Ship * World::createShip(void)
  */
 Ship * World::createShip(float x, float y)
 {
+#if __gnu_linux__
+	uuid_t uuid;
+	uuid_generate(uuid);
+#else
+#	error "Implement me !"
+#endif // __gnu_linux__
+
 	Ship * ship = m_aShips + m_ShipCount;
 
 	++m_ShipCount;
 
-	*ship = Ship(x, y);
+	*ship = Ship(uuid, x, y);
 
 	CreateShipMessage message;
 #if __gnu_linux__
-	uuid_generate(message.shipId);
+	uuid_copy(message.shipId, uuid);
 #else
 	CoCreateGuid(&message.shipId); 
 #endif // __gnu_linux__

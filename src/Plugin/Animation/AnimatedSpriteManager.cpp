@@ -105,9 +105,7 @@ void AnimatedSpriteManager::Reset(void)
 		ShEntity2::SetRotation(m_pEntity, 0.0f, 0.0f, 0.0f);
 	}
 
-	char szEntityName[1024];
-	sprintf(szEntityName, "%s_%04d", m_strSpriteName.Get(), m_iCurrentSprite);
-	ShEntity2::SetSprite(m_pEntity, CShIdentifier(m_strSpriteLibrary), CShIdentifier(szEntityName));
+	ShEntity2::SetSprite(m_pEntity, m_apSprite[0]);
 	ShEntity2::SetPivotCustom(m_pEntity, m_vPivot);
 }
 
