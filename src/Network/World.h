@@ -42,6 +42,11 @@ public:
 	Transmitter * createTransmitter	(void);
 	Transmitter * createTransmitter	(float x, float y);
 
+	void setListener(WorldListener * pListener)
+	{
+		m_pListener = pListener;
+	}
+
 protected:
 
 	bool broadcastHelloMessage(void);
