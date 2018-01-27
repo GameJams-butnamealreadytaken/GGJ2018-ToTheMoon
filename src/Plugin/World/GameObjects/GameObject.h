@@ -11,7 +11,7 @@ public:
 	{
 		e_type_ship,
 		e_type_transmiter,
-
+		e_type_bullet,
 	};
 
 	explicit		GameObject			(ShEntity2* pEntity, const CShVector2 & vPosition);
