@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Network.h"
+#include "utils.h"
 
 #include "Ship.h"
 #include "Transmitter.h"

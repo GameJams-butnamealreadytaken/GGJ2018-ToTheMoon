@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.1)
 
 # Network files
-set(SOURCES_Network Network.h)
+set(SOURCES_Network )
 source_group("Network" FILES ${SOURCES_Network})
 
 # World files
@@ -19,7 +19,7 @@ source_group("Transmitter" FILES ${SOURCES_Transmitter})
 # Put everything together before adding platform-specific files
 set(SOURCES ${SOURCES_Network} ${SOURCES_World} ${SOURCES_Ship} ${SOURCES_Transmitter})
 
-add_library(Network STATIC ${SOURCES})
+add_library(Network STATIC ${SOURCES} utils.h)
 
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
 	target_link_libraries(Network INTERFACE ws2_32.lib)
