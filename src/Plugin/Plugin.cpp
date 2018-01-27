@@ -1,5 +1,7 @@
 #include "Plugin.h"
+#include "Sound/SoundManager.h"
 
+extern SoundManager g_soundManager;
 const CShIdentifier plugin_identifier("PluginGGJ2018");
 
 /**
@@ -30,6 +32,8 @@ void PluginGGJ2018::OnPlayStart(const CShIdentifier & levelIdentifier)
 
 	m_levelIdentifier = levelIdentifier;
 
+	g_soundManager.Initialize();
+	g_soundManager.PlayMusic(SoundManager::e_sound_music_game);
 	m_world.Initialize(m_levelIdentifier);
 }
 
@@ -40,6 +44,7 @@ void PluginGGJ2018::OnPlayStart(const CShIdentifier & levelIdentifier)
 void PluginGGJ2018::OnPlayStop(const CShIdentifier & levelIdentifier)
 {
 	m_world.Release();
+	g_soundManager.Release();
 
 	m_levelIdentifier = GID(NULL);
 }

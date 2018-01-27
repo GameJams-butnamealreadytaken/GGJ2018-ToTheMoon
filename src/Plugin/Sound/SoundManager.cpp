@@ -1,6 +1,6 @@
 #include "SoundManager.h"
 
-SoundManager g_SoundManager;
+SoundManager g_soundManager;
 
 //--------------------------------------------------------------------------------------------------
 /// @todo comment

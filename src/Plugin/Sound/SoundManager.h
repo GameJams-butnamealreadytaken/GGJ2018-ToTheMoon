@@ -42,5 +42,3 @@ private:
 	ShSoundResource *					m_aSoundFXResource		[e_sound_fx_max];
 	ShSoundResource *					m_aSoundMusicResource	[e_sound_music_max];
 };
-
-extern SoundManager g_gameSoundManager;
