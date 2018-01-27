@@ -32,6 +32,11 @@ public:
 
 protected:
 
+	bool initSocket(void);
+	void releaseSocket(void);
+
+	bool broadcastHelloMessage(void);
+
 private:
 
 	static const unsigned int MAX_SHIPS = 256;
@@ -41,6 +46,8 @@ private:
 	unsigned int m_ShipCount;
 
 	vec2 m_halfSize;
+
+	int m_sock;
 
 };
 
