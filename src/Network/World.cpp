@@ -104,11 +104,14 @@ bool World::initSocket(void)
 	}
 
 	int enable = 1;
-	if (setsockopt(m_sock, SOL_SOCKET, SO_BROADCAST, (void*)&enable, sizeof(int)) < 0)
-	{
+	
 #if WIN32
+	if (setsockopt(m_sock, SOL_SOCKET, SO_BROADCAST, (const char *)&enable, sizeof(int)) < 0)
+	{
 		closesocket(m_sock);
 #else // WIN32
+	if (setsockopt(m_sock, SOL_SOCKET, SO_BROADCAST, (void*)&enable, sizeof(int)) < 0)
+		{
 		close(m_sock);
 #endif // WIN32
 		return(false);
@@ -143,7 +146,7 @@ bool World::broadcastHelloMessage(void)
 
 	HelloMessage msg;
 #if WIN32
-	SSIZE_T size = sendto(m_sock, (void*)&msg, sizeof(msg), 0, (sockaddr*)&addr, sizeof(addr));
+	SSIZE_T size = sendto(m_sock, (const char*)&msg, sizeof(msg), 0, (sockaddr*)&addr, sizeof(addr));
 #else // WIN32
 	ssize_t size = sendto(m_sock, (void*)&msg, sizeof(msg), 0, (sockaddr*)&addr, sizeof(addr));
 #endif // WIN32
@@ -166,8 +169,12 @@ void World::handleHelloMessage(HelloMessage * msg, struct sockaddr* sender, unsi
 	addr.sin_family = AF_INET;
 	addr.sin_port = htons(BRD_HELO_PORT);
 	addr.sin_addr.s_addr = inet_addr(BRD_HELO_ADDR); // FIXME : respond only to sender !
-
+#if WIN32
+	SSIZE_T size = sendto(m_sock, (const char*)&response, sizeof(ShipStateMessage), 0, (sockaddr*)&addr, sizeof(addr));
+#else // WIN32
 	ssize_t size = sendto(m_sock, (void*)&response, sizeof(ShipStateMessage), 0, (sockaddr*)&addr, sizeof(addr));
+#endif // WIN32
+	
 	assert(size > 0);
 }
 
@@ -207,7 +214,6 @@ void World::update(float dt)
 
 	//
 	// Receive messages
-	unsigned char MSG [MAX_MESSAGE_SIZE];
 
 	fd_set fdset;
 	FD_ZERO(&fdset);
@@ -221,9 +227,16 @@ void World::update(float dt)
 	{
 		struct sockaddr_storage sender;
 		socklen_t sendsize = sizeof(sender);
-		bzero(&sender, sizeof(sender));
+		memset(&sender, 0, sizeof(sender));
 
+#if WIN32	
+		char MSG [MAX_MESSAGE_SIZE];
+		SSIZE_T size = recvfrom(m_sock, MSG, sizeof(MSG), 0, (struct sockaddr*)&sender, &sendsize);
+#else // WIN32
+		unsigned char MSG[MAX_MESSAGE_SIZE];
 		ssize_t size = recvfrom(m_sock, MSG, sizeof(MSG), 0, (struct sockaddr*)&sender, &sendsize);
+#endif // WIN32
+		
 
 		if (size <= 0)
 		{

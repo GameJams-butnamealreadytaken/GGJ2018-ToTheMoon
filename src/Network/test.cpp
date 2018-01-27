@@ -1,5 +1,11 @@
 #include <stdio.h>
-#include <unistd.h>
+
+#if WIN32
+#	include "Windows.h"
+#	define sleep(x) Sleep(x)
+#else // WIN32
+#	include <unistd.h>
+#endif // WIN32
 
 #include "World.h"
 
