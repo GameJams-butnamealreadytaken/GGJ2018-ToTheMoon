@@ -3,6 +3,7 @@
 #include "ShSDK/ShSDK.h"
 #include "ShEngineExt/ShEngineExt.h"
 
+#include "../../../Animation/AnimatedSpriteManager.h"
 #include "../GameObject.h"
 
 class Explosion : public GameObject
@@ -31,4 +32,6 @@ public:
 
 protected:
 
+private:
+	AnimatedSpriteManager					m_animationManager;
 };

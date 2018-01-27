@@ -4,6 +4,7 @@
 #include "ShEngineExt/ShEngineExt.h"
 
 #include "../GameObject.h"
+#include "../../../Animation/AnimatedSpriteManager.h"
 
 class Planet : public GameObject
 {
@@ -28,14 +29,11 @@ public:
 	void									Initialize			(void);
 	void									Release				(void);
 
-	void									Start				(const CShVector2 & vPosition);
-	void									Stop				(void);
-
 	void									Update				(float dt);
 
 	virtual void							OnHit				(GameObject* pObject) { }
 	virtual GameObject::EType				GetType(void)		{ return(GameObject::e_type_planet); }
 
 protected:
-
+	AnimatedSpriteManager					m_animationManager;
 };

@@ -1,38 +1,45 @@
 #include "Planet.h"
 
+extern bool g_bDisableAnimations;
+
 /**
  * @brief Constructor
  */
 Planet::Planet(EPlanet planet, ShEntity2 * pEntity)
 : GameObject(pEntity, CShVector2(0.0f, 0.0f))
 {
-	switch(planet)
+	if (!g_bDisableAnimations)
 	{
-		case e_planet_moon :
+		switch (planet)
 		{
-			//Animate(96, "ggj", "moon", 0.1f);
-		}
-		break;	
+			case e_planet_moon:
+			{
+				m_animationManager = AnimatedSpriteManager(pEntity, CShString("ggj"), CShString("moon"), CShVector2(0.0f, 0.0f), 0.1f, 96, false, false);
+			}
+			break;
 
-		case e_planet_earth:
-		{
-			//Animate(96, "ggj", "earth", 0.1f);
-		}
-		break;
+			case e_planet_earth:
+			{
+				m_animationManager = AnimatedSpriteManager(pEntity, CShString("ggj"), CShString("earth"), CShVector2(0.0f, 0.0f), 0.1f, 96, false, false);
+			}
+			break;
 
-		case e_planet_jupiter:
-		{
-			//Animate(96, "ggj", "jupiter", 0.1f);
-		}
-		break;
+			case e_planet_jupiter:
+			{
+				m_animationManager = AnimatedSpriteManager(pEntity, CShString("ggj"), CShString("jupiter"), CShVector2(0.0f, 0.0f), 0.1f, 96, false, false);
+			}
+			break;
 
-		case e_planet_mars:
-		{
-			//Animate(96, "ggj", "mars", 0.1f);
-		}
-		break;
+			case e_planet_mars:
+			{
+				m_animationManager = AnimatedSpriteManager(pEntity, CShString("ggj"), CShString("mars"), CShVector2(0.0f, 0.0f), 0.1f, 96, false, false);
+			}
+			break;
 
-		default: SH_ASSERT_ALWAYS(); break;
+			default: SH_ASSERT_ALWAYS(); break;
+		}
+
+		m_animationManager.Play();
 	}
 
 	SetShow(true);
@@ -69,4 +76,9 @@ void Planet::Release(void)
 void Planet::Update(float dt)
 {
 	GameObject::Update(dt);
+
+	if (!g_bDisableAnimations)
+	{
+		m_animationManager.Update(dt);
+	}
 }

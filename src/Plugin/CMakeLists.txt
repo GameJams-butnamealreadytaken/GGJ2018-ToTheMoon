@@ -19,6 +19,10 @@ source_group("Plugin" FILES ${SOURCES_Plugin})
 set(SOURCES_Factory PluginFactory.cpp PluginFactory.h)
 source_group("Factory" FILES ${SOURCES_Factory})
 
+# AnimatedSpriteManager files
+set(SOURCES_AnimatedSpriteManager Animation/AnimatedSpriteManager.cpp Animation/AnimatedSpriteManager.h)
+source_group("Animation" FILES ${SOURCES_AnimatedSpriteManager})
+
 # SoundManager files
 set(SOURCES_SoundManager Sound/SoundManager.cpp Sound/SoundManager.h)
 source_group("Sound\\SoundManager" FILES ${SOURCES_SoundManager})
@@ -67,6 +71,7 @@ source_group("World\\GameObject\\Transmitter" FILES ${SOURCES_Transmitter})
 set(SOURCES 
 ${SOURCES_Plugin} 
 ${SOURCES_Factory} 
+${SOURCES_AnimatedSpriteManager}
 ${SOURCES_SoundManager}
 ${SOURCES_World}
 ${SOURCES_GameObject}
