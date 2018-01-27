@@ -208,7 +208,11 @@ bool NetworkHelper::Receive(char * buffer, unsigned int & size, char * machine, 
  */
 bool NetworkHelper::RegisterClient(char * machine)
 {
+#if WIN32
+	unsigned int long machine_addr = inet_addr(machine);
+#else // WIN32
 	in_addr_t machine_addr = inet_addr(machine);
+#endif // WIN32
 
 	for (int i = 0; i < m_iClientCount; ++i)
 	{

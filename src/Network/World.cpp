@@ -96,8 +96,12 @@ void World::handleHelloMessage(HelloMessage * msg, char * machine, char * servic
 {
 	printf("HELLO from %s:%s\n", machine, service);
 	fflush(stdout);
-
+#if WIN32
+	RPC_STATUS status;
+	if (UuidCompare(&m_MyHelloUUID, &msg->helloId, &status) == 0)
+#else // WIN32
 	if (uuid_compare(m_MyHelloUUID, msg->helloId) == 0)
+#endif // WIN32
 	{
 		return;
 	}
