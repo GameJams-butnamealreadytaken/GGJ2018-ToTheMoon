@@ -1,11 +1,15 @@
 #include "Ship.h"
 
+#include "../Projectile/ProjectileManager.h"
+
 /**
  * @brief Constructor
  */
 Ship::Ship(ShEntity2 * pEntity, const CShVector2 & vPosition)
 	: GameObject(pEntity, vPosition)
 	, m_pNetworkShip(shNULL)
+	, m_pProjectileManager(shNULL)
+	, m_fFireRate(0.0f)
 {
 	SetState((int)IDLE);
 }
@@ -21,11 +25,12 @@ Ship::~Ship(void)
 /**
 * @brief Initialize
 */
-void Ship::Initialize(EShipType type, const Network::Ship * pNetworkShip)
+void Ship::Initialize(EShipType type, const Network::Ship * pNetworkShip, ProjectileManager * pProjectileManager)
 {
 	m_type = type;
 	m_pNetworkShip = const_cast<Network::Ship *>(pNetworkShip);
 	m_pNetworkShip->setSpeed(0.0f);
+	m_pProjectileManager = pProjectileManager;
 	SetShow(true);
 }
 
@@ -42,7 +47,22 @@ void Ship::Release(void)
 */
 void Ship::Update(float dt)
 {
-	UpdateSprite();
+	// Sprite rotation
+	const Network::vec2 & shipPos = m_pNetworkShip->getPosition();
+	const Network::vec2 & targetPos = m_pNetworkShip->getTarget();
+
+	float direction = atan2(targetPos.x - shipPos.x, targetPos.y - shipPos.y) * 180 / SHC_PI;
+	float fAngle = (-direction + 90)*SHC_DEG2RAD;
+
+	UpdateSprite(shipPos, targetPos, fAngle);
+
+	m_fFireRate += dt;
+
+	if (m_fFireRate > 0.1f)
+	{
+		m_pProjectileManager->Start(ProjectileManager::e_projectile_bullet, GetPosition2(), GetPosition2() + CShVector2(cos(fAngle) * 1500.0f, sin(fAngle) * 1500.0f), 4.0f);
+		m_fFireRate = 0.0f;
+	}
 
 	switch (m_iState)
 	{
@@ -102,16 +122,9 @@ void Ship::SetTarget(float x, float y, float fSpeed)
 /**
 * @brief GameObject::UpdateSprite
 */
-void Ship::UpdateSprite(void)
+void Ship::UpdateSprite(const Network::vec2 & shipPos, const Network::vec2 & targetPos, float fAngle)
 {
-	// Sprite rotation
-	const Network::vec2 & shipPos = m_pNetworkShip->getPosition();
-	const Network::vec2 & targetPos = m_pNetworkShip->getTarget();
-	
-	float direction = atan2(targetPos.x - shipPos.x, targetPos.y - shipPos.y) * 180 / SHC_PI;
-	float orientation = (-direction + 90)*SHC_DEG2RAD;
-
-	ShEntity2::SetWorldRotation(m_pEntity, 0.0f, 0.0f, orientation);
+	ShEntity2::SetWorldRotation(m_pEntity, 0.0f, 0.0f, fAngle);
 
 	// Sprite pos
 	m_vPosition.m_x = shipPos.x;

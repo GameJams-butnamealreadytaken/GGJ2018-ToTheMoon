@@ -146,22 +146,6 @@ void World::Update(float dt)
 	// Update projectile manager
 	m_projectileManager.Update(dt);
 
-#if TEST
-	{
-		static float x = 0.0f;
-		static float y = 0.0f;
-
-		y += dt;
-		x += dt;
-
-		if (y > 0.1f)
-		{
-			m_projectileManager.Start(ProjectileManager::e_projectile_bullet, CShVector2(0.0f, 0.0f), CShVector2(500.0f * cos(x), 500.0f * sin(x)), 5.0f);
-			y = 0.0f;
-		}
-	}
-#endif //TEST
-
 	//
 	// Update ships
 	int iShipCount = m_apShip.GetCount();
@@ -258,7 +242,7 @@ void World::OnTouchMove(int iTouch, float positionX, float positionY)
 */
 void World::CreateShip(float x, float y, const Network::Ship * pNetworkShip /*= shNULL*/)
 {
-	ShEntity2* pEntity = ShEntity2::Create(m_levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("image_white"), CShVector3(x, y, 2.0f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(10.0f, 10.0f, 1.0f));
+	ShEntity2* pEntity = ShEntity2::Create(m_levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("ship"), CShVector3(x, y, 1.1f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(0.15f, 0.15f, 1.0f));
 	SH_ASSERT(shNULL != pEntity);
 	Ship * pShip = new Ship(pEntity, CShVector2(x, y));
 	if (shNULL == pNetworkShip)
@@ -266,7 +250,7 @@ void World::CreateShip(float x, float y, const Network::Ship * pNetworkShip /*= 
 		pNetworkShip = m_world.createShip(x, y);
 		m_pShip = pShip;
 	}
-	pShip->Initialize(Ship::BASE, pNetworkShip);
+	pShip->Initialize(Ship::BASE, pNetworkShip, &m_projectileManager);
 	m_apShip.Add(pShip);
 }
 
