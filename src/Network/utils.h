@@ -2,6 +2,8 @@
 
 #if __gnu_linux__
 #	include <uuid/uuid.h>
+#else
+#	include <rpc.h>
 #endif // __gnu_linux__
 
 namespace Network
@@ -51,7 +53,11 @@ struct SyncShipStateMessage
 	}
 
 	MSG_ID id;
+#if WIN32
+	GUID shipId;
+#else // WIN32
 	uuid_t shipId;
+#endif // WIN32
 
 	vec2 position;
 	vec2 target;

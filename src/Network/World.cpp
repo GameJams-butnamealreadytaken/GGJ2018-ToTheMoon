@@ -243,7 +243,7 @@ Ship * World::createShip(float x, float y)
 #if __gnu_linux__
 	uuid_generate(message.shipId);
 #else
-#	error "Implement me !"
+	CoCreateGuid(&message.shipId); 
 #endif // __gnu_linux__
 	message.position = vec2(x, y);
 	message.target = vec2(x, y);
