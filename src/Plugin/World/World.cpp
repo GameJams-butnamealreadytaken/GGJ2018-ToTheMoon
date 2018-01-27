@@ -210,12 +210,19 @@ void World::OnTouchMove(int iTouch, float positionX, float positionY)
 }
 
 /**
-* @brief World::OnShipCreated
+* @brief World::onShipCreated
 */
-/*virtual*/ void World::OnShipCreated(Network::Ship* pShip)
+/*virtual*/ void World::onShipCreated(const Ship * ship)
 {
-	//m_apShip.Add(new Ship(pShip));
-	//m_apShip[0]->Initialize()
+	
+}
+
+/**
+* @brief World::onTransmitterCreate
+*/
+/*virtual*/ void World::onTransmitterCreate(const Transmitter * ship)
+{
+
 }
 
 /**
