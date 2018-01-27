@@ -280,7 +280,7 @@ void World::update(float dt)
 
 				case SHIP_STATE:
 				{
-					printf("SHIP_STATE from %s:%d\n", machine, service);
+					printf("SHIP_STATE from %s:%s\n", machine, service);
 				}
 				break;
 			}
