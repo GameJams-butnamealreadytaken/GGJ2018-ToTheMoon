@@ -24,6 +24,8 @@
 #define BRD_HELO_ADDR	"192.168.1.255"
 #define BRD_HELO_PORT	(PORT)
 
+static_assert(sizeof(uuid_t) == 16, "Size of 'uuid_t' must be 16");
+
 /**
  * @brief Constructor
  */
