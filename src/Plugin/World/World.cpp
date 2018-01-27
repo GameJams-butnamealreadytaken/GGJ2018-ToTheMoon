@@ -2,7 +2,7 @@
 
 #include "GameObjects/Projectile/ProjectileManager.h"
 
-#define TEST 0
+#define TEST 1
 
 /**
 * @brief Constructor

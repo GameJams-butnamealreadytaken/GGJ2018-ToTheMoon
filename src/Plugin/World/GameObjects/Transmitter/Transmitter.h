@@ -36,6 +36,8 @@ public:
 private:
 
 	AnimatedSpriteManager	m_animationManagerDeploy;
+	AnimatedSpriteManager	m_animationManagerIdle;
+
 	float					m_fRadius;
 	int						m_iLife;
 
