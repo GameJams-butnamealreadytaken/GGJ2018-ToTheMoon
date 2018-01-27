@@ -21,10 +21,34 @@ ProjectileManager::~ProjectileManager(void)
 */
 void ProjectileManager::Initialize(const CShIdentifier & levelIdentifier)
 {
-	for (int iBullet = 0; iBullet < POOL_BULLET; ++iBullet)
+	for (int iProjectile = 0; iProjectile < e_projectile_max; ++iProjectile)
 	{
-		ShEntity2* pEntity = ShEntity2::Create(levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("bullet"), CShVector3(0.0f, 0.0f, 0.1f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
-		m_apBullet[iBullet] = new Bullet(pEntity);
+		m_aiCurrentProjectile[iProjectile] = 0;
+	}
+
+	for (int iProjectile = 0; iProjectile < e_projectile_max; ++iProjectile)
+	{
+		ShEntity2* pEntity = shNULL;
+
+		for (int j = 0; j < POOL_PROJECTILE; ++j)
+		{
+			switch (iProjectile)
+			{
+				case e_projectile_bullet:
+				{
+					pEntity = ShEntity2::Create(levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("bullet"), CShVector3(0.0f, 0.0f, 0.1f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
+					m_apProjectile[iProjectile][j] = new Bullet(pEntity);
+				}
+				break;
+
+				default:
+				{
+					SH_ASSERT_ALWAYS();
+				}
+				break;
+			}
+			
+		}
 	}
 }
 
@@ -39,9 +63,11 @@ void ProjectileManager::Release(void)
 /**
 * @brief Start
 */
-void ProjectileManager::Start(const CShVector2 & vPosition, const CShVector2 & vDestination, const CShVector2 & vSpeed)
+void ProjectileManager::Start(EProjectile eProjectile, const CShVector2 & vPosition, const CShVector2 & vDestination, const CShVector2 & vSpeed)
 {
-	
+	m_apProjectile[eProjectile][m_aiCurrentProjectile[eProjectile]]->Start(vPosition, vDestination, vSpeed);
+	m_aiCurrentProjectile[eProjectile]++;
+	m_aiCurrentProjectile[eProjectile] %= POOL_PROJECTILE;
 }
 
 /**
@@ -49,9 +75,12 @@ void ProjectileManager::Start(const CShVector2 & vPosition, const CShVector2 & v
 */
 void ProjectileManager::Update(float dt)
 {
-	for (int iBullet = 0; iBullet < POOL_BULLET; ++iBullet)
+	for (int iProjectile = 0; iProjectile < e_projectile_max; ++iProjectile)
 	{
-		Bullet* pBullet = m_apBullet[iBullet];
-		pBullet->Update(dt);
+		for (int j = 0; j < POOL_PROJECTILE; ++j)
+		{
+			Projectile* pProjectile = m_apProjectile[iProjectile][j];
+			pProjectile->Update(dt);
+		}
 	}
 }
