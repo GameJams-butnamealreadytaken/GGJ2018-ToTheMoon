@@ -31,9 +31,9 @@ public:
 
 	//
 	// Target (getter / setter)
-	float getTarget(void) const
+	const vec2 & getTarget(void) const
 	{
-		return(m_speed);
+		return(m_target);
 	}
 
 	void setTarget(float x, float y)
