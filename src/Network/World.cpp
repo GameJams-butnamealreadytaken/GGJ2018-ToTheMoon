@@ -83,15 +83,21 @@ bool World::broadcastHelloMessage(void)
 void World::handleHelloMessage(HelloMessage * msg, char * machine, char * service)
 {
 	printf("HELLO from %s:%s\n", machine, service);
-#if 0 // tmp disable
-	SyncShipStateMessage response;
-	response.shipId = 0;
-	response.position = vec2(0.0f, 0.0f);
-	response.target = vec2(0.0f, 0.0f);
-	response.speed = 0.0f;
 
-	m_network.SendMessageToMachine(response, machine);
-#endif // 0
+	for (int i = 0; i < MAX_SHIPS; ++i)
+	{
+		if (m_aOwnedShips[i])
+		{
+			SyncShipStateMessage response;
+			uuid_copy(response.shipId, m_aOwnedShips[i]->m_uuid);
+			response.position = vec2(0.0f, 0.0f);
+			response.target = vec2(0.0f, 0.0f);
+			response.speed = 0.0f;
+
+			m_network.SendMessageToMachine(response, machine);
+		}
+	}
+
 	m_network.RegisterClient(machine);
 }
 
@@ -100,9 +106,18 @@ void World::handleHelloMessage(HelloMessage * msg, char * machine, char * servic
  */
 void World::handleSyncShipStateMessage(SyncShipStateMessage * msg, char * machine, char * service)
 {
-	printf("SHIP_STATE from %s:%s\n", machine, service);
+	printf("SYNC_SHIP_STATE from %s:%s\n", machine, service);
 
 	Ship * ship = nullptr; // FIXME : find ship msg->shipId
+
+	for (int i = 0; i < MAX_SHIPS; ++i)
+	{
+		if (uuid_compare(msg->shipId, m_aShips[i].m_uuid))
+		{
+			ship = m_aShips+i;
+			break;
+		}
+	}
 
 	if (!ship)
 	{
@@ -258,6 +273,8 @@ Ship * World::createShip(float x, float y)
 	message.speed = 0.0f;
 
 	m_network.SendMessageToAllClients(message);
+
+	m_aOwnedShips[0] = ship; // FIXME !
 
 	return(ship);
 }
