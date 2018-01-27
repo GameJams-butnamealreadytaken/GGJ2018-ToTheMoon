@@ -63,9 +63,9 @@ void ProjectileManager::Release(void)
 /**
 * @brief Start
 */
-void ProjectileManager::Start(EProjectile eProjectile, const CShVector2 & vPosition, const CShVector2 & vDestination, const CShVector2 & vSpeed)
+void ProjectileManager::Start(EProjectile eProjectile, const CShVector2 & vPosition, const CShVector2 & vDestination, float fSpeed)
 {
-	m_apProjectile[eProjectile][m_aiCurrentProjectile[eProjectile]]->Start(vPosition, vDestination, vSpeed);
+	m_apProjectile[eProjectile][m_aiCurrentProjectile[eProjectile]]->Start(vPosition, vDestination, fSpeed);
 	m_aiCurrentProjectile[eProjectile]++;
 	m_aiCurrentProjectile[eProjectile] %= POOL_PROJECTILE;
 }

@@ -26,7 +26,7 @@ public:
 	void									Initialize			(const CShIdentifier & levelIdentifier);
 	void									Release				(void);
 
-	void									Start				(EProjectile eProjectile, const CShVector2 & vPosition, const CShVector2 & vDestination, const CShVector2 & vSpeed);
+	void									Start				(EProjectile eProjectile, const CShVector2 & vPosition, const CShVector2 & vDestination, float fSpeed);
 
 	virtual void							Update				(float dt);
 

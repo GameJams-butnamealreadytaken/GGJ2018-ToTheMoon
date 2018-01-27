@@ -15,14 +15,14 @@ public:
 	void									Initialize			(void);
 	void									Release				(void);
 
-	void									Start				(const CShVector2 & vPosition, const CShVector2 & vDestination, const CShVector2 & vSpeed);
+	void									Start				(const CShVector2 & vPosition, const CShVector2 & vDestination, float fSpeed);
 
-	virtual void							Update				(float dt) = 0;
+	void									Update				(float dt);
 
 	virtual void							OnHit				(GameObject* pObject) = 0;
 	virtual GameObject::EType				GetType				(void) = 0;
 
 protected:
-	CShVector2								m_vSpeed;
+	float									m_fSpeed;
 	CShVector2								m_vDestination;
 };
