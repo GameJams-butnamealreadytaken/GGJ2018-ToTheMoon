@@ -25,9 +25,9 @@ Transmitter::~Transmitter(void)
 /**
 * @brief Initialize
 */
-void Transmitter::Initialize(Network::World & world)
+void Transmitter::Initialize(Network::Transmitter * pNetworkTransmitter)
 {
-	m_pTransmitter = world.createTransmitter(m_vPosition.m_x, m_vPosition.m_y);
+	m_pTransmitter = pNetworkTransmitter;
 	SetShow(true);
 }
 

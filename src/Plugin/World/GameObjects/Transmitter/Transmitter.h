@@ -23,7 +23,7 @@ public:
 	explicit			Transmitter			(ShEntity2 * pEntity, const CShVector2 & vPosition);
 	virtual				~Transmitter		(void);
 
-	void				Initialize			(Network::World & world);
+	void				Initialize			(Network::Transmitter * pNetworkTransmitter);
 	void				Release				(void);
 
 	void				Start				(const CShVector2 & vPosition);
