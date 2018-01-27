@@ -96,6 +96,7 @@ void World::handleHelloMessage(HelloMessage * msg, char * machine, char * servic
 {
 	printf("HELLO from %s:%s\n", machine, service);
 	fflush(stdout);
+
 #if WIN32
 	RPC_STATUS status;
 	if (UuidCompare(&m_MyHelloUUID, &msg->helloId, &status) == 0)
@@ -104,6 +105,12 @@ void World::handleHelloMessage(HelloMessage * msg, char * machine, char * servic
 #endif // WIN32
 	{
 		return;
+	}
+
+	if (CURRENT_NETWORK_VERSION == msg->version)
+	{
+		printf("BAD VERSION !\n");
+		return; // BAD VERSION !
 	}
 
 	for (int i = 0; i < MAX_SHIPS; ++i)
@@ -124,7 +131,6 @@ void World::handleHelloMessage(HelloMessage * msg, char * machine, char * servic
 		}
 	}
 
-
 	//
 	// Say HELLO to the new client
 	if (m_network.RegisterClient(machine))
@@ -132,6 +138,49 @@ void World::handleHelloMessage(HelloMessage * msg, char * machine, char * servic
 		HelloMessage msg;
 		m_network.SendMessageToMachine(msg, machine);
 	}
+}
+
+/**
+ * @brief World::handlePingMessage
+ */
+void World::handlePingMessage(PingMessage * msg, char * machine, char * service)
+{
+	printf("PING from %s:%s\n", machine, service);
+	fflush(stdout);
+
+	// TODO
+}
+
+/**
+ * @brief World::handleCreateShipMessage
+ */
+void World::handleCreateShipMessage(CreateShipMessage * msg, char * machine, char * service)
+{
+	printf("CREATE_SHIP from %s:%s\n", machine, service);
+	fflush(stdout);
+
+	Ship * ship = createShipInternal(msg->shipId, 0.0f, 0.0f);
+	assert(nullptr != ship);
+	if (m_pListener)
+	{
+		m_pListener->onShipCreated(ship);
+	}
+
+	// Set Attributes
+	ship->m_position = msg->position;
+	ship->m_target = msg->target;
+	ship->m_speed = msg->speed;
+}
+
+/**
+ * @brief World::handleDestroyShipMessage
+ */
+void World::handleDestroyShipMessage(DestroyShipMessage * msg, char * machine, char * service)
+{
+	printf("DESTROY_SHIP from %s:%s\n", machine, service);
+	fflush(stdout);
+
+	// TODO
 }
 
 /**
@@ -161,32 +210,33 @@ void World::handleSyncShipStateMessage(SyncShipStateMessage * msg, char * machin
 }
 
 /**
- * @brief World::handleCreateShipMessage
- */
-void World::handleCreateShipMessage(CreateShipMessage * msg, char * machine, char * service)
-{
-	printf("CREATE_SHIP from %s:%s\n", machine, service);
-	fflush(stdout);
-
-	Ship * ship = createShipInternal(msg->shipId, 0.0f, 0.0f);
-	assert(nullptr != ship);
-	if (m_pListener)
-	{
-		m_pListener->onShipCreated(ship);
-	}
-
-	// Set Attributes
-	ship->m_position = msg->position;
-	ship->m_target = msg->target;
-	ship->m_speed = msg->speed;
-}
-
-/**
  * @brief World::handleCreateTransmitterMessage
  */
 void World::handleCreateTransmitterMessage(CreateTransmitterMessage * msg, char * machine, char * service)
 {
 	printf("CREATE_TRANSMITTER from %s:%s\n", machine, service);
+	fflush(stdout);
+
+	// TODO
+}
+
+/**
+ * @brief World::handleDestroyTransmitterMessage
+ */
+void World::handleDestroyTransmitterMessage(DestroyTransmitterMessage * msg, char * machine, char * service)
+{
+	printf("DESTROY_TRANSMITTER from %s:%s\n", machine, service);
+	fflush(stdout);
+
+	// TODO
+}
+
+/**
+ * @brief handleSyncTransmitterStateMessage
+ */
+void handleSyncTransmitterStateMessage(DestroyTransmitterMessage * msg, char * machine, char * service)
+{
+	printf("SYNC_TRANSMITTER_STATE from %s:%s\n", machine, service);
 	fflush(stdout);
 
 	// TODO
@@ -231,27 +281,51 @@ void World::update(float dt)
 				}
 				break;
 
-				case SYNC_SHIP_STATE:
+				case PING:
 				{
-					static_assert(sizeof(SyncShipStateMessage) < MAX_MESSAGE_SIZE, "ShipStateMessage is too big !");
-					assert(sizeof(SyncShipStateMessage) == size);
-					handleSyncShipStateMessage((SyncShipStateMessage*)MSG, machine, service);
+					static_assert(sizeof(PingMessage) < MAX_MESSAGE_SIZE, "PingMessage is too big !");
+					assert(sizeof(PingMessage) == size);
+					handlePingMessage((PingMessage*)MSG, machine, service);
 				}
 				break;
 
-				case CREATE_SHIP:
+				case SHIP_CREATE:
 				{
-					static_assert(sizeof(CreateShipMessage) < MAX_MESSAGE_SIZE, "ShipStateMessage is too big !");
+					static_assert(sizeof(CreateShipMessage) < MAX_MESSAGE_SIZE, "CreateShipMessage is too big !");
 					assert(sizeof(CreateShipMessage) == size);
 					handleCreateShipMessage((CreateShipMessage*)MSG, machine, service);
 				}
 				break;
 
-				case CREATE_TRANSMITTER:
+				case SHIP_DESTROY:
 				{
-					static_assert(sizeof(CreateTransmitterMessage) < MAX_MESSAGE_SIZE, "ShipStateMessage is too big !");
+					static_assert(sizeof(DestroyShipMessage) < MAX_MESSAGE_SIZE, "DestroyShipMessage is too big !");
+					assert(sizeof(DestroyShipMessage) == size);
+					handleDestroyShipMessage((DestroyShipMessage*)MSG, machine, service);
+				}
+				break;
+
+				case SHIP_SYNC_STATE:
+				{
+					static_assert(sizeof(SyncShipStateMessage) < MAX_MESSAGE_SIZE, "SyncShipStateMessage is too big !");
+					assert(sizeof(SyncShipStateMessage) == size);
+					handleSyncShipStateMessage((SyncShipStateMessage*)MSG, machine, service);
+				}
+				break;
+
+				case TRANSMITTER_CREATE:
+				{
+					static_assert(sizeof(CreateTransmitterMessage) < MAX_MESSAGE_SIZE, "CreateTransmitterMessage is too big !");
 					assert(sizeof(CreateTransmitterMessage) == size);
 					handleCreateTransmitterMessage((CreateTransmitterMessage*)MSG, machine, service);
+				}
+				break;
+
+				case TRANSMITTER_DESTROY:
+				{
+					static_assert(sizeof(DestroyTransmitterMessage) < MAX_MESSAGE_SIZE, "DestroyTransmitterMessage is too big !");
+					assert(sizeof(DestroyTransmitterMessage) == size);
+					handleDestroyTransmitterMessage((DestroyTransmitterMessage*)MSG, machine, service);
 				}
 				break;
 			}
