@@ -15,9 +15,8 @@ int main(int argc, char ** argv)
 
 	world.init();
 
-	for (int i = 0; i < 60; ++i)
+	while (1)
 	{
-		printf("Iteration # %d\n", i+1);
 		world.update(1.0f);
 		sleep(1);
 	}
