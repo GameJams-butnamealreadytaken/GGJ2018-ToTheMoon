@@ -51,7 +51,11 @@ bool World::init(void)
 	bool enable = true;
 	if (setsockopt(sock, SOL_SOCKET, SO_BROADCAST, (char*)&enable, sizeof(bool)) < 0)
 	{
+#if WIN32
+		closesocket(sock);
+#else // WIN32
 		close(sock);
+#endif // WIN32
 		return(false);
 	}
 
@@ -60,17 +64,29 @@ bool World::init(void)
 	addr.sin_port = htons(BRD_HELO_PORT);
 	addr.sin_addr.s_addr = inet_addr("192.168.1.255");
 
+#if WIN32
+	char MSG [1024];
+	SSIZE_T size = sendto(sock, MSG, sizeof(MSG), 0, (sockaddr *)&addr, sizeof(addr));
+#else // WIN32
 	unsigned int MSG [1024];
-
 	ssize_t size = sendto(sock, MSG, sizeof(MSG), 0, (sockaddr *)&addr, sizeof(addr));
+#endif // WIN32
 
 	if (size < 0)
 	{
+#if WIN32
+		closesocket(sock);
+#else // WIN32
 		close(sock);
+#endif // WIN32
 		return(false);
 	}
-
-	close(sock);
+	
+#if WIN32
+		closesocket(sock);
+#else // WIN32
+		close(sock);
+#endif // WIN32
 
 	return(true);
 }
@@ -78,7 +94,7 @@ bool World::init(void)
 /**
  * @brief Release
  */
-void World::release()
+void World::release(void)
 {
 
 }

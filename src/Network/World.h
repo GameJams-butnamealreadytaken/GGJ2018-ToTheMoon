@@ -13,22 +13,22 @@ public:
 
 	//
 	// Constructor / Destructor
-	World(float size_x, float size_y);
-	~World(void);
+	World				(float size_x, float size_y);
+	~World				(void);
 
 	//
 	// Initialize
-	bool init();
-	void release();
+	bool init			(void);
+	void release		(void);
 
 	//
 	// Update
-	void update(float dt);
+	void update			(float dt);
 
 	//
 	// Create Ship
-	Ship * createShip(void);
-	Ship * createShip(float x, float y);
+	Ship * createShip	(void);
+	Ship * createShip	(float x, float y);
 
 protected:
 
