@@ -21,7 +21,6 @@
 			
 		<!-- Notifications -->	
 		<style identifier="panel_ingame_hud_notifications"				h_pivot="left" v_pivot="top" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="0"			position_y="2.5" 	width="100"		height="100"/>
-		<style identifier="text_ingame_hud_notifications"				h_pivot="left" v_pivot="top" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="0"			position_y="0" 		width="100"		height="100"/>
 	</sss>                                         
 	<root>		
 		<image id="image_ingame_hud_hp_1" sprite_library="ggj_ui" image="image_white"/>
@@ -39,8 +38,6 @@
 		
 		<image id="image_ingame_hud_bonus_slot" sprite_library="ggj_ui" image="image_white"/>
 		
-		<panel id="text_ingame_hud_notifications">
-			<text id="text_ingame_hud_notifications"/>
-		</panel>
+		<panel id="text_ingame_hud_notifications"/>
 	</root>
 </gui>
