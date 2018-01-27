@@ -98,9 +98,9 @@ void GameStateMainMenu::obscuring(void)
 
 	//
 	// GUI
-	ShGUIControl::Show(m_pControlBackground, false);
-	ShGUIControl::Show(m_pControlMainMenu, false);
-	ShGUIControl::Show(m_pControlMainMenuContent1, false);
+	ShGUIControl::Hide(m_pControlBackground, true);
+	ShGUIControl::Hide(m_pControlMainMenu, true);
+	ShGUIControl::Hide(m_pControlMainMenuContent1, true);
 }
 
 /**
