@@ -19,6 +19,10 @@ source_group("Plugin" FILES ${SOURCES_Plugin})
 set(SOURCES_Factory PluginFactory.cpp PluginFactory.h)
 source_group("Factory" FILES ${SOURCES_Factory})
 
+# SoundManager files
+set(SOURCES_SoundManager Sound/SoundManager.cpp Sound/SoundManager.h)
+source_group("Sound\\SoundManager" FILES ${SOURCES_SoundManager})
+
 # World files
 set(SOURCES_World World/World.cpp World/World.h)
 source_group("World" FILES ${SOURCES_World})
@@ -39,6 +43,7 @@ source_group("World\\GameObject\\Transmiter" FILES ${SOURCES_Transmiter})
 set(SOURCES 
 ${SOURCES_Plugin} 
 ${SOURCES_Factory} 
+${SOURCES_SoundManager}
 ${SOURCES_World}
 ${SOURCES_GameObject}
 ${SOURCES_Ship}
