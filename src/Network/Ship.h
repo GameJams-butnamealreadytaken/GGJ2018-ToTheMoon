@@ -58,7 +58,6 @@ protected:
 	void clampPosition(const vec2 & halfSize);
 
 private:
-
 	uuid_t m_uuid;
 
 	vec2 m_position;

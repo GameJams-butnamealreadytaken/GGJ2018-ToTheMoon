@@ -10,7 +10,7 @@ namespace Network
  */
 Ship::Ship(void) : m_position(0.0f, 0.0f), m_target(0.0f, 0.0f), m_speed(0.0f)
 {
-	memset(m_uuid, 0, sizeof(uuid_t));
+	memset(&m_uuid, 0, sizeof(uuid_t));
 }
 
 /**
@@ -23,7 +23,7 @@ Ship::Ship(uuid_t id, float x, float y) : m_position(x, y), m_target(x, y), m_sp
 #if __gnu_linux__
 	uuid_copy(m_uuid, id);
 #else
-#	error "Implement me !"
+	memcpy(&m_uuid, (void*)&id, sizeof(uuid_t));
 #endif // __gnu_linux__
 }
 

@@ -234,11 +234,11 @@ Ship * World::createShip(void)
  */
 Ship * World::createShip(float x, float y)
 {
-#if __gnu_linux__
 	uuid_t uuid;
+#if __gnu_linux__
 	uuid_generate(uuid);
 #else
-#	error "Implement me !"
+	UuidCreate(&uuid);
 #endif // __gnu_linux__
 
 	Ship * ship = m_aShips + m_ShipCount;
@@ -251,7 +251,7 @@ Ship * World::createShip(float x, float y)
 #if __gnu_linux__
 	uuid_copy(message.shipId, uuid);
 #else
-	CoCreateGuid(&message.shipId); 
+	memcpy(&message.shipId, (void*)&uuid, sizeof(uuid_t));
 #endif // __gnu_linux__
 	message.position = vec2(x, y);
 	message.target = vec2(x, y);
