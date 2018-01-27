@@ -1,10 +1,16 @@
 #include "World.h"
 
+#include "GameObjects/projectile/ProjectileManager.h"
+
 /**
 * @brief Constructor
 */
 /*explicit*/ World::World(void) 
-	: m_world(1000.0f, 1000.0f)
+	: m_levelIdentifier()
+	, m_world(1000.0f, 1000.0f)
+	, m_projectileManager()
+	, m_apTransmiter()
+	, m_apShip()
 	, m_pShip(shNULL)
 {
 	// ...
@@ -27,6 +33,8 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 
 	m_world.init();
 
+	m_projectileManager.Initialize(levelIdentifier);
+
 	//
 	// Create player's Ship
 	{
@@ -43,8 +51,6 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 */
 void World::Release(void)
 {
-	m_world.release();
-
 	m_pShip = shNULL;
 
 	int nShipCount = m_apShip.GetCount();
@@ -54,6 +60,10 @@ void World::Release(void)
 		SH_SAFE_DELETE(m_apShip[i]);
 	}
 	m_apShip.Empty();
+
+	m_projectileManager.Release();
+
+	m_world.release();
 }
 
 /**
@@ -62,6 +72,10 @@ void World::Release(void)
 void World::Update(float dt)
 {
 	m_world.update(dt);
+
+	//
+	// Update projectile manager
+	m_projectileManager.Update(dt);
 
 	//
 	// Update Transmiters
