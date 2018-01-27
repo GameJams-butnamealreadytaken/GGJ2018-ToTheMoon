@@ -29,6 +29,11 @@ public:
 	void		OnTouchUp			(int iTouch, float positionX, float positionY);
 	void		OnTouchMove			(int iTouch, float positionX, float positionY);
 
+
+private:
+	void		CreateShip			(float x, float y);
+	void		CreateTransmitter	(float x, float y);
+
 private:
 
 	CShIdentifier					m_levelIdentifier;

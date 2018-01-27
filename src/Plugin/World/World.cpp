@@ -2,7 +2,7 @@
 
 #include "GameObjects/Projectile/ProjectileManager.h"
 
-#define TEST 0
+#define TEST 1
 
 /**
 * @brief Constructor
@@ -78,11 +78,7 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 	//
 	// Create player's Ship
 	{
-		ShEntity2* pEntity = ShEntity2::Create(levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("image_white"), CShVector3(0.0f, 0.0f, 2.0f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(10.0f, 10.0f, 1.0f));
-		SH_ASSERT(shNULL != pEntity);
-		m_pShip = new Ship(pEntity, CShVector2(0.0f,0.0f));
-		m_pShip->Initialize(Ship::BASE, m_world);
-		m_apShip.Add(m_pShip);
+		CreateShip(0.0f, 0.0f);
 	}
 }
 
@@ -100,6 +96,14 @@ void World::Release(void)
 		SH_SAFE_DELETE(m_apShip[i]);
 	}
 	m_apShip.Empty();
+
+	int nTransCount = m_apTransmitter.GetCount();
+	for (int i = 0; i < nTransCount; ++i)
+	{
+		m_apTransmitter[i]->Release();
+		SH_SAFE_DELETE(m_apTransmitter[i]);
+	}
+	m_apTransmitter.Empty();
 
 	m_projectileManager.Release();
 	m_explosionManager.Release();
@@ -162,7 +166,7 @@ void World::Update(float dt)
 		m_pShip->Update(dt);
 
 		ShCamera* pCamera = ShCamera::GetCamera2D();
-		CShVector2 shipPos = m_pShip->GetShipPosition();
+		CShVector2 shipPos = m_pShip->GetPosition2();
 		ShCamera::SetPosition2(pCamera, shipPos);
 		ShCamera::SetTarget(pCamera, CShVector3(shipPos, 0.0f));
 	}
@@ -191,9 +195,9 @@ void World::OnTouchDown(int iTouch, float positionX, float positionY)
 		m_pShip->SetTarget(worldPosition.m_x, worldPosition.m_y, 5.0f); // todo move speed on her right place
 	}
 
-
 #if TEST
 	m_explosionManager.Start(CShVector2(worldPosition.m_x, worldPosition.m_y));
+	CreateTransmitter(worldPosition.m_x, worldPosition.m_y);
 #endif //TEST
 }
 
@@ -211,4 +215,28 @@ void World::OnTouchUp(int iTouch, float positionX, float positionY)
 void World::OnTouchMove(int iTouch, float positionX, float positionY)
 {
 
+}
+
+/**
+* @brief World::CreateShip
+*/
+void World::CreateShip(float x, float y)
+{
+	ShEntity2* pEntity = ShEntity2::Create(m_levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("image_white"), CShVector3(x, y, 2.0f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(10.0f, 10.0f, 1.0f));
+	SH_ASSERT(shNULL != pEntity);
+	m_pShip = new Ship(pEntity, CShVector2(x, y));
+	m_pShip->Initialize(Ship::BASE, m_world);
+	m_apShip.Add(m_pShip);
+}
+
+/**
+* @brief World::CreateTransmitter
+*/
+void World::CreateTransmitter(float x, float y)
+{
+	ShEntity2* pEntity = ShEntity2::Create(m_levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("transmiter"), CShVector3(x, y, 2.0f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
+	SH_ASSERT(shNULL != pEntity);
+	Transmitter * pTrans = new Transmitter(pEntity, CShVector2(x, y));
+	pTrans->Initialize(m_world);
+	m_apTransmitter.Add(pTrans);
 }
