@@ -6,7 +6,7 @@
 #	include <net/if.h>
 #	include <arpa/inet.h>
 #	include <netdb.h>
-#elif SH_PC
+#else
 #	include <winsock2.h>
 #	include <ws2tcpip.h>
 #endif // __gnu_linux__
