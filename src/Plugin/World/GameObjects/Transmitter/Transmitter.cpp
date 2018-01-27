@@ -135,3 +135,21 @@ void Transmitter::Update(float dt)
 		SetState((int)HIT);
 	}
 }
+
+/**
+* @brief AddNeighbour
+*/
+void Transmitter::AddNeighbour(Transmitter * pTrans)
+{
+	SH_ASSERT(shNULL != pTrans);
+	m_aNeighbour.Add(pTrans);
+}
+
+/**
+* @brief RemoveNeighbour
+*/
+void Transmitter::RemoveNeighbour(Transmitter * pTrans)
+{
+	SH_ASSERT(shNULL != pTrans);
+	m_aNeighbour.RemoveAll(pTrans);
+}

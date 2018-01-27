@@ -19,6 +19,10 @@ public:
 	void			AddTransmitter		(Transmitter * pTransmitter);
 
 private:
+	bool			GetVictoryCondition	(void);
+	float			ComputeVecteurNorme	(float Ax, float Ay, float Bx, float By);
+
+private:
 
 	int							m_iTeamId;
 	CShArray<Transmitter *>		m_apTransmitter;

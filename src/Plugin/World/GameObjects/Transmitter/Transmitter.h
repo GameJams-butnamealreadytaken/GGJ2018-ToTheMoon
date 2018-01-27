@@ -33,6 +33,10 @@ public:
 
 	virtual void		OnHit				(GameObject* pObject);
 	virtual GameObject::EType GetType		(void)	{ return(e_type_transmitter); }
+
+	void				AddNeighbour		(Transmitter * pTrans);
+	void				RemoveNeighbour		(Transmitter * pTrans);
+
 private:
 
 	AnimatedSpriteManager	m_animationManagerDeploy;
@@ -42,4 +46,5 @@ private:
 	int						m_iLife;
 
 	Network::Transmitter *	m_pTransmitter;
+	CShArray<Transmitter *>	m_aNeighbour;
 };
