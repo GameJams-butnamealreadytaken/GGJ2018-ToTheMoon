@@ -39,7 +39,7 @@ void Game::initialize(void)
 	ShCamera::SetProjectionOrtho(m_pCamera);
 	ShCamera::SetFarPlaneDistance(m_pCamera, 200.0f);
 	ShCamera::SetNearPlaneDistance(m_pCamera, 1.0f);
-	ShCamera::SetViewport(m_pCamera, display_width * m_fRatio, display_height * m_fRatio);
+	ShCamera::SetViewport(m_pCamera, ORIGINAL_VIEWPORT_X, ORIGINAL_VIEWPORT_Y);
 
 	ShCamera::SetCurrent2D(m_pCamera);
 

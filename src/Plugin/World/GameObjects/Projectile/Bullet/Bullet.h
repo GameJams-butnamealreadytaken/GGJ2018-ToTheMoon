@@ -3,7 +3,7 @@
 #include "ShSDK/ShSDK.h"
 #include "ShEngineExt/ShEngineExt.h"
 
-#include "../../projectile/Projectile.h"
+#include "../../Projectile/Projectile.h"
 
 class Bullet : public Projectile
 {
