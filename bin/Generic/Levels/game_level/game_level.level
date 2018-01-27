@@ -19,11 +19,11 @@
         <prefab_list/>
     </preload>
     <layer_list>
-        <layer name="layer_default" show="true" position_x="0.000000" position_y="0.000000" position_z="0.000000" min_x="0.000000" min_y="0.000000" max_x="2048.000000" max_y="1152.000000"/>
+        <layer name="layer_default" show="true" position_x="0.000000" position_y="0.000000" position_z="0.000000" min_x="0.000000" min_y="0.000000" max_x="6144.000000" max_y="3456.000000"/>
         <layer name="layer_gui" show="true" position_x="0.000000" position_y="0.000000" position_z="0.000000" min_x="0.000000" min_y="0.000000" max_x="0.000000" max_y="0.000000"/>
     </layer_list>
     <object_list>
-        <entity2 name="sprite_ggj_background_001" position_x="0.000000" position_y="0.000000" position_z="0.000000" rotation_x="0.000000" rotation_y="0.000000" rotation_z="0.000000" scale_x="1.000000" scale_y="1.000000" scale_z="1.000000" layer="layer_default" show="true" color_r="1.000000" color_g="1.000000" color_b="1.000000" color_a="1.000000" pivot="center_center" pivot_custom_x="0.500000" pivot_custom_y="0.500000" sprite_library="ggj" sprite_name="background" blend_function="alpha"/>
+        <entity2 name="sprite_ggj_background_001" position_x="0.000000" position_y="0.000000" position_z="0.000000" rotation_x="0.000000" rotation_y="0.000000" rotation_z="0.000000" scale_x="3.000000" scale_y="3.000000" scale_z="1.000000" layer="layer_default" show="true" color_r="1.000000" color_g="1.000000" color_b="1.000000" color_a="1.000000" pivot="center_center" pivot_custom_x="0.500000" pivot_custom_y="0.500000" sprite_library="ggj" sprite_name="background" blend_function="alpha"/>
     </object_list>
     <plugins>
         <plugin name="pluginggj2018"/>
@@ -38,6 +38,7 @@
         <translate_z enabled="true"/>
         <grid enabled="false" position_x="0.000000" position_y="0.000000" position_z="0.000000" size_x="100.000000" size_y="100.000000" subdivision_x="10" subdivision_y="10"/>
         <show_markers enabled="false"/>
-        <camera position_x="0.000000" position_y="-2377.666992" position_z="1396.199219" target_x="0.000000" target_y="0.000000" target_z="0.000000" znear="1.000000" zfar="40000.000000" zoom="2.757294" camera_angle_x="-100.000000" camera_angle_z="0.000000" type="1" arcball_x="0.000000" arcball_y="-2757.294434" arcball_z="0.000000" camera_up_x="0.000000" camera_up_y="0.000000" camera_up_z="1.000000"/>
+        <camera position_x="-0.000000" position_y="0.000302" position_z="6906.359375" target_x="0.000000" target_y="0.000000" target_z="0.000000" znear="1.000000" zfar="40000.000000" zoom="6.906359" camera_angle_x="1.570796" camera_angle_z="0.000000" type="0" arcball_x="0.000000" arcball_y="-6906.359375" arcball_z="0.000000" camera_up_x="0.000000" camera_up_y="0.000000" camera_up_z="1.000000"/>
     </editor_settings>
 </level>
+evel>
