@@ -33,12 +33,12 @@ void Game::initialize(void)
 
 	m_fRatio = shMax(ratio_x, ratio_y, 2.0f);
 
-	ShCamera::SetPosition(m_pCamera, CShVector3(0.0f, 0.0f, 5.0f));
+	ShCamera::SetPosition(m_pCamera, CShVector3(0.0f, 0.0f, 100.0f));
 	ShCamera::SetTarget(m_pCamera, CShVector3(0.0f, 0.0f, 0.0f));
 	ShCamera::SetUp(m_pCamera, CShVector3(0.0f, 1.0f, 0.0f));
 	ShCamera::SetProjectionOrtho(m_pCamera);
-	ShCamera::SetFarPlaneDistance(m_pCamera, 10.0f);
-	ShCamera::SetNearPlaneDistance(m_pCamera, 0.1f);
+	ShCamera::SetFarPlaneDistance(m_pCamera, 200.0f);
+	ShCamera::SetNearPlaneDistance(m_pCamera, 1.0f);
 	ShCamera::SetViewport(m_pCamera, display_width * m_fRatio, display_height * m_fRatio);
 
 	ShCamera::SetCurrent2D(m_pCamera);
