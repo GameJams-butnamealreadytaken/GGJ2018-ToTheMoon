@@ -8,6 +8,7 @@
 #include "GameObjects/Projectile/ProjectileManager.h"
 #include "GameObjects/Transmiter/Transmiter.h"
 #include "GameObjects/Ship/Ship.h"
+#include "GameObjects/Planet/Planet.h"
 
 class World
 {
@@ -36,6 +37,7 @@ private:
 	ExplosionManager				m_explosionManager;
 	ProjectileManager				m_projectileManager;
 
+	Planet*							m_aPlanet[4];
 	CShArray<Transmiter *>			m_apTransmiter;
 	CShArray<Ship *>				m_apShip;
 	Ship *							m_pShip;
