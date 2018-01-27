@@ -5,6 +5,7 @@
 
 #include "../GameObject.h"
 
+#include "../../../Animation/AnimatedSpriteManager.h"
 #include "../../../../Network/World.h"
 
 class Transmitter : public GameObject
@@ -34,6 +35,7 @@ public:
 	virtual GameObject::EType GetType		(void)	{ return(e_type_transmitter); }
 private:
 
+	AnimatedSpriteManager	m_animationManagerDeploy;
 	float					m_fRadius;
 	int						m_iLife;
 
