@@ -1,5 +1,7 @@
 #include "NetworkHelper.h"
 
+#include <stdio.h> // memset
+
 #if WIN32
 #	include <ws2tcpip.h>
 #	include <IPHlpApi.h>
@@ -71,24 +73,36 @@
 	{
 		// If successful, output some information from the data we received
 		pCurrAddresses = pAddresses;
-		while (pCurrAddresses) 
-		{
+		//while (pCurrAddresses) 
+		//{
 			pUnicast = pCurrAddresses->FirstUnicastAddress;
 			if (pUnicast != NULL)
 			{
-				for (i = 0; pUnicast != NULL; i++)
-				{
+				//for (i = 0; pUnicast != NULL; i++)
+				//{
 					if (pUnicast->Address.lpSockaddr->sa_family == AF_INET)
 					{
+						char szIp[256];
 						sockaddr_in *sa_in = (sockaddr_in *)pUnicast->Address.lpSockaddr;
-						memset(szBroadcast, 0, iLength);
-						inet_ntop(AF_INET,&(sa_in->sin_addr), szBroadcast, iLength);
+						memset(szIp, 0, 256);
+						inet_ntop(AF_INET,&(sa_in->sin_addr), szIp, 256);
+
+						UINT8 iSubnetMask = pUnicast->OnLinkPrefixLength;
+						ULONG bits = 0xffffffff ^ (1 << 32 - iSubnetMask) - 1;
+						char szSubnetMask[256];
+						sprintf(szSubnetMask, "%d.%d.%d.%d", (bits & 0x0000000000ff000000L) >> 24, (bits & 0x0000000000ff0000) >> 16, (bits & 0x0000000000ff00) >> 8, bits & 0xff);
+						struct in_addr ip, mask, broadcast;
+						inet_pton(AF_INET, szSubnetMask, &mask);
+						inet_pton(AF_INET, szIp, &ip);
+						broadcast.s_addr = ip.s_addr | ~mask.s_addr;
+						inet_ntop(AF_INET, &broadcast, szBroadcast, iLength);
 					}
-					pUnicast = pUnicast->Next;
-				}
+				
+				//	pUnicast = pUnicast->Next;
+				//}
 			}
-			pCurrAddresses = pCurrAddresses->Next;
-		}
+		//	pCurrAddresses = pCurrAddresses->Next;
+		//}
 	}
 
 	if (pAddresses) 

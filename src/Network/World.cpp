@@ -1,6 +1,7 @@
 #include "World.h"
 
 #include "WorldListener.h"
+#include "NetworkHelper.h"
 
 #include <stdio.h>
 #include <assert.h>
@@ -63,6 +64,9 @@ bool World::init(void)
 	{
 		return(false);
 	}
+
+	char szBroadcast[256];
+	NetworkHelper::discoverNetwork(szBroadcast, 256);
 
 	if (!broadcastHelloMessage())
 	{
