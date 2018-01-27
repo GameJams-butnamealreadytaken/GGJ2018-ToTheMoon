@@ -113,6 +113,56 @@
 
 	return(strcmp(szBroadcast, "") > 0);
 #else // WIN32
-	return(false);
+	int sock = socket(AF_INET, SOCK_DGRAM, 0);
+
+	
+    struct ifreq *ifreq;
+    struct ifconf ifconf;
+    char buf[16384];
+    unsigned i;
+    size_t len;
+ 
+    ifconf.ifc_len = sizeof(buf);
+    ifconf.ifc_buf = buf;
+
+    if (ioctl(sock, SIOCGIFCONF, &ifconf) != 0)
+    {
+        perror("ioctl(SIOCGIFCONF)");
+		return(false);
+    }
+ 
+    printf("Listing all interfaces:\n");
+    ifreq = ifconf.ifc_req;
+    i = 0;
+    //while (i < ifconf.ifc_len)
+    //{
+#ifndef linux
+        len = IFNAMSIZ + ifreq->ifr_addr.sa_len;
+#else
+        len = sizeof(struct ifreq);
+#endif
+
+        printf("%s\n", ifreq->ifr_name);
+
+        ifreq = (struct ifreq*)((char*)ifreq + len);
+
+        i += len;
+	//}
+
+    int family;
+    struct ifreq ifreq;
+
+    if(ioctl(sock, SIOCGIFBRDADDR, &ifreq) != 0)
+    {
+        fprintf(stderr, "Could not find interface named %s", name);
+        return; /* ignore */
+    }
+
+    getnameinfo(&ifreq.ifr_broadaddr, sizeof(ifreq.ifr_broadaddr), szBroadcast, iLength, 0, 0, NI_NUMERICHOST);
+	printf("%-24s%s\n", name, host);
+	
+	close(sock);
+
+	return(true);
 #endif // WIN32
 }
