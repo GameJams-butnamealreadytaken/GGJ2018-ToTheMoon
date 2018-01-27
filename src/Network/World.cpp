@@ -73,7 +73,18 @@ void World::release(void)
  */
 bool World::broadcastHelloMessage(void)
 {
+#if __gnu_linux__
+	uuid_generate(m_MyHelloUUID);
+#else
+	UuidCreate(&m_MyHelloUUID);
+#endif // __gnu_linux__
+
 	HelloMessage msg;
+#if __gnu_linux__
+	uuid_copy(msg.helloId, m_MyHelloUUID);
+#else
+	memcpy(&msg.helloId, (void*)&m_MyHelloUUID, sizeof(uuid_t));
+#endif // __gnu_linux__
 
 	return(m_network.BroadcastMessage(msg));
 }
@@ -85,6 +96,11 @@ void World::handleHelloMessage(HelloMessage * msg, char * machine, char * servic
 {
 	printf("HELLO from %s:%s\n", machine, service);
 	fflush(stdout);
+
+	if (uuid_compare(m_MyHelloUUID, msg->helloId) == 0)
+	{
+		return;
+	}
 
 	for (int i = 0; i < MAX_SHIPS; ++i)
 	{
@@ -104,7 +120,14 @@ void World::handleHelloMessage(HelloMessage * msg, char * machine, char * servic
 		}
 	}
 
-	m_network.RegisterClient(machine);
+
+	//
+	// Say HELLO to the new client
+	if (m_network.RegisterClient(machine))
+	{
+		HelloMessage msg;
+		m_network.SendMessageToMachine(msg, machine);
+	}
 }
 
 /**
