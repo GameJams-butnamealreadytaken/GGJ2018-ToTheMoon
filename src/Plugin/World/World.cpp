@@ -44,7 +44,7 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 
 	m_world.init();
 	m_world.setListener(this);
-	m_pMiniMap->Initialize(this);
+
 	m_explosionManager.Initialize(levelIdentifier);
 	m_projectileManager.Initialize(levelIdentifier);
 
@@ -94,6 +94,9 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 
 	m_pUser = ShUser::GetUser(0);
 	SH_ASSERT(shNULL != m_pUser);
+
+	m_pMiniMap = new MiniMap();
+	m_pMiniMap->Initialize(levelIdentifier, this);
 }
 
 /**
@@ -101,6 +104,7 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 */
 void World::Release(void)
 {
+	m_pMiniMap->Release();
 	m_pShip = shNULL;
 
 	int nShipCount = m_apShip.GetCount();
@@ -129,7 +133,6 @@ void World::Release(void)
 	m_projectileManager.Release();
 	m_explosionManager.Release();
 
-	m_pMiniMap->Release();
 	m_world.release();
 }
 
@@ -139,7 +142,6 @@ void World::Release(void)
 void World::Update(float dt)
 {
 	m_world.update(dt);
-	m_pMiniMap->Update(dt);
 
 	//
 	// Update planets
@@ -192,6 +194,8 @@ void World::Update(float dt)
 			CreateTransmitter(shipPos.m_x, shipPos.m_y);
 		}
 	}
+
+	m_pMiniMap->Update(dt);
 }
 
 /**
