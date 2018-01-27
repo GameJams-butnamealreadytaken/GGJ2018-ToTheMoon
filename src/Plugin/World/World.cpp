@@ -248,7 +248,7 @@ void World::CreateShip(float x, float y, const Network::Ship * pNetworkShip /*= 
 */
 void World::CreateTransmitter(float x, float y, const Network::Transmitter * pNetworkTrans /*= shNULL*/)
 {
-	ShEntity2* pEntity = ShEntity2::Create(m_levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("transmiter"), CShVector3(x, y, 2.01f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
+	ShEntity2* pEntity = ShEntity2::Create(m_levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("transmitter_01"), CShVector3(x, y, 2.01f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
 	SH_ASSERT(shNULL != pEntity);
 	Transmitter * pTrans = new Transmitter(pEntity, CShVector2(x, y));
 	if (shNULL == pNetworkTrans)
@@ -256,5 +256,7 @@ void World::CreateTransmitter(float x, float y, const Network::Transmitter * pNe
 		pNetworkTrans = m_world.createTransmitter(x, y);
 	}
 	pTrans->Initialize(pNetworkTrans);
+	pTrans->Start(CShVector2(x, y));
 	m_apTransmitter.Add(pTrans);
+	
 }

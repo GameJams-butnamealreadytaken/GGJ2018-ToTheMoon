@@ -11,6 +11,7 @@ Transmitter::Transmitter(ShEntity2 * pEntity, const CShVector2 & vPosition)
 , m_fRadius(RADIUS)
 , m_pTransmitter(shNULL)
 {
+	m_animationManagerDeploy = AnimatedSpriteManager(pEntity, CShString("ggj"), CShString("transmitter"), CShVector2(0.0f, 0.0f), 0.03f, 75, false, true);
 	SetState((int)OFF);
 }
 
@@ -44,6 +45,7 @@ void Transmitter::Release(void)
 */
 void Transmitter::Start(const CShVector2 & vPosition)
 {
+	m_animationManagerDeploy.Play();
 	SetPosition2(vPosition);
 	SetState((int)APPEAR);
 	SetShow(true);
@@ -56,18 +58,17 @@ void Transmitter::Update(float dt)
 {
 	GameObject::Update(dt);
 
+	m_animationManagerDeploy.Update(dt);
+
 	switch (m_iState)
 	{
 		case APPEAR:
 		{
-			if (m_fStateTime < 1.0f)
-			{
-				ShEntity2::SetAlpha(m_pEntity, m_fStateTime);
-			}
-			else
+			if (!m_animationManagerDeploy.IsPlaying())
 			{
 				SetState((int)IDLE);
 			}
+			
 		}
 		break;
 
