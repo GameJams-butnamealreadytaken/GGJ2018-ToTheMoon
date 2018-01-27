@@ -6,6 +6,7 @@
 Explosion::Explosion(ShEntity2 * pEntity)
 : GameObject(pEntity, CShVector2(0.0f, 0.0f))
 {
+	Animate(10, "ggj", "explosion", 0.1f, true);
 	SetState((int)OFF);
 }
 
@@ -38,9 +39,11 @@ void Explosion::Release(void)
 */
 void Explosion::Start(const CShVector2 & vPosition)
 {
+	m_bAnimationEnded = false;
+
 	SetState((int)ON);
 	SetShow(true);
-	
+	SetPosition2(vPosition);
 }
 
 void Explosion::Stop(void)
@@ -54,5 +57,13 @@ void Explosion::Stop(void)
 */
 void Explosion::Update(float dt)
 {
-	
+	GameObject::Update(dt);
+
+	if (m_iState == ON)
+	{
+		if (m_bAnimationEnded)
+		{
+			Stop();
+		}
+	}
 }
