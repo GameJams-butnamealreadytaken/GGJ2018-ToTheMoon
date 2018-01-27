@@ -22,7 +22,7 @@ MiniMap::~MiniMap(void)
 */
 void MiniMap::Initialize(World * pWorld)
 {
-	m_pWorld = pWorld;
+	//m_pWorld = pWorld;
 	//m_fRatio = m_pWorld->;
 }
 
