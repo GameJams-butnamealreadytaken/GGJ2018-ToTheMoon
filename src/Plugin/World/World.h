@@ -28,8 +28,12 @@ public:
 	void		OnTouchDown			(int iTouch, float positionX, float positionY);
 	void		OnTouchUp			(int iTouch, float positionX, float positionY);
 	void		OnTouchMove			(int iTouch, float positionX, float positionY);
-
+	
 	virtual void OnShipCreated		(Network::Ship* pShip);
+
+private:
+	void		CreateShip			(float x, float y);
+	void		CreateTransmitter	(float x, float y);
 
 private:
 
