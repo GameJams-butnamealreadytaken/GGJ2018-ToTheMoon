@@ -25,8 +25,6 @@ static const CShString strPluginFilePath(PLUGIN_PATH);
 
 static CShDynamicLibrary plugin_library(strPluginFilePath);
 
-bool g_bDisableAnimations = false;
-
 extern "C"
 {
 
