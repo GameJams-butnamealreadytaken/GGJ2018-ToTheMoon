@@ -14,7 +14,7 @@
 , m_fAnimationInterFrameTime(0.0f)
 , m_fAnimationTime(0.0f)
 {
-	// ...
+	ShEntity2::SetShow(pEntity, false);
 }
 
 /**
