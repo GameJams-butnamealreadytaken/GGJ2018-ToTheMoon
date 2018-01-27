@@ -43,6 +43,7 @@ struct HelloMessage
 	}
 
 	MSG_ID id;
+	uuid_t helloId;
 };
 
 struct SyncShipStateMessage

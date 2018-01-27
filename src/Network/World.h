@@ -75,6 +75,8 @@ private:
 	NetworkHelper m_network;
 
 	WorldListener * m_pListener;
+
+	uuid_t m_MyHelloUUID;
 };
 
 }
