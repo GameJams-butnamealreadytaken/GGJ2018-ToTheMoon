@@ -298,7 +298,7 @@ void World::OnTouchDown(int iTouch, float positionX, float positionY)
 	// Set new ship target
 	if (shNULL != m_pShip)
 	{
-		m_pShip->SetTarget(worldPosition.m_x, worldPosition.m_y, 5.0f); // todo move speed on her right place
+		m_pShip->SetTarget(worldPosition.m_x, worldPosition.m_y, 800.0f); // todo move speed on her right place
 	}
 
 
