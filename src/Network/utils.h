@@ -79,6 +79,13 @@ struct HelloMessage
 	HelloMessage()
 	{
 		id = HELLO;
+
+#if __gnu_linux__
+		uuid_clear(helloId);
+#else
+		memset(&helloId, 0, sizeof(uuid_t));
+#endif // __gnu_linux__
+
 		version = CURRENT_NETWORK_VERSION;
 	}
 
@@ -114,6 +121,12 @@ struct CreateShipMessage
 	CreateShipMessage()
 	{
 		id = SHIP_CREATE;
+
+#if __gnu_linux__
+		uuid_clear(shipId);
+#else
+		memset(&shipId, 0, sizeof(uuid_t));
+#endif // __gnu_linux__
 	}
 
 	MSG_ID id;
@@ -122,6 +135,7 @@ struct CreateShipMessage
 	vec2 position;
 	vec2 target;
 	float speed;
+	unsigned int life;
 	unsigned int team;
 	unsigned int shipType;
 };
@@ -131,6 +145,12 @@ struct DestroyShipMessage
 	DestroyShipMessage()
 	{
 		id = SHIP_DESTROY;
+
+#if __gnu_linux__
+		uuid_clear(shipId);
+#else
+		memset(&shipId, 0, sizeof(uuid_t));
+#endif // __gnu_linux__
 	}
 
 	MSG_ID id;
@@ -142,6 +162,19 @@ struct SyncShipStateMessage
 	SyncShipStateMessage()
 	{
 		id = SHIP_SYNC_STATE;
+
+#if __gnu_linux__
+		uuid_clear(shipId);
+#else
+		memset(&shipId, 0, sizeof(uuid_t));
+#endif // __gnu_linux__
+
+		position = vec2(0.0f, 0.0f);
+		target = vec2(0.0f, 0.0f);
+		speed = 0.0f;
+		life = 0;
+		team = 0;
+		shipType = 0;
 	}
 
 	MSG_ID id;
@@ -150,6 +183,7 @@ struct SyncShipStateMessage
 	vec2 position;
 	vec2 target;
 	float speed;
+	unsigned int life;
 	unsigned int team;
 	unsigned int shipType;
 };
@@ -159,6 +193,15 @@ struct CreateTransmitterMessage
 	CreateTransmitterMessage()
 	{
 		id = TRANSMITTER_CREATE;
+
+#if __gnu_linux__
+		uuid_clear(transmitterId);
+#else
+		memset(&transmitterId, 0, sizeof(uuid_t));
+#endif // __gnu_linux__
+
+		position = vec2(0.0f, 0.0f);
+		team = 0;
 	}
 
 	MSG_ID id;
@@ -173,6 +216,12 @@ struct DestroyTransmitterMessage
 	DestroyTransmitterMessage()
 	{
 		id = TRANSMITTER_DESTROY;
+
+#if __gnu_linux__
+		uuid_clear(transmitterId);
+#else
+		memset(&transmitterId, 0, sizeof(uuid_t));
+#endif // __gnu_linux__
 	}
 
 	MSG_ID id;
@@ -184,6 +233,15 @@ struct SyncTransmitterStateMessage
 	SyncTransmitterStateMessage()
 	{
 		id = TRANSMITTER_SYNC_STATE;
+
+#if __gnu_linux__
+		uuid_clear(transmitterId);
+#else
+		memset(&transmitterId, 0, sizeof(uuid_t));
+#endif // __gnu_linux__
+
+		position = vec2(0.0f, 0.0f);
+		team = 0;
 	}
 
 	MSG_ID id;

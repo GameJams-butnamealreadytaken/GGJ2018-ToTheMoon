@@ -130,6 +130,7 @@ void World::handleHelloMessage(HelloMessage * msg, char * machine, char * servic
 			response.position = m_aOwnedShips[i]->getPosition();
 			response.target = m_aOwnedShips[i]->getTarget();
 			response.speed = m_aOwnedShips[i]->getSpeed();
+			response.life = m_aOwnedShips[i]->getLife();
 			response.team = m_aOwnedShips[i]->getTeam();
 			response.shipType = m_aOwnedShips[i]->getType();
 
@@ -192,7 +193,7 @@ void World::handleCreateShipMessage(CreateShipMessage * msg, char * machine, cha
 {
 	NETWORK_DEBUG_LOG("CREATE_SHIP from %s:%s\n", machine, service);
 
-	Ship * ship = createShipInternal(msg->shipId, 0, msg->shipType, 0.0f, 0.0f);
+	Ship * ship = createShipInternal(msg->shipId, 0, 0, msg->shipType, 0.0f, 0.0f);
 	assert(nullptr != ship);
 
 	// Set Attributes
@@ -243,7 +244,7 @@ void World::handleSyncShipStateMessage(SyncShipStateMessage * msg, char * machin
 
 	if (!ship)
 	{
-		ship = createShipInternal(msg->shipId, 0, msg->shipType, 0.0f, 0.0f);
+		ship = createShipInternal(msg->shipId, 0, 0, msg->shipType, 0.0f, 0.0f);
 		assert(nullptr != ship);
 		bCreated = true;
 	}
@@ -279,7 +280,7 @@ void World::handleCreateTransmitterMessage(CreateTransmitterMessage * msg, char 
 {
 	NETWORK_DEBUG_LOG("CREATE_TRANSMITTER from %s:%s\n", machine, service);
 
-	Transmitter * transmitter = createTransmitterInternal(msg->transmitterId, 0, 0.0f, 0.0f);
+	Transmitter * transmitter = createTransmitterInternal(msg->transmitterId, 0, 0, 0.0f, 0.0f);
 	assert(nullptr != transmitter);
 
 	// Set Attributes
@@ -327,7 +328,7 @@ void World::handleSyncTransmitterStateMessage(SyncTransmitterStateMessage * msg,
 
 	if (!transmitter)
 	{
-		transmitter = createTransmitterInternal(msg->transmitterId, 0, 0.0f, 0.0f);
+		transmitter = createTransmitterInternal(msg->transmitterId, 0, 0, 0.0f, 0.0f);
 		assert(nullptr != transmitter);
 		bCreated = true;
 	}
@@ -486,7 +487,7 @@ void World::update(float dt)
  * @param y
  * @return new Ship
  */
-Ship * World::createShip(unsigned int team, unsigned int eShipType, float x, float y)
+Ship * World::createShip(unsigned int team, unsigned int life, unsigned int eShipType, float x, float y)
 {
 	uuid_t uuid;
 #if __gnu_linux__
@@ -495,7 +496,7 @@ Ship * World::createShip(unsigned int team, unsigned int eShipType, float x, flo
 	UuidCreate(&uuid);
 #endif // __gnu_linux__
 
-	Ship * ship = createShipInternal(uuid, team, eShipType, x, y);
+	Ship * ship = createShipInternal(uuid, team, life, eShipType, x, y);
 
 	CreateShipMessage message;
 #if __gnu_linux__
@@ -506,6 +507,7 @@ Ship * World::createShip(unsigned int team, unsigned int eShipType, float x, flo
 	message.position = vec2(x, y);
 	message.target = vec2(x, y);
 	message.speed = 0.0f;
+	message.life = life;
 	message.team = team;
 	message.shipType = eShipType;
 
@@ -529,7 +531,7 @@ Ship * World::createShip(unsigned int team, unsigned int eShipType, float x, flo
  * @param y
  * @return new Ship
  */
-Ship * World::createShipInternal(const uuid_t & uuid, unsigned int team, unsigned int eShipType, float x, float y)
+Ship * World::createShipInternal(const uuid_t & uuid, unsigned int team, unsigned int life, unsigned int eShipType, float x, float y)
 {
 #if ENABLE_CHECKS
 	{
@@ -542,7 +544,7 @@ Ship * World::createShipInternal(const uuid_t & uuid, unsigned int team, unsigne
 
 	++m_ShipCount;
 
-	*ship = Ship(uuid, team, eShipType, x, y);
+	*ship = Ship(uuid, team, life, eShipType, x, y);
 
 	return(ship);
 }
@@ -622,7 +624,7 @@ Ship * World::findShip(const uuid_t & uuid)
 * @param y
 * @return new Transmitter
 */
-Transmitter * World::createTransmitter(unsigned int team, float x, float y)
+Transmitter * World::createTransmitter(unsigned int team, unsigned int life, float x, float y)
 {
 	uuid_t uuid;
 #if __gnu_linux__
@@ -631,7 +633,7 @@ Transmitter * World::createTransmitter(unsigned int team, float x, float y)
 	UuidCreate(&uuid);
 #endif // __gnu_linux__
 
-	Transmitter * transmitter = createTransmitterInternal(uuid, team, x, y);
+	Transmitter * transmitter = createTransmitterInternal(uuid, team, life, x, y);
 
 	CreateTransmitterMessage message;
 #if __gnu_linux__
@@ -663,7 +665,7 @@ Transmitter * World::createTransmitter(unsigned int team, float x, float y)
  * @param y
  * @return
  */
-Transmitter * World::createTransmitterInternal(const uuid_t & uuid, unsigned int team, float x, float y)
+Transmitter * World::createTransmitterInternal(const uuid_t & uuid, unsigned int team, unsigned int life, float x, float y)
 {
 #if ENABLE_CHECKS
 	{
@@ -676,7 +678,7 @@ Transmitter * World::createTransmitterInternal(const uuid_t & uuid, unsigned int
 
 	++m_TransmitterCount;
 
-	*transmitter = Transmitter(uuid, team, x, y);
+	*transmitter = Transmitter(uuid, team, life, x, y);
 
 	return(transmitter);
 }

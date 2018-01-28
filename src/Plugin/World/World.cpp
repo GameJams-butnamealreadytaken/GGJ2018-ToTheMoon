@@ -12,6 +12,9 @@
 #define HALF_SIZE_Y 5.0f * 1152.0f
 #define TEST 0
 
+#define DEFAULT_TRANSMITTER_LIFE 10
+#define DEFAULT_SHIP_LIFE 10
+
 /**
 * @brief Constructor
 */
@@ -179,7 +182,7 @@ void World::Update(float dt)
 		{
 
 			CShVector2 & shipPos = m_pShip->GetPosition2();
-			Network::Transmitter * pNetworkTrans = m_world.createTransmitter(m_pShip->GetTeam(), shipPos.m_x, shipPos.m_y);
+			Network::Transmitter * pNetworkTrans = m_world.createTransmitter(m_pShip->GetTeam(), DEFAULT_TRANSMITTER_LIFE, shipPos.m_x, shipPos.m_y);
 			CreateTransmitter(shipPos.m_x, shipPos.m_y, pNetworkTrans);
 
 		}
@@ -454,7 +457,7 @@ void World::Start(unsigned int team, unsigned int eShipType)
 {
 	//
 	// Create player's Ship
-	Network::Ship * pNetworkShip = m_world.createShip(team, eShipType, 0.0f, 0.0f);
+	Network::Ship * pNetworkShip = m_world.createShip(team, DEFAULT_SHIP_LIFE, eShipType, 0.0f, 0.0f);
 	m_pShip = CreateShip(0.0f, 0.0f, pNetworkShip);
 
 	if (m_pShip->GetTeam() == 0)

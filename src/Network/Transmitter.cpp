@@ -20,7 +20,7 @@ Transmitter::Transmitter(void) : m_position(0.0f, 0.0f), m_team(0)
  * @param x
  * @param y
  */
-Transmitter::Transmitter(const uuid_t & id, unsigned int team) : m_position(0.0f, 0.0f), m_team(team)
+Transmitter::Transmitter(const uuid_t & id, unsigned int team, unsigned int life) : m_position(0.0f, 0.0f), m_team(team), m_life(life)
 {
 #if __gnu_linux__
 	uuid_copy(m_uuid, id);
@@ -34,7 +34,7 @@ Transmitter::Transmitter(const uuid_t & id, unsigned int team) : m_position(0.0f
  * @param x
  * @param y
  */
-Transmitter::Transmitter(const uuid_t & id, unsigned int team, float x, float y) : m_position(x, y), m_team(team)
+Transmitter::Transmitter(const uuid_t & id, unsigned int team, unsigned int life, float x, float y) : m_position(x, y), m_team(team), m_life(life)
 {
 #if __gnu_linux__
 	uuid_copy(m_uuid, id);

@@ -11,7 +11,7 @@ namespace Network
 /**
  * @brief Default constructor
  */
-Ship::Ship(void) : m_position(0.0f, 0.0f), m_target(0.0f, 0.0f), m_speed(0.0f), m_team(0), m_eShipType(0), m_bNeedSync(false)
+Ship::Ship(void) : m_position(0.0f, 0.0f), m_target(0.0f, 0.0f), m_speed(0.0f), m_team(0), m_eShipType(0), m_life(0), m_bNeedSync(false)
 {
 #if __gnu_linux__
 	uuid_clear(m_uuid);
@@ -24,7 +24,7 @@ Ship::Ship(void) : m_position(0.0f, 0.0f), m_target(0.0f, 0.0f), m_speed(0.0f), 
  * @brief Constructor
  * @param id
  */
-Ship::Ship(const uuid_t & id, unsigned int team, unsigned int eShipType) : m_position(0.0f, 0.0f), m_target(0.0f, 0.0f), m_speed(0.0f), m_team(team), m_eShipType(eShipType), m_bNeedSync(false)
+Ship::Ship(const uuid_t & id, unsigned int team, unsigned int life, unsigned int eShipType) : m_position(0.0f, 0.0f), m_target(0.0f, 0.0f), m_speed(0.0f), m_team(team), m_life(life), m_eShipType(eShipType), m_bNeedSync(false)
 {
 #if __gnu_linux__
 	uuid_copy(m_uuid, id);
@@ -39,7 +39,7 @@ Ship::Ship(const uuid_t & id, unsigned int team, unsigned int eShipType) : m_pos
  * @param x
  * @param y
  */
-Ship::Ship(const uuid_t & id, unsigned int team, unsigned int eShipType, float x, float y) : m_position(x, y), m_target(x, y), m_speed(0.0f), m_team(team), m_eShipType(eShipType), m_bNeedSync(false)
+Ship::Ship(const uuid_t & id, unsigned int team, unsigned int life, unsigned int eShipType, float x, float y) : m_position(x, y), m_target(x, y), m_speed(0.0f), m_team(team), m_life(life), m_eShipType(eShipType), m_bNeedSync(false)
 {
 #if __gnu_linux__
 	uuid_copy(m_uuid, id);
@@ -93,6 +93,7 @@ void Ship::update(float dt, NetworkHelper & network)
 		message.position = m_position;
 		message.target = m_target;
 		message.speed = m_speed;
+		message.life = m_life;
 		message.team = m_team;
 		message.shipType = m_eShipType;
 
