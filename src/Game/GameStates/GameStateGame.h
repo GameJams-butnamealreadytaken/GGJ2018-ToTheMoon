@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GameState.h"
+#include "GameStateShipSelection.h"
 
 class GameStateGame : public GameState
 {
@@ -25,6 +25,10 @@ public:
 	void				touchEnd				(const CShVector2 & pos, float ratio) SH_ATTRIBUTE_OVERRIDE;
 	void				touchMove				(const CShVector2 & pos, float ratio) SH_ATTRIBUTE_OVERRIDE;
 
+	//
+	// Setters
+	void				SetShipType				(GameStateShipSelection::EShipType eShipType);
+
 protected:
 
 	void				load					(void);
@@ -46,4 +50,8 @@ private:
 	ShGUIModalDialog *	m_pQuitDialog;
 	ShGUIControl *		m_pControlHUD;
 	ShGUIControl *		m_pControlNotif;
+
+	//
+	// Properties
+	GameStateShipSelection::EShipType m_eShipType;
 };

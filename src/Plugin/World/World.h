@@ -49,7 +49,7 @@ public:
 	virtual void	onTransmitterCreated	(const Network::Transmitter * pTrans);
 	virtual void	onTransmitterDestroyed	(const Network::Transmitter * pTrans);
 	
-	void			Start					(unsigned int team);
+	void			Start					(unsigned int team, unsigned int eShipType);
 
 private:
 

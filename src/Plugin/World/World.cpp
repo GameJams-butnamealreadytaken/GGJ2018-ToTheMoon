@@ -369,11 +369,11 @@ void World::OnTouchMove(int iTouch, float positionX, float positionY)
 /**
 * @brief World::Start
 */
-void World::Start(unsigned int team)
+void World::Start(unsigned int team, unsigned int eShipType)
 {
 	//
 	// Create player's Ship
-	Network::Ship * pNetworkShip = m_world.createShip(team, 0.0f, 0.0f);
+	Network::Ship * pNetworkShip = m_world.createShip(team, eShipType, 0.0f, 0.0f);
 	m_pShip = CreateShip(0.0f, 0.0f, pNetworkShip);
 }
 
@@ -382,10 +382,10 @@ void World::Start(unsigned int team)
 */
 Ship * World::CreateShip(float x, float y, const Network::Ship * pNetworkShip)
 {
-	ShEntity2* pEntity = ShEntity2::Create(m_levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("ship"), CShVector3(x, y, 1.1f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(0.15f, 0.15f, 1.0f));
+	ShEntity2* pEntity = ShEntity2::Create(m_levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier(CShString("ship_") + CShString::FromInt(pNetworkShip->getType())), CShVector3(x, y, 1.1f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(0.15f, 0.15f, 1.0f));
 	SH_ASSERT(shNULL != pEntity);
 	Ship * pShip = new Ship(pEntity, CShVector2(x, y));
-	pShip->Initialize(Ship::BASE, pNetworkShip, &m_projectileManager);
+	pShip->Initialize((Ship::EShipType)(pNetworkShip->getType()), pNetworkShip, &m_projectileManager);
 	m_apShip.Add(pShip);
 
 	return(pShip);

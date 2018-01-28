@@ -34,7 +34,7 @@ public:
 
 	//
 	// Create Ship
-	Ship *			createShip			(unsigned int team, float x, float y);
+	Ship *			createShip			(unsigned int team, unsigned int eShipType, float x, float y);
 	void			destroyShip			(Ship * ship);
 	Ship *			findShip			(const uuid_t & uuid);
 
@@ -53,7 +53,7 @@ public:
 
 protected:
 
-	Ship * createShipInternal(const uuid_t & uuid, unsigned int team, float x, float y);
+	Ship * createShipInternal(const uuid_t & uuid, unsigned int team, unsigned int eShipType, float x, float y);
 	void removeShipInternal(Ship * ship);
 
 	Transmitter * createTransmitterInternal(const uuid_t & uuid, unsigned int team, float x, float y);

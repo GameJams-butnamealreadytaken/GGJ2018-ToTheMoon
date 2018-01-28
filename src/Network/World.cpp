@@ -195,14 +195,15 @@ void World::handleCreateShipMessage(CreateShipMessage * msg, char * machine, cha
 	NETWORK_DEBUG_LOG("CREATE_SHIP from %s:%s\n", machine, service);
 	fflush(stdout);
 
-	Ship * ship = createShipInternal(msg->shipId, 0, 0.0f, 0.0f);
+	Ship * ship = createShipInternal(msg->shipId, 0, msg->shipType, 0.0f, 0.0f);
 	assert(nullptr != ship);
 
 	// Set Attributes
-	ship->m_position = msg->position;
-	ship->m_target = msg->target;
-	ship->m_speed = msg->speed;
-	ship->m_team = msg->team;
+	ship->m_position	= msg->position;
+	ship->m_target		= msg->target;
+	ship->m_speed		= msg->speed;
+	ship->m_team		= msg->team;
+	ship->m_eShipType	= msg->shipType;
 
 	// Notify the game
 	if (m_pListener)
@@ -247,16 +248,17 @@ void World::handleSyncShipStateMessage(SyncShipStateMessage * msg, char * machin
 
 	if (!ship)
 	{
-		ship = createShipInternal(msg->shipId, 0, 0.0f, 0.0f);
+		ship = createShipInternal(msg->shipId, 0, msg->shipType, 0.0f, 0.0f);
 		assert(nullptr != ship);
 		bCreated = true;
 	}
 
 	// Set Attributes
-	ship->m_position = msg->position;
-	ship->m_target = msg->target;
-	ship->m_speed = msg->speed;
-	ship->m_team = msg->team;
+	ship->m_position	= msg->position;
+	ship->m_target		= msg->target;
+	ship->m_speed		= msg->speed;
+	ship->m_team		= msg->team;
+	ship->m_eShipType	= msg->shipType;
 
 	if (bCreated)
 	{
@@ -477,7 +479,7 @@ void World::update(float dt)
  * @param y
  * @return new Ship
  */
-Ship * World::createShip(unsigned int team, float x, float y)
+Ship * World::createShip(unsigned int team, unsigned int eShipType, float x, float y)
 {
 	uuid_t uuid;
 #if __gnu_linux__
@@ -486,7 +488,7 @@ Ship * World::createShip(unsigned int team, float x, float y)
 	UuidCreate(&uuid);
 #endif // __gnu_linux__
 
-	Ship * ship = createShipInternal(uuid, team, x, y);
+	Ship * ship = createShipInternal(uuid, team, eShipType, x, y);
 
 	CreateShipMessage message;
 #if __gnu_linux__
@@ -498,6 +500,7 @@ Ship * World::createShip(unsigned int team, float x, float y)
 	message.target = vec2(x, y);
 	message.speed = 0.0f;
 	message.team = team;
+	message.shipType = eShipType;
 
 	m_network.SendMessageToAllClients(message);
 
@@ -519,7 +522,7 @@ Ship * World::createShip(unsigned int team, float x, float y)
  * @param y
  * @return new Ship
  */
-Ship * World::createShipInternal(const uuid_t & uuid, unsigned int team, float x, float y)
+Ship * World::createShipInternal(const uuid_t & uuid, unsigned int team, unsigned int eShipType, float x, float y)
 {
 #if ENABLE_CHECKS
 	{
@@ -532,7 +535,7 @@ Ship * World::createShipInternal(const uuid_t & uuid, unsigned int team, float x
 
 	++m_ShipCount;
 
-	*ship = Ship(uuid, team, x, y);
+	*ship = Ship(uuid, team, eShipType, x, y);
 
 	return(ship);
 }

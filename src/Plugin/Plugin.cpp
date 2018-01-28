@@ -109,7 +109,7 @@ void PluginGGJ2018::OnTouchMove(int iTouch, float positionX, float positionY)
  * @brief PluginGGJ2018::Start
  * @param team
  */
-void PluginGGJ2018::Start(int team)
+void PluginGGJ2018::Start(int team, unsigned int eShipType)
 {
-	m_world.Start(team);
+	m_world.Start(team, eShipType);
 }

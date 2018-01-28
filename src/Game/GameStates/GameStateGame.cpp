@@ -10,8 +10,10 @@
 */
 GameStateGame::GameStateGame(void)
 : m_pQuitDialog(shNULL)
+, m_pTeamChoiceDialog(shNULL)
 , m_pControlHUD(shNULL)
 , m_pControlNotif(shNULL)
+, m_eShipType(GameStateShipSelection::e_ship_type_base)
 {
 	// ...
 }
@@ -151,11 +153,15 @@ void GameStateGame::unload(void)
 */
 /*static*/ bool GameStateGame::OnButtonClickedTeamBlue(ShGUIControlButton * pButton)
 {
+	Game & game = Game::instance();
+	GameStateGame * pGameState = static_cast<GameStateGame*>(game.get(Game::GAME_LEVEL));
+	SH_ASSERT(shNULL != pGameState);
+
 	//
-	// Create shp with team
+	// Create ship with team
 	CShPlugin * pPlugin = ShApplication::FindPlugin(CShIdentifier("PluginGGJ2018"));
 	SH_ASSERT(shNULL != pPlugin);
-	((PluginGGJ2018*)pPlugin)->Start(0);
+	((PluginGGJ2018*)pPlugin)->Start(0, (unsigned int)pGameState->m_eShipType);
 	
 	//
 	// Pops current dialog
@@ -163,9 +169,6 @@ void GameStateGame::unload(void)
 
 	//
 	// Show GUI
-	Game & game = Game::instance();
-	GameStateGame * pGameState = static_cast<GameStateGame*>(game.get(Game::GAME_LEVEL));
-	SH_ASSERT(shNULL != pGameState);
 	ShGUIControl::Show(pGameState->m_pControlHUD, true);
 
 	return(true);
@@ -176,11 +179,15 @@ void GameStateGame::unload(void)
 */
 /*static*/ bool GameStateGame::OnButtonClickedTeamRed(ShGUIControlButton * pButton)
 {
+	Game & game = Game::instance();
+	GameStateGame * pGameState = static_cast<GameStateGame*>(game.get(Game::GAME_LEVEL));
+	SH_ASSERT(shNULL != pGameState);
+
 	//
 	// Create shp with team
 	CShPlugin * pPlugin = ShApplication::FindPlugin(CShIdentifier("PluginGGJ2018"));
 	SH_ASSERT(shNULL != pPlugin);
-	((PluginGGJ2018*)pPlugin)->Start(1);
+	((PluginGGJ2018*)pPlugin)->Start(1, (unsigned int)pGameState->m_eShipType);
 
 	//
 	// Pops current dialog
@@ -188,9 +195,6 @@ void GameStateGame::unload(void)
 
 	//
 	// Show GUI
-	Game & game = Game::instance();
-	GameStateGame * pGameState = static_cast<GameStateGame*>(game.get(Game::GAME_LEVEL));
-	SH_ASSERT(shNULL != pGameState);
 	ShGUIControl::Show(pGameState->m_pControlHUD, true);
 	
 	return(true);
@@ -283,4 +287,12 @@ void GameStateGame::touchMove(const CShVector2 & pos_, float ratio)
 	{
 		TouchMoveGGJ2018Plugin(0, pos_.m_x, pos_.m_y);
 	}
+}
+
+/**
+ * @brief GameStateGame::SetShipType
+ */
+void GameStateGame::SetShipType(GameStateShipSelection::EShipType eShipType)
+{
+	m_eShipType = eShipType;
 }

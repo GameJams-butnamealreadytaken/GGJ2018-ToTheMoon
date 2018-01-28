@@ -32,7 +32,7 @@ public:
 
 	//
 	// Misc
-	void					Start				(int team);
+	void					Start				(int team, unsigned int eShipType);
 private:
 
 	CShIdentifier	m_levelIdentifier;
