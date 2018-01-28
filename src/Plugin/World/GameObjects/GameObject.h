@@ -9,6 +9,7 @@ public:
 
 	enum EType
 	{
+		e_type_void,
 		e_type_ship,
 		e_type_transmitter,
 		e_type_bullet,

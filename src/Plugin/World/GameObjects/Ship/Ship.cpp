@@ -125,7 +125,7 @@ Network::Ship * Ship::GetNetworkShip(void) const
 /**
 * @brief SetTarget
 */
-void Ship::SetTarget(float x, float y, float fSpeed)
+void Ship::SetTarget(float x, float y, float fSpeed, EType targetType)
 {
 	m_pNetworkShip->setTarget(x, y);
 	m_pNetworkShip->setSpeed(fSpeed);
