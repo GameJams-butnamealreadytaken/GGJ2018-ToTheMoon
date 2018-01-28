@@ -44,10 +44,18 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 {
 	m_levelIdentifier = levelIdentifier;
 
-	ShPrimitiveSegment::Create(m_levelIdentifier, CShIdentifier("aa"), CShVector3(5.0f,  5.0f,  5.0f), CShVector3(5.0f, -5.0f , 5.0f), CShRGBAf());
-	ShPrimitiveSegment::Create(m_levelIdentifier, CShIdentifier("aa"), CShVector3(5.0f,  5.0f,  5.0f), CShVector3(-5.0f, -5.0f, 5.0f), CShRGBAf());
-	ShPrimitiveSegment::Create(m_levelIdentifier, CShIdentifier("aa"), CShVector3(-5.0f, 5.0f, 5.0f), CShVector3(5.0f, -5.0f ,5.0f), CShRGBAf());
-	ShPrimitiveSegment::Create(m_levelIdentifier, CShIdentifier("aa"), CShVector3(-5.0f, 5.0f, 5.0f), CShVector3(-5.0f, -5.0f , 5.0f), CShRGBAf());
+	//
+	// Create world delimiters
+	{
+		ShPrimitiveSegment * pSegment1 = ShPrimitiveSegment::Create(m_levelIdentifier, GID(NULL), CShVector3(-5.0f * 2048.0f, 5.0f * 1152.0f, 5.0f), CShVector3(5.0f * 2048.0f, 5.0f * 1152.0f, 5.0f), CShRGBAf(1.0f, 1.0f, 0.0f, 1.0f));
+		ShPrimitiveSegment * pSegment2 = ShPrimitiveSegment::Create(m_levelIdentifier, GID(NULL), CShVector3(5.0f * 2048.0f, 5.0f * 1152.0f, 5.0f), CShVector3(5.0f * 2048.0f, -5.0f * 1152.0f, 5.0f), CShRGBAf(1.0f, 1.0f, 0.0f, 1.0f));
+		ShPrimitiveSegment * pSegment3 = ShPrimitiveSegment::Create(m_levelIdentifier, GID(NULL), CShVector3(5.0f * 2048.0f, -5.0f * 1152.0f, 5.0f), CShVector3(-5.0f * 2048.0f, -5.0f * 1152.0f, 5.0f), CShRGBAf(1.0f, 1.0f, 0.0f, 1.0f));
+		ShPrimitiveSegment * pSegment4 = ShPrimitiveSegment::Create(m_levelIdentifier, GID(NULL), CShVector3(-5.0f * 2048.0f, -5.0f * 1152.0f, 5.0f), CShVector3(-5.0f * 2048.0f, 5.0f * 1152.0f, 5.0f), CShRGBAf(1.0f, 1.0f, 0.0f, 1.0f));
+		ShPrimitiveSegment::Set2d(pSegment1, true);
+		ShPrimitiveSegment::Set2d(pSegment2, true);
+		ShPrimitiveSegment::Set2d(pSegment3, true);
+		ShPrimitiveSegment::Set2d(pSegment4, true);
+	}
 
 	m_world.init();
 	m_world.setListener(this);
