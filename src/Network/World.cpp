@@ -274,6 +274,14 @@ void World::handleSyncShipStateMessage(SyncShipStateMessage * msg, char * machin
 }
 
 /**
+ * @brief World::handleShootShipMessage
+ */
+void World::handleShootShipMessage(ShootShipMessage * msg, char * machine, char * service)
+{
+	// TODO
+}
+
+/**
  * @brief World::handleCreateTransmitterMessage
  */
 void World::handleCreateTransmitterMessage(CreateTransmitterMessage * msg, char * machine, char * service)
@@ -352,6 +360,14 @@ void World::handleSyncTransmitterStateMessage(SyncTransmitterStateMessage * msg,
 			m_pListener->onTransmitterStateChanged(transmitter);
 		}
 	}
+}
+
+/**
+ * @brief World::handleShootTransmitterMessage
+ */
+void World::handleShootTransmitterMessage(ShootTransmitterMessage * msg, char * machine, char * service)
+{
+	// TODO
 }
 
 /**
@@ -453,6 +469,14 @@ void World::update(float dt)
 				}
 				break;
 
+				case SHIP_SHOOT:
+				{
+					static_assert(sizeof(ShootShipMessage) < MAX_MESSAGE_SIZE, "ShootShipMessage is too big !");
+					assert(sizeof(ShootShipMessage) == size);
+					handleShootShipMessage((ShootShipMessage*)MSG, machine, service);
+				}
+				break;
+
 				case TRANSMITTER_CREATE:
 				{
 					static_assert(sizeof(CreateTransmitterMessage) < MAX_MESSAGE_SIZE, "CreateTransmitterMessage is too big !");
@@ -474,6 +498,14 @@ void World::update(float dt)
 					static_assert(sizeof(SyncTransmitterStateMessage) < MAX_MESSAGE_SIZE, "DestroyTransmitterMessage is too big !");
 					assert(sizeof(SyncTransmitterStateMessage) == size);
 					handleSyncTransmitterStateMessage((SyncTransmitterStateMessage*)MSG, machine, service);
+				}
+				break;
+
+				case TRANSMITTER_SHOOT:
+				{
+					static_assert(sizeof(ShootTransmitterMessage) < MAX_MESSAGE_SIZE, "ShootTransmitterMessage is too big !");
+					assert(sizeof(ShootTransmitterMessage) == size);
+					handleShootTransmitterMessage((ShootTransmitterMessage*)MSG, machine, service);
 				}
 				break;
 			}
@@ -619,6 +651,32 @@ Ship * World::findShip(const uuid_t & uuid)
 }
 
 /**
+ * @brief World::shootShip
+ * @param ship1
+ * @param ship2
+ * @param force
+ */
+void World::shootShip(Ship * target, Ship * shooter, unsigned int force)
+{
+	ShootShipMessage message;
+
+#if __gnu_linux__
+	uuid_copy(message.shipId, target->m_uuid);
+#else
+	memcpy(&message.shipId, (void*)&target->m_uuid, sizeof(uuid_t));
+#endif // __gnu_linux__
+
+
+#if __gnu_linux__
+	uuid_copy(message.shooterId, shooter->m_uuid);
+#else
+	memcpy(&message.shooterId, (void*)&shooter->m_uuid, sizeof(uuid_t));
+#endif // __gnu_linux__
+
+	m_network.SendMessageToAllClients(message); // we should send this to the owner ONLY
+}
+
+/**
 * @brief Create Transmitter
 * @param x
 * @param y
@@ -751,5 +809,32 @@ Transmitter * World::findTransmitter(const uuid_t & uuid)
 
 	return(ship);
 }
+
+/**
+ * @brief World::shootTransmitter
+ * @param target
+ * @param shooter
+ * @param force
+ */
+void World::shootTransmitter(Transmitter * target, Ship * shooter, unsigned int force)
+{
+	ShootTransmitterMessage message;
+
+#if __gnu_linux__
+	uuid_copy(message.transmitterId, target->m_uuid);
+#else
+	memcpy(&message.transmitterId, (void*)&target->m_uuid, sizeof(uuid_t));
+#endif // __gnu_linux__
+
+
+#if __gnu_linux__
+	uuid_copy(message.shooterId, shooter->m_uuid);
+#else
+	memcpy(&message.shooterId, (void*)&shooter->m_uuid, sizeof(uuid_t));
+#endif // __gnu_linux__
+
+	m_network.SendMessageToAllClients(message); // we should send this to the owner ONLY
+}
+
 
 }

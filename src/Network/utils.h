@@ -67,11 +67,13 @@ enum MSG_ID
 	SHIP_CREATE				= 0x0011,
 	SHIP_DESTROY			= 0x0012,
 	SHIP_SYNC_STATE			= 0x0013,
+	SHIP_SHOOT				= 0x0014,
 
 	// Transmitter messages
 	TRANSMITTER_CREATE		= 0x0101,
 	TRANSMITTER_DESTROY		= 0x0102,
 	TRANSMITTER_SYNC_STATE	= 0x0103,
+	TRANSMITTER_SHOOT		= 0x0104,
 };
 
 struct HelloMessage
@@ -188,6 +190,31 @@ struct SyncShipStateMessage
 	unsigned int shipType;
 };
 
+struct ShootShipMessage
+{
+	ShootShipMessage(void)
+	{
+		id = SHIP_SHOOT;
+
+#if __gnu_linux__
+		uuid_clear(shipId);
+#else
+		memset(&shipId, 0, sizeof(uuid_t));
+#endif // __gnu_linux__
+
+#if __gnu_linux__
+		uuid_clear(shooterId);
+#else
+		memset(&shooterId, 0, sizeof(uuid_t));
+#endif // __gnu_linux__
+	}
+
+	MSG_ID id;
+	uuid_t shipId; // target
+
+	uuid_t shooterId; // Ship
+};
+
 struct CreateTransmitterMessage
 {
 	CreateTransmitterMessage()
@@ -249,6 +276,31 @@ struct SyncTransmitterStateMessage
 
 	vec2 position;
 	unsigned int team;
+};
+
+struct ShootTransmitterMessage
+{
+	ShootTransmitterMessage(void)
+	{
+		id = TRANSMITTER_SHOOT;
+
+#if __gnu_linux__
+		uuid_clear(transmitterId);
+#else
+		memset(&transmitterId, 0, sizeof(uuid_t));
+#endif // __gnu_linux__
+
+#if __gnu_linux__
+		uuid_clear(shooterId);
+#else
+		memset(&shooterId, 0, sizeof(uuid_t));
+#endif // __gnu_linux__
+	}
+
+	MSG_ID id;
+	uuid_t transmitterId; // target
+
+	uuid_t shooterId; // Ship
 };
 
 }
