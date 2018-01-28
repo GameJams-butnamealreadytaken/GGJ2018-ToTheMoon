@@ -527,6 +527,7 @@ Transmitter * World::createTransmitter(unsigned int team, float x, float y)
 	memcpy(&message.transmitterId, (void*)&uuid, sizeof(uuid_t));
 #endif // __gnu_linux__
 	message.position = vec2(x, y);
+	message.team = team;
 
 	m_network.SendMessageToAllClients(message);
 
