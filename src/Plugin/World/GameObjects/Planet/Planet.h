@@ -31,9 +31,11 @@ public:
 
 	void									Update				(float dt);
 
+	EPlanet									GetPlanet			(void);
 	virtual void							OnHit				(GameObject* pObject) { }
 	virtual GameObject::EType				GetType(void)		{ return(GameObject::e_type_planet); }
 
 protected:
 	AnimatedSpriteManager					m_animationManager;
+	EPlanet									m_ePlanet;
 };

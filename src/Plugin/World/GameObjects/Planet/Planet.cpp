@@ -7,6 +7,7 @@ extern bool g_bDisableAnimations;
  */
 Planet::Planet(EPlanet planet, ShEntity2 * pEntity)
 : GameObject(pEntity, ShEntity2::GetWorldPosition2(pEntity))
+, m_ePlanet(planet)
 {
 	if (!g_bDisableAnimations)
 	{
@@ -81,4 +82,12 @@ void Planet::Update(float dt)
 	{
 		m_animationManager.Update(dt);
 	}
+}
+
+/**
+* @brief GetPlanet
+*/
+Planet::EPlanet Planet::GetPlanet(void)
+{
+	return(m_ePlanet);
 }
