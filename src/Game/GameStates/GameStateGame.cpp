@@ -31,16 +31,30 @@ void GameStateGame::init(void)
 {
 	//
 	// GUI Dialog
-	m_pQuitDialog					= ShGUIModalDialog::Create(CShIdentifier("ingame_quit_dialog"));
-	ShGUIControl * pDialogRoot		= ShGUIModalDialog::GetRootControl(m_pQuitDialog);
-	SH_ASSERT(shNULL != pDialogRoot);
-	ShGUIControlButton * pButtonYes	= (ShGUIControlButton*)ShGUIControl::GetElementById(CShIdentifier("button_ingame_quit_dialog_main_panel_yes"), pDialogRoot);
-	ShGUIControlButton * pButtonNo	= (ShGUIControlButton*)ShGUIControl::GetElementById(CShIdentifier("button_ingame_quit_dialog_main_panel_no"), pDialogRoot);
+	{
+		m_pQuitDialog					= ShGUIModalDialog::Create(CShIdentifier("ingame_quit_dialog"));
+		ShGUIControl * pDialogRoot		= ShGUIModalDialog::GetRootControl(m_pQuitDialog);
+		SH_ASSERT(shNULL != pDialogRoot);
+		ShGUIControlButton * pButtonYes	= (ShGUIControlButton*)ShGUIControl::GetElementById(CShIdentifier("button_ingame_quit_dialog_main_panel_yes"), pDialogRoot);
+		ShGUIControlButton * pButtonNo	= (ShGUIControlButton*)ShGUIControl::GetElementById(CShIdentifier("button_ingame_quit_dialog_main_panel_no"), pDialogRoot);
 	
-	SH_ASSERT(shNULL != pButtonYes);
-	SH_ASSERT(shNULL != pButtonNo);
-	ShGUIControlButton::AddSlotFctPtrClick(pButtonYes, (pSlotSDKButtonClick)OnButtonClickedYes);
-	ShGUIControlButton::AddSlotFctPtrClick(pButtonNo, (pSlotSDKButtonClick)OnButtonClickedNo);
+		SH_ASSERT(shNULL != pButtonYes);
+		SH_ASSERT(shNULL != pButtonNo);
+		ShGUIControlButton::AddSlotFctPtrClick(pButtonYes, (pSlotSDKButtonClick)OnButtonClickedYes);
+		ShGUIControlButton::AddSlotFctPtrClick(pButtonNo, (pSlotSDKButtonClick)OnButtonClickedNo);
+	}
+	{
+		m_pTeamChoiceDialog						= ShGUIModalDialog::Create(CShIdentifier("ingame_team_choice_dialog"));
+		ShGUIControl * pDialogRoot				= ShGUIModalDialog::GetRootControl(m_pTeamChoiceDialog);
+		SH_ASSERT(shNULL != pDialogRoot);
+		ShGUIControlButton * pButtonTeamBlue	= (ShGUIControlButton*)ShGUIControl::GetElementById(CShIdentifier("button_ingame_team_choice_dialog_main_panel_blue"), pDialogRoot);
+		ShGUIControlButton * pButtonTeamRed		= (ShGUIControlButton*)ShGUIControl::GetElementById(CShIdentifier("button_ingame_team_choice_dialog_main_panel_red"), pDialogRoot);
+	
+		SH_ASSERT(shNULL != pButtonTeamBlue);
+		SH_ASSERT(shNULL != pButtonTeamRed);
+		ShGUIControlButton::AddSlotFctPtrClick(pButtonTeamBlue, (pSlotSDKButtonClick)OnButtonClickedTeamBlue);
+		ShGUIControlButton::AddSlotFctPtrClick(pButtonTeamRed, (pSlotSDKButtonClick)OnButtonClickedTeamRed);
+	}
 
 	//
 	// GUI
@@ -78,8 +92,7 @@ void GameStateGame::entered(void)
 {
 	//
 	// GUI showing
-	ShGUIControl::Show(m_pControlHUD, true);
-	//ShGUIControl::Hide(m_pControlNotif);
+	ShGUI::PushModalDialog(m_pTeamChoiceDialog);
 
 	load();
 }
@@ -131,6 +144,56 @@ void GameStateGame::load(void)
 void GameStateGame::unload(void)
 {
 	ShLevel::Release();
+}
+
+/**
+* @brief GameStateGame::OnButtonClickedTeamBlue
+*/
+/*static*/ bool GameStateGame::OnButtonClickedTeamBlue(ShGUIControlButton * pButton)
+{
+	//
+	// Create shp with team
+	CShPlugin * pPlugin = ShApplication::FindPlugin(CShIdentifier("PluginGGJ2018"));
+	SH_ASSERT(shNULL != pPlugin);
+	((PluginGGJ2018*)pPlugin)->Start(0);
+	
+	//
+	// Pops current dialog
+	ShGUI::PopModalDialog();
+
+	//
+	// Show GUI
+	Game & game = Game::instance();
+	GameStateGame * pGameState = static_cast<GameStateGame*>(game.get(Game::GAME_LEVEL));
+	SH_ASSERT(shNULL != pGameState);
+	ShGUIControl::Show(pGameState->m_pControlHUD, true);
+
+	return(true);
+}
+
+/**
+* @brief GameStateGame::OnButtonClickedTeamRed
+*/
+/*static*/ bool GameStateGame::OnButtonClickedTeamRed(ShGUIControlButton * pButton)
+{
+	//
+	// Create shp with team
+	CShPlugin * pPlugin = ShApplication::FindPlugin(CShIdentifier("PluginGGJ2018"));
+	SH_ASSERT(shNULL != pPlugin);
+	((PluginGGJ2018*)pPlugin)->Start(1);
+
+	//
+	// Pops current dialog
+	ShGUI::PopModalDialog();
+
+	//
+	// Show GUI
+	Game & game = Game::instance();
+	GameStateGame * pGameState = static_cast<GameStateGame*>(game.get(Game::GAME_LEVEL));
+	SH_ASSERT(shNULL != pGameState);
+	ShGUIControl::Show(pGameState->m_pControlHUD, true);
+	
+	return(true);
 }
 
 /**
