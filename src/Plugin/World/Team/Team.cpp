@@ -1,6 +1,7 @@
 #include "Team.h"
 
 #include "../GameObjects/Transmitter/Transmitter.h"
+#include "../World.h"
 
 /**
 * @brief Constructor
@@ -65,7 +66,7 @@ void Team::AddTransmitter(Transmitter * pTransmitter)
 		for (int i = 0; i < nTransCount; ++i)
 		{
 			CShVector2 & transPos = m_apTransmitter[i]->GetPosition2();
-			if (1500.0f > ComputeVecteurNorme(newPos.m_x, newPos.m_y, transPos.m_x, transPos.m_y))
+			if (1500.0f > World::ComputeVecteurNorme(newPos.m_x, newPos.m_y, transPos.m_x, transPos.m_y))
 			{
 				AddNeighbour(pTransmitter, m_apTransmitter[i]);
 			}
@@ -103,7 +104,7 @@ bool Team::GetVictoryCondition(void)
 		Transmitter * pTrans = m_apTransmitter[i];
 		CShVector2 & newPos = pTrans->GetPosition2();
 		// Linked to start point
-		if (700.0f > ComputeVecteurNorme(newPos.m_x, newPos.m_y, m_startPoint.m_x, m_startPoint.m_y))
+		if (700.0f > World::ComputeVecteurNorme(newPos.m_x, newPos.m_y, m_startPoint.m_x, m_startPoint.m_y))
 		{
 			if (CheckNeighboorList(pTrans, transList_done))
 			{
@@ -125,7 +126,7 @@ bool Team::CheckNeighboorList(Transmitter * pTrans, CShArray<int> & transList_do
 		transList_done.Add(pTrans->GetId());
 		CShVector2 & newPos = pTrans->GetPosition2();
 		// Linked to end point
-		if (700.0f > ComputeVecteurNorme(newPos.m_x, newPos.m_y, m_endPoint.m_x, m_endPoint.m_y))
+		if (700.0f > World::ComputeVecteurNorme(newPos.m_x, newPos.m_y, m_endPoint.m_x, m_endPoint.m_y))
 		{
 			return(true);
 		}
@@ -141,14 +142,6 @@ bool Team::CheckNeighboorList(Transmitter * pTrans, CShArray<int> & transList_do
 	}
 
 	return(false);
-}
-
-/**
-* @brief Team::ComputeVecteurNorme
-*/
-float Team::ComputeVecteurNorme(float Ax, float Ay, float Bx, float By)
-{
-	return sqrt(((Bx - Ax)*(Bx - Ax)) + ((By - Ay)*(By - Ay)));
 }
 
 /**

@@ -327,7 +327,8 @@ void World::OnTouchDown(int iTouch, float positionX, float positionY)
 			Transmitter * pTransmitter = m_apTransmitter[iTransmitter];
 			if (m_pShip->GetTeam() != pTransmitter->GetTeam())
 			{
-				if (ShEntity2::Includes(pTransmitter->GetSprite(), CShVector2(worldPosition.m_x, worldPosition.m_y)))
+				CShVector2 transPos = ShEntity2::GetWorldPosition2(pTransmitter->GetSprite());
+				if (75.0f > ComputeVecteurNorme(transPos.m_x, transPos.m_y, worldPosition.m_x, worldPosition.m_y))
 				{
 					m_pShip->SetTarget(worldPosition.m_x, worldPosition.m_y, pTransmitter); // todo move speed on her right place
 					return;
@@ -335,7 +336,7 @@ void World::OnTouchDown(int iTouch, float positionX, float positionY)
 			}
 		}
 
-		m_pShip->SetTarget(worldPosition.m_x, worldPosition.m_y); // todo move speed on her right place
+		m_pShip->SetVoidTarget(worldPosition.m_x, worldPosition.m_y); // todo move speed on her right place
 	}
 
 #if TEST
@@ -357,6 +358,14 @@ void World::OnTouchUp(int iTouch, float positionX, float positionY)
 void World::OnTouchMove(int iTouch, float positionX, float positionY)
 {
 
+}
+
+/**
+* @brief World::ComputeVecteurNorme
+*/
+float World::ComputeVecteurNorme(float Ax, float Ay, float Bx, float By)
+{
+	return sqrt(((Bx - Ax)*(Bx - Ax)) + ((By - Ay)*(By - Ay)));
 }
 
 /**

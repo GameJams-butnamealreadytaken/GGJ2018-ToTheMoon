@@ -22,9 +22,9 @@ public:
 
 private:
 	bool			GetVictoryCondition	(void);
-	float			ComputeVecteurNorme	(float Ax, float Ay, float Bx, float By);
 	void			AddNeighbour		(Transmitter * pTransmitter1, Transmitter * pTransmitter2);
 	bool			CheckNeighboorList	(Transmitter * pTrans, CShArray<int> & transList_done);
+
 private:
 
 	CShIdentifier					m_levelIdentifier;
