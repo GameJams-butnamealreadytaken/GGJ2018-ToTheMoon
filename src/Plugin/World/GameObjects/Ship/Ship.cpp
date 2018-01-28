@@ -40,6 +40,8 @@ void Ship::Initialize(EShipType type, const Network::Ship * pNetworkShip, Projec
 void Ship::Release(void)
 {
 	m_pNetworkShip = shNULL;
+	ShEntity2::Destroy(m_pEntity);
+	m_pEntity = shNULL;
 }
 
 /**
