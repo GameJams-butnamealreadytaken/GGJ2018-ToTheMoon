@@ -127,7 +127,7 @@ void Ship::Update(float dt)
 */
 /*virtual*/ void Ship::OnHit(GameObject* pObject)
 {
-	SetState((int)HIT);
+	// ...
 }
 
 /**
