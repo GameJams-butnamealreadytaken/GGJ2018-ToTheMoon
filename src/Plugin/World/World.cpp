@@ -8,6 +8,8 @@
 #include "Team/Team.h"
 #include "Camera/CameraPlugin.h"
 
+#define HALF_SIZE_X 5.0f * 2048.0f
+#define HALF_SIZE_Y 5.0f * 1152.0f
 #define TEST 0
 
 /**
@@ -15,7 +17,7 @@
 */
 /*explicit*/ World::World(void) 
 : m_levelIdentifier()
-, m_world(5.0f * 2048.0f, 5.0f * 1152.0f)
+, m_world(HALF_SIZE_X, HALF_SIZE_Y)
 , m_pMiniMap(shNULL)
 , m_pUser(shNULL)
 , m_pInputs(shNULL)
@@ -47,10 +49,10 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 	//
 	// Create world delimiters
 	{
-		ShPrimitiveSegment * pSegment1 = ShPrimitiveSegment::Create(m_levelIdentifier, GID(NULL), CShVector3(-5.0f * 2048.0f, 5.0f * 1152.0f, 5.0f), CShVector3(5.0f * 2048.0f, 5.0f * 1152.0f, 5.0f), CShRGBAf(1.0f, 1.0f, 0.0f, 1.0f));
-		ShPrimitiveSegment * pSegment2 = ShPrimitiveSegment::Create(m_levelIdentifier, GID(NULL), CShVector3(5.0f * 2048.0f, 5.0f * 1152.0f, 5.0f), CShVector3(5.0f * 2048.0f, -5.0f * 1152.0f, 5.0f), CShRGBAf(1.0f, 1.0f, 0.0f, 1.0f));
-		ShPrimitiveSegment * pSegment3 = ShPrimitiveSegment::Create(m_levelIdentifier, GID(NULL), CShVector3(5.0f * 2048.0f, -5.0f * 1152.0f, 5.0f), CShVector3(-5.0f * 2048.0f, -5.0f * 1152.0f, 5.0f), CShRGBAf(1.0f, 1.0f, 0.0f, 1.0f));
-		ShPrimitiveSegment * pSegment4 = ShPrimitiveSegment::Create(m_levelIdentifier, GID(NULL), CShVector3(-5.0f * 2048.0f, -5.0f * 1152.0f, 5.0f), CShVector3(-5.0f * 2048.0f, 5.0f * 1152.0f, 5.0f), CShRGBAf(1.0f, 1.0f, 0.0f, 1.0f));
+		ShPrimitiveSegment * pSegment1 = ShPrimitiveSegment::Create(m_levelIdentifier, GID(NULL), CShVector3(-HALF_SIZE_X, HALF_SIZE_Y, 5.0f), CShVector3(HALF_SIZE_X, HALF_SIZE_Y, 5.0f), CShRGBAf(1.0f, 1.0f, 0.0f, 1.0f));
+		ShPrimitiveSegment * pSegment2 = ShPrimitiveSegment::Create(m_levelIdentifier, GID(NULL), CShVector3(HALF_SIZE_X, HALF_SIZE_Y, 5.0f), CShVector3(HALF_SIZE_X, -HALF_SIZE_Y, 5.0f), CShRGBAf(1.0f, 1.0f, 0.0f, 1.0f));
+		ShPrimitiveSegment * pSegment3 = ShPrimitiveSegment::Create(m_levelIdentifier, GID(NULL), CShVector3(HALF_SIZE_X, -HALF_SIZE_Y, 5.0f), CShVector3(-HALF_SIZE_X, -HALF_SIZE_Y, 5.0f), CShRGBAf(1.0f, 1.0f, 0.0f, 1.0f));
+		ShPrimitiveSegment * pSegment4 = ShPrimitiveSegment::Create(m_levelIdentifier, GID(NULL), CShVector3(-HALF_SIZE_X, -HALF_SIZE_Y, 5.0f), CShVector3(-HALF_SIZE_X, HALF_SIZE_Y, 5.0f), CShRGBAf(1.0f, 1.0f, 0.0f, 1.0f));
 		ShPrimitiveSegment::Set2d(pSegment1, true);
 		ShPrimitiveSegment::Set2d(pSegment2, true);
 		ShPrimitiveSegment::Set2d(pSegment3, true);
@@ -112,7 +114,7 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 	m_pMiniMap = new MiniMap();
 	m_pMiniMap->Initialize(levelIdentifier, this);
 
-	m_pCamera = new CameraPlugin();
+	m_pCamera = new CameraPlugin(CShVector2(HALF_SIZE_X, HALF_SIZE_Y));
 	m_pCamera->Initialize(m_pInputs);
 }
 

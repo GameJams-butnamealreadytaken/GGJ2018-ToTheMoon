@@ -7,8 +7,9 @@
 /**
  * @brief Constructor
  */
-CameraPlugin::CameraPlugin(void)
+CameraPlugin::CameraPlugin(CShVector2 halfSize)
 	: m_pCamera(shNULL)
+	, m_halfSize(halfSize)
 	, m_bLocked(true)
 {
 	// ...
@@ -80,6 +81,34 @@ void CameraPlugin::Update(float dt, const CShVector2 & shipPos)
 			ShCamera::Translate(m_pCamera, CShVector3(-50.0f, 0.0f, 0.0f));
 		}
 
-		ShCamera::SetTarget(m_pCamera, CShVector3(ShCamera::GetWorldPosition2(m_pCamera), 0.0f));
+		ClampPosition();
 	}
+}
+
+void CameraPlugin::ClampPosition(void)
+{
+	CShVector2 camPos = ShCamera::GetWorldPosition2(m_pCamera);
+
+	// Clamp X
+	if (camPos.m_x > m_halfSize.m_x)
+	{
+		camPos.m_x = m_halfSize.m_x;
+	}
+	else if (camPos.m_x < -m_halfSize.m_x)
+	{
+		camPos.m_x = -m_halfSize.m_x;
+	}
+
+	// Clamp Y
+	if (camPos.m_y > m_halfSize.m_y)
+	{
+		camPos.m_y = m_halfSize.m_y;
+	}
+	else if (camPos.m_y < -m_halfSize.m_y)
+	{
+		camPos.m_y = -m_halfSize.m_y;
+	}
+
+	ShCamera::SetWorldPosition2(m_pCamera, camPos);
+	ShCamera::SetTarget(m_pCamera, CShVector3(camPos, 0.0f));
 }
