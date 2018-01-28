@@ -56,7 +56,7 @@ void Ship::Update(float dt)
 	float direction = atan2(targetPos.x - shipPos.x, targetPos.y - shipPos.y) * 180 / SHC_PI;
 	float fAngle = (-direction + 90)*SHC_DEG2RAD;
 
-	UpdateSprite(shipPos, targetPos, fAngle);
+	UpdateSprite(shipPos);
 
 	m_fFireRate += dt;
 
@@ -79,7 +79,7 @@ void Ship::Update(float dt)
 			{
 				const Network::vec2 & targetPos = m_pNetworkShip->getTarget();
 
-				if (6.0f > ComputeVecteurNorme(m_vPosition.m_x, m_vPosition.m_y, targetPos.x, targetPos.y))
+				if (10.0f > ComputeVecteurNorme(m_vPosition.m_x, m_vPosition.m_y, targetPos.x, targetPos.y))
 				{
 					// setSpeed à 0 & setState à Idle si pos, FIGHT sinon
 					m_pNetworkShip->setSpeed(0.0f);
@@ -98,6 +98,9 @@ void Ship::Update(float dt)
 	}
 }
 
+/**
+* @brief OnHit
+*/
 /*virtual*/ void Ship::OnHit(GameObject* pObject)
 {
 
@@ -118,17 +121,31 @@ unsigned int Ship::GetTeam(void) const
 {
 	return(m_pNetworkShip->getTeam());
 }
+
+/**
+* @brief GetNetworkShip
+*/
 Network::Ship * Ship::GetNetworkShip(void) const
 {
 	return(m_pNetworkShip);
 }
+
 /**
 * @brief SetTarget
 */
-void Ship::SetTarget(float x, float y, float fSpeed)
+void Ship::SetTarget(float x, float y, float fSpeed, EType targetType)
 {
 	m_pNetworkShip->setTarget(x, y);
 	m_pNetworkShip->setSpeed(fSpeed);
+
+	const Network::vec2 & shipPos = m_pNetworkShip->getPosition();
+	const Network::vec2 & targetPos = m_pNetworkShip->getTarget();
+
+	float direction = atan2(targetPos.x - shipPos.x, targetPos.y - shipPos.y) * 180 / SHC_PI;
+	float fAngle = (-direction + 90)*SHC_DEG2RAD;
+
+	ShEntity2::SetWorldRotation(m_pEntity, CShEulerAngles(0.0f, 0.0f, fAngle));
+
 	SetState((int)TRAVEL);
 }
 
@@ -143,10 +160,8 @@ CShEulerAngles Ship::GetRotation(void)
 /**
 * @brief GameObject::UpdateSprite
 */
-void Ship::UpdateSprite(const Network::vec2 & shipPos, const Network::vec2 & targetPos, float fAngle)
+void Ship::UpdateSprite(const Network::vec2 & shipPos)
 {
-	ShEntity2::SetWorldRotation(m_pEntity, 0.0f, 0.0f, fAngle);
-
 	// Sprite pos
 	m_vPosition.m_x = shipPos.x;
 	m_vPosition.m_y = shipPos.y;

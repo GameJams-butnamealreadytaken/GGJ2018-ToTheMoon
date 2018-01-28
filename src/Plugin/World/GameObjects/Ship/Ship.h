@@ -39,7 +39,9 @@ public:
 	virtual void				OnHit					(GameObject* pObject);
 	virtual GameObject::EType	GetType					(void) { return(e_type_ship); }
 
-	void						SetTarget				(float x, float y, float fSpeed);
+	//void						SetTarget				(float x, float y, float fSpeed);
+	//void						SetTarget				(float x, float y, float fSpeed, );
+	void						SetTarget				(float x, float y, float fSpeed, EType targetType);
 
 	CShEulerAngles				GetRotation				(void);
 	EShipType					GetShipType				(void) const;
@@ -47,7 +49,7 @@ public:
 	Network::Ship *				GetNetworkShip			(void) const;
 
 private:
-	void						UpdateSprite			(const Network::vec2 & shipPos, const Network::vec2 & targetPos, float fAngle);
+	void						UpdateSprite			(const Network::vec2 & shipPos);
 
 	float						ComputeVecteurNorme		(float Ax, float Ay, float Bx, float By);
 
