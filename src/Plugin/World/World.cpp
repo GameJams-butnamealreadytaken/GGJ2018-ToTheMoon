@@ -394,7 +394,7 @@ void World::OnTouchMove(int iTouch, float positionX, float positionY)
 		Ship * pShip = m_apShip[iShip];
 		if (pShip->GetNetworkShip() == pNetworkShip)
 		{
-			pShip->SetTarget(pNetworkShip->getTarget().x, pNetworkShip->getTarget().y, pNetworkShip->getSpeed(), GameObject::e_type_ship);
+			pShip->SetTarget(pNetworkShip->getTarget().x, pNetworkShip->getTarget().y, pNetworkShip->getSpeed());
 		}
 	}
 }
