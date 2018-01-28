@@ -218,9 +218,9 @@ void World::handleDestroyShipMessage(DestroyShipMessage * msg, char * machine, c
 
 	Ship * ship = findShip(msg->shipId);
 
+	// Notify the game
 	if (ship)
 	{
-		// Notify the game
 		if (m_pListener)
 		{
 			m_pListener->onShipDestroyed(ship);
@@ -255,11 +255,19 @@ void World::handleSyncShipStateMessage(SyncShipStateMessage * msg, char * machin
 	ship->m_team		= msg->team;
 	ship->m_eShipType	= msg->shipType;
 
+	// Notify the game
 	if (bCreated)
 	{
 		if (m_pListener)
 		{
 			m_pListener->onShipCreated(ship);
+		}
+	}
+	else
+	{
+		if (m_pListener)
+		{
+			m_pListener->onShipStateChanged(ship);
 		}
 	}
 }
@@ -294,9 +302,9 @@ void World::handleDestroyTransmitterMessage(DestroyTransmitterMessage * msg, cha
 
 	Transmitter * transmitter = findTransmitter(msg->transmitterId);
 
+	// Notify the game
 	if (transmitter)
 	{
-		// Notify the game
 		if (m_pListener)
 		{
 			m_pListener->onTransmitterDestroyed(transmitter);
@@ -328,12 +336,19 @@ void World::handleSyncTransmitterStateMessage(SyncTransmitterStateMessage * msg,
 	transmitter->m_position = msg->position;
 	transmitter->m_team = msg->team;
 
+	// Notify the game
 	if (bCreated)
 	{
-		// Notify the game
 		if (m_pListener)
 		{
 			m_pListener->onTransmitterCreated(transmitter);
+		}
+	}
+	else
+	{
+		if (m_pListener)
+		{
+			m_pListener->onTransmitterStateChanged(transmitter);
 		}
 	}
 }

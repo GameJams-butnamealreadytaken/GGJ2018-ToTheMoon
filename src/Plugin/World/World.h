@@ -47,9 +47,11 @@ public:
 	
 	virtual void	onShipCreated			(const Network::Ship * pShip);
 	virtual void	onShipDestroyed			(const Network::Ship * pShip);
+	virtual void	onShipStateChanged		(const Network::Ship * pShip);
 
-	virtual void	onTransmitterCreated	(const Network::Transmitter * pTrans);
-	virtual void	onTransmitterDestroyed	(const Network::Transmitter * pTrans);
+	virtual void	onTransmitterCreated		(const Network::Transmitter * pTrans);
+	virtual void	onTransmitterDestroyed		(const Network::Transmitter * pTrans);
+	virtual void	onTransmitterStateChanged	(const Network::Transmitter * pTrans);
 	
 	void			Start					(unsigned int team, unsigned int eShipType);
 
