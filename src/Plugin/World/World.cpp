@@ -42,6 +42,11 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 {
 	m_levelIdentifier = levelIdentifier;
 
+	ShPrimitiveSegment::Create(m_levelIdentifier, GID(NULL), CShVector3(5.0f * 2048.0f, 5.0f * 1152.0f, 5.0f), CShVector3(5.0f * 2048.0f, -5.0f * 1152.0f, 5.0f), CShRGBAf());
+	ShPrimitiveSegment::Create(m_levelIdentifier, GID(NULL), CShVector3(5.0f * 2048.0f, 5.0f * 1152.0f, 5.0f), CShVector3(-5.0f * 2048.0f, -5.0f * 1152.0f, 5.0f), CShRGBAf());
+	ShPrimitiveSegment::Create(m_levelIdentifier, GID(NULL), CShVector3(-5.0f * 2048.0f, 5.0f * 1152.0f, 5.0f), CShVector3(5.0f * 2048.0f, -5.0f * 1152.0f, 5.0f), CShRGBAf());
+	ShPrimitiveSegment::Create(m_levelIdentifier, GID(NULL), CShVector3(-5.0f * 2048.0f, 5.0f * 1152.0f, 5.0f), CShVector3(-5.0f * 2048.0f, -5.0f * 1152.0f, 5.0f), CShRGBAf());
+
 	m_world.init();
 	m_world.setListener(this);
 
