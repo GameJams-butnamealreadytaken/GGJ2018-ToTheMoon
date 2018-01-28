@@ -59,4 +59,6 @@ private:
 
 	ProjectileManager *	m_pProjectileManager;
 	float				m_fFireRate;
+
+	float				m_fAngle;
 };
