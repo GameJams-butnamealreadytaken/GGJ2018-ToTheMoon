@@ -270,8 +270,7 @@ void GameStateGame::update(float dt)
 
 			if (m_ConnectTimer > 5.0f)
 			{
-				//
-				// GUI showing
+				ShGUI::PopModalDialog();
 				ShGUI::PushModalDialog(m_pTeamChoiceDialog);
 
 				m_eState = PLAYING;
