@@ -423,7 +423,7 @@ float World::ComputeVecteurNorme(float Ax, float Ay, float Bx, float By)
  */
 /*virtual*/ void World::onShipShooted(const Network::Ship * pShip, const Network::Ship * pShooterShip)
 {
-	// TODO
+	m_projectileManager.Start(ProjectileManager::e_projectile_bullet, CShVector2(pShooterShip->getPosition().x, pShooterShip->getPosition().y), CShVector2(pShip->getPosition().x, pShip->getPosition().y), 4.0f);
 }
 
 /**
@@ -473,7 +473,7 @@ float World::ComputeVecteurNorme(float Ax, float Ay, float Bx, float By)
  */
 /*virtual*/ void World::onTransmitterShooted(const Network::Transmitter * pTrans, const Network::Ship * pShooterShip)
 {
-	// TODO
+	m_projectileManager.Start(ProjectileManager::e_projectile_bullet, CShVector2(pShooterShip->getPosition().x, pShooterShip->getPosition().y), CShVector2(pTrans->getPosition().x, pTrans->getPosition().y), 4.0f);
 }
 
 /**
