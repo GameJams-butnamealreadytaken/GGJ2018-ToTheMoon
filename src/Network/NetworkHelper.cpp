@@ -31,6 +31,12 @@ static_assert(sizeof(uuid_t) == 16, "Size of 'uuid_t' must be 16");
 namespace Network
 {
 
+struct Client
+{
+	struct sockaddr_in addr;
+	uuid_t sessionId;
+};
+
 /**
  * @brief Constructor
  */
@@ -207,7 +213,7 @@ bool NetworkHelper::Receive(char * buffer, unsigned int & size, char * machine, 
  * @brief NetworkHelper::RegisterClient
  * @param machine
  */
-bool NetworkHelper::RegisterClient(char * machine)
+bool NetworkHelper::RegisterClient(char * machine, const uuid_t & uuid)
 {
 #if WIN32
 	unsigned int long machine_addr = inet_addr(machine);
@@ -215,24 +221,52 @@ bool NetworkHelper::RegisterClient(char * machine)
 	in_addr_t machine_addr = inet_addr(machine);
 #endif // WIN32
 
+	Client * client = nullptr;
+
+	// Already exists ?
 	for (int i = 0; i < m_iClientCount; ++i)
 	{
-		if (m_pClients[i].sin_addr.s_addr == machine_addr)
+		if (m_pClients[i].addr.sin_addr.s_addr == machine_addr)
 		{
-			return(false);
+			client = (m_pClients+i);
+			break;
 		}
+	}
+	if (nullptr != client)
+	{
+#if WIN32
+		RPC_STATUS status;
+		bool bEqual = (UuidCompare((uuid_t*)(&uuid), &client->sessionId, &status) == 0);
+#else // WIN32
+		bool bEqual = (uuid_compare(uuid, client->sessionId) == 0);
+#endif // WIN32
+
+		assert(!bEqual);
+		//return(false);
 	}
 
 	unsigned int index = m_iClientCount;
 
-	m_iClientCount++;
+	// Allocate a new client
+	if (nullptr == client)
+	{
+		m_iClientCount++;
 
-	m_pClients = (sockaddr_in *)realloc(m_pClients, sizeof(sockaddr_in) * m_iClientCount);
+		m_pClients = (Client*)realloc(m_pClients, sizeof(Client) * m_iClientCount);
 
-	sockaddr_in & addr = m_pClients[index];
-	addr.sin_family = AF_INET;
-	addr.sin_port = htons(PORT);
-	addr.sin_addr.s_addr = machine_addr;
+		client = (m_pClients+index);
+	}
+
+	// Update client values
+	client->addr.sin_family = AF_INET;
+	client->addr.sin_port = htons(PORT);
+	client->addr.sin_addr.s_addr = machine_addr;
+
+#if __gnu_linux__
+	uuid_copy(client->sessionId, uuid);
+#else
+	memcpy(&client->sessionId, (void*)&uuid, sizeof(uuid_t));
+#endif // __gnu_linux__
 
 	return(true);
 }

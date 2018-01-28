@@ -35,7 +35,7 @@ public:
 	virtual GameObject::EType GetType		(void)	{ return(e_type_transmitter); }
 
 	void				AddNeighbour		(Transmitter * pTrans, ShPrimitiveSegment * pSegment);
-	void				RemoveNeighbour		(Transmitter * pTrans);
+	void				RemoveNeighbour		(Transmitter * pTrans, ShPrimitiveSegment * pSegment);
 
 	int					GetNeighbourCount	(void);
 	Transmitter *		GetNeighbour		(int id);
@@ -54,4 +54,5 @@ private:
 
 	Network::Transmitter *			m_pTransmitter;
 	CShArray<Transmitter *>			m_aNeighbour;
+	CShArray<ShPrimitiveSegment *>	m_aPrimitives;
 };

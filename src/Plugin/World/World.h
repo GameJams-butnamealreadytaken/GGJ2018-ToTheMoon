@@ -17,7 +17,6 @@ class MiniMap;
 
 class World : public Network::WorldListener
 {
-
 public:
 
 	explicit		World				(void);
@@ -40,9 +39,10 @@ public:
 	void			OnTouchUp			(int iTouch, float positionX, float positionY);
 	void			OnTouchMove			(int iTouch, float positionX, float positionY);
 	
-	virtual void	onShipCreated			(const Network::Ship * pShip);
+	virtual void	onShipCreated		(const Network::Ship * pShip);
 	virtual void	onTransmitterCreate	(const Network::Transmitter * pTrans);
-
+	
+	void			Start				(unsigned int team);
 private:
 	Ship *			CreateShip			(float x, float y, const Network::Ship * pShip);
 	Transmitter *	CreateTransmitter	(float x, float y, const Network::Transmitter * pTransmitter);

@@ -30,6 +30,9 @@ public:
 	void					OnTouchUp			(int iTouch, float positionX, float positionY);
 	void					OnTouchMove			(int iTouch, float positionX, float positionY);
 
+	//
+	// Misc
+	void					Start				(int team);
 private:
 
 	CShIdentifier	m_levelIdentifier;

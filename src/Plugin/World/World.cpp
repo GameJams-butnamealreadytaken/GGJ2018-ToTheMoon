@@ -85,11 +85,6 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 		}
 	}
 
-	//
-	// Create player's Ship
-	Network::Ship * pNetworkShip = m_world.createShip(0, 0.0f, 0.0f);
-	m_pShip = CreateShip(0.0f, 0.0f, pNetworkShip);
-
 	m_aTeam.Empty();
 	for (int i = 0; i < 2; ++i)
 	{
@@ -300,6 +295,17 @@ void World::OnTouchMove(int iTouch, float positionX, float positionY)
 {
 	Network::vec2 pos = pTrans->getPosition();
 	CreateTransmitter(pos.x, pos.y, pTrans);
+}
+
+/**
+* @brief World::Start
+*/
+void World::Start(unsigned int team)
+{
+	//
+	// Create player's Ship
+	Network::Ship * pNetworkShip = m_world.createShip(team, 0.0f, 0.0f);
+	m_pShip = CreateShip(0.0f, 0.0f, pNetworkShip);
 }
 
 /**

@@ -153,7 +153,7 @@ void World::handleHelloMessage(HelloMessage * msg, char * machine, char * servic
 
 	//
 	// Say HELLO to the new client
-	if (m_network.RegisterClient(machine))
+	if (m_network.RegisterClient(machine, msg->helloId))
 	{
 		HelloMessage msg;
 		m_network.SendMessageToMachine(msg, machine);
