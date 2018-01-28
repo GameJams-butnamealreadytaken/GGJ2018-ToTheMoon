@@ -98,6 +98,9 @@ void Ship::Update(float dt)
 	}
 }
 
+/**
+* @brief OnHit
+*/
 /*virtual*/ void Ship::OnHit(GameObject* pObject)
 {
 
@@ -118,10 +121,15 @@ unsigned int Ship::GetTeam(void) const
 {
 	return(m_pNetworkShip->getTeam());
 }
+
+/**
+* @brief GetNetworkShip
+*/
 Network::Ship * Ship::GetNetworkShip(void) const
 {
 	return(m_pNetworkShip);
 }
+
 /**
 * @brief SetTarget
 */
