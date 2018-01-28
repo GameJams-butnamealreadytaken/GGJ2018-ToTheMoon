@@ -196,7 +196,19 @@ bool NetworkHelper::Receive(char * buffer, unsigned int & size, char * machine, 
 
 	while (timeout.tv_usec > 0)
 	{
-		if (select(m_sock+1, &fdset, nullptr, nullptr, &timeout) > 0)
+#if WIN32
+		DWORD before = GetTickCount();
+#endif // WIN32
+
+		int res = select(m_sock+1, &fdset, nullptr, nullptr, &timeout);
+
+#if WIN32
+		DWORD after = GetTickCount();
+
+		timeout.tv_usec -= after - beofre;
+#endif // WIN32
+
+		if (res > 0)
 		{
 			struct sockaddr_storage sender;
 			socklen_t sendsize = sizeof(sender);
