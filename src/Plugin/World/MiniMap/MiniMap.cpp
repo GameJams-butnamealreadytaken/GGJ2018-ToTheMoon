@@ -3,6 +3,9 @@
 #include "../GameObjects/Ship/Ship.h"
 #include "../GameObjects/Transmitter/Transmitter.h"
 
+#define POSITION_OFFSET_X 76.8f
+#define POSITION_OFFSET_Y 43.2f
+
 /**
  * @brief Constructor
  */
@@ -44,7 +47,7 @@ void MiniMap::Initialize(const CShIdentifier & levelIdentifier, World * pWorld)
 	m_pEntityBackground = ShEntity2::Create(levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("minimap_background"), CShVector3(0.0f, 0.0f, 100.0f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(m_fWidth / 10.0f, m_fHeight / 10.0f, 1.0f));
 	SH_ASSERT(shNULL != m_pEntityBackground);
 
-	ShEntity2::SetWorldPosition2(m_pEntityBackground, CShVector2(ShDisplay::GetWidth() * 0.5f - ShEntity2::GetWidth(m_pEntityBackground) * 0.5f,-ShDisplay::GetHeight() * 0.5f + ShEntity2::GetWidth(m_pEntityBackground) * 0.5f));
+	ShEntity2::SetWorldPosition2(m_pEntityBackground, CShVector2(ShDisplay::GetWidth() * 0.5f - ShEntity2::GetWidth(m_pEntityBackground) * 0.5f - POSITION_OFFSET_X,-ShDisplay::GetHeight() * 0.5f + ShEntity2::GetWidth(m_pEntityBackground) * 0.5f + POSITION_OFFSET_Y));
 
 	m_vPosition = ShEntity2::GetPosition2(m_pEntityBackground);
 
@@ -56,6 +59,7 @@ void MiniMap::Initialize(const CShIdentifier & levelIdentifier, World * pWorld)
 		ShEntity2* pEntityShip = ShEntity2::Create(levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("minimap_ship"), CShVector3(0.0f, 0.0f, 101.0f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
 		m_apShip.Add(pEntityShip);
 		ShEntity2::Link(m_pEntityBackground, pEntityShip);
+		m_iShipCount++;
 	}
 
 	//
@@ -66,6 +70,7 @@ void MiniMap::Initialize(const CShIdentifier & levelIdentifier, World * pWorld)
 		ShEntity2* pEntityTransmitter = ShEntity2::Create(levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("minimap_transmitter"), CShVector3(0.0f, 0.0f, 101.0f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
 		m_apTransmitter.Add(pEntityTransmitter);
 		ShEntity2::Link(m_pEntityBackground, pEntityTransmitter);
+		m_iTransmitterCount++;
 	}
 }
 
@@ -83,7 +88,7 @@ void MiniMap::Release(void)
 void MiniMap::Update(float dt)
 {
 	ShCamera* pCamera = ShCamera::GetCamera2D();
-	ShEntity2::SetWorldPosition2(m_pEntityBackground, ShCamera::GetPosition2(pCamera) + CShVector2(ShCamera::GetViewport(pCamera).m_x * 0.5f - ShEntity2::GetWidth(m_pEntityBackground) * ShEntity2::GetScale(m_pEntityBackground).m_x * 0.5f, -ShCamera::GetViewport(pCamera).m_y * 0.5f + ShEntity2::GetHeight(m_pEntityBackground)  * ShEntity2::GetScale(m_pEntityBackground).m_y * 0.5f));
+	ShEntity2::SetWorldPosition2(m_pEntityBackground, ShCamera::GetPosition2(pCamera) + CShVector2(ShCamera::GetViewport(pCamera).m_x * 0.5f - ShEntity2::GetWidth(m_pEntityBackground) * ShEntity2::GetScale(m_pEntityBackground).m_x * 0.5f - POSITION_OFFSET_X, -ShCamera::GetViewport(pCamera).m_y * 0.5f + ShEntity2::GetHeight(m_pEntityBackground)  * ShEntity2::GetScale(m_pEntityBackground).m_y * 0.5f + POSITION_OFFSET_Y));
 	m_vPosition = ShEntity2::GetPosition2(m_pEntityBackground);
 
 	//
@@ -98,7 +103,7 @@ void MiniMap::Update(float dt)
 			ShEntity2::Link(m_pEntityBackground, pEntityShip);
 			m_iShipCount++;
 		}
-
+	
 		Ship * pShip = m_pWorld->GetShip(iShip);
 		ShEntity2::SetWorldPosition2(m_apShip[iShip], m_vPosition + pShip->GetPosition2() * CShVector2(m_fRatio, m_fRatio) * 0.5f);
 	}
