@@ -13,6 +13,7 @@ Transmitter::Transmitter(ShEntity2 * pEntity, const CShVector2 & vPosition)
 , m_fRadius(RADIUS)
 , m_pTransmitter(shNULL)
 , m_aNeighbour()
+, m_aPrimitives()
 {
 	if (!g_bDisableAnimations)
 	{
@@ -47,6 +48,24 @@ void Transmitter::Initialize(const Network::Transmitter * pNetworkTransmitter, i
 void Transmitter::Release(void)
 {
 	m_pTransmitter = shNULL;
+
+	int nNeighboorCount = m_aNeighbour.GetCount();
+	for (int i = 0; i < nNeighboorCount; ++i)
+	{
+		int nPrimitiveCount = m_aPrimitives.GetCount();
+		for (int j = 0; j < nPrimitiveCount; ++j)
+		{
+			m_aNeighbour[i]->RemoveNeighbour(this, m_aPrimitives[j]);
+		}
+	}
+	m_aNeighbour.Empty();
+
+	int nPrimitiveCount = m_aPrimitives.GetCount();
+	for (int j = 0; j < nPrimitiveCount; ++j)
+	{
+		ShPrimitiveSegment::Destroy(m_aPrimitives[j]);
+	}
+	m_aPrimitives.Empty();
 }
 
 /**
@@ -145,15 +164,18 @@ void Transmitter::AddNeighbour(Transmitter * pTrans, ShPrimitiveSegment * pSegme
 {
 	SH_ASSERT(shNULL != pTrans);
 	m_aNeighbour.Add(pTrans);
+	m_aPrimitives.Add(pSegment);
 }
 
 /**
 * @brief RemoveNeighbour
 */
-void Transmitter::RemoveNeighbour(Transmitter * pTrans)
+void Transmitter::RemoveNeighbour(Transmitter * pTrans, ShPrimitiveSegment * pSegment)
 {
 	SH_ASSERT(shNULL != pTrans);
 	m_aNeighbour.RemoveAll(pTrans);
+	SH_ASSERT(shNULL != pSegment);
+	m_aPrimitives.RemoveAll(pSegment);
 }
 
 int Transmitter::GetNeighbourCount(void)
