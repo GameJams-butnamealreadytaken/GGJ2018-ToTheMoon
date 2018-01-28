@@ -243,6 +243,8 @@ bool NetworkHelper::RegisterClient(char * machine)
 		return(false);
 	}
 
+	NETWORK_DEBUG_LOG("NEW CLIENT REGISTERED %s\n", machine);
+
 	unsigned int index = m_iClientCount;
 
 	// Allocate a new client
