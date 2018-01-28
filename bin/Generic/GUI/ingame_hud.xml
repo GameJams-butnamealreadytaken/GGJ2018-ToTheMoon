@@ -20,11 +20,8 @@
 		<style identifier="panel_ingame_hud_notifications"				h_pivot="left" v_pivot="top" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="0"			position_y="2.5" 	width="100"		height="100"/>
 	</sss>                                         
 	<root>		
-		<image id="image_ingame_hud_hp_1" sprite_library="ggj_ui" image="image_white"/>
-		<image id="image_ingame_hud_hp_2" sprite_library="ggj_ui" image="image_white"/>
-		<image id="image_ingame_hud_hp_3" sprite_library="ggj_ui" image="image_white"/>
-		<image id="image_ingame_hud_hp_4" sprite_library="ggj_ui" image="image_white"/>
-		<image id="image_ingame_hud_hp_5" sprite_library="ggj_ui" image="image_white"/>
+		<image id="image_ingame_hud_hp_bg" sprite_library="ggj_ui" image="image_white"/>
+		<image id="image_ingame_hud_hp_fg" sprite_library="ggj_ui" image="image_white"/>
 		<text id="text_ingame_hud_hp_label" text="HP"/>
 		
 		<image id="image_ingame_hud_transmitter_cooldown_bg" sprite_library="ggj_ui" image="image_white"/>
