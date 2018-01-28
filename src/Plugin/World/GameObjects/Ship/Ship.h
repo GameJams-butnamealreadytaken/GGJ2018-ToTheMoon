@@ -80,8 +80,7 @@ private:
 	float				m_fAttackRange;
 
 	float				m_fAngle;
-	
-	int					m_iLife;
+
 	unsigned int		m_iMaxLife;
 	float				m_fSpeed;
 

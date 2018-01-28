@@ -16,7 +16,6 @@ Ship::Ship(ShEntity2 * pEntity, const CShVector2 & vPosition)
 	, m_pTargetObject(shNULL)
 	, m_pTargetType(e_type_void)
 	, m_fAttackRange(30.0f)
-	, m_iLife(100)
 	, m_fSpeed(800.0f)
 {
 	SetState((int)IDLE);
@@ -128,16 +127,7 @@ void Ship::Update(float dt)
 */
 /*virtual*/ void Ship::OnHit(GameObject* pObject)
 {
-	--m_iLife;
-	if (m_iLife <= 0)
-	{
-		SetState((int)DESTROYED);
-		Network::DestroyTransmitterMessage(m_pTransmitter);
-	}
-	else
-	{
-		SetState((int)HIT);
-	}
+	SetState((int)HIT);
 }
 
 /**
@@ -169,7 +159,7 @@ Network::Ship * Ship::GetNetworkShip(void) const
 */
 unsigned int Ship::GetLife(void) const
 {
-	return(m_iLife);
+	return(m_pNetworkShip->getLife());
 }
 
 /**
@@ -182,7 +172,7 @@ unsigned int Ship::GetMaxLife(void) const
 
 bool Ship::IsDead(void)
 {
-	return(m_iLife <= 0);
+	return(m_pNetworkShip->getLife() <= 0);
 }
 
 /**

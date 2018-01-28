@@ -424,6 +424,18 @@ float World::ComputeVecteurNorme(float Ax, float Ay, float Bx, float By)
 /*virtual*/ void World::onShipShooted(const Network::Ship * pShip, const Network::Ship * pShooterShip)
 {
 	m_projectileManager.Start(ProjectileManager::e_projectile_bullet, CShVector2(pShooterShip->getPosition().x, pShooterShip->getPosition().y), CShVector2(pShip->getPosition().x, pShip->getPosition().y), 4.0f);
+
+	if (m_pShip->GetNetworkShip() == pShip)
+	{
+		unsigned int newLife = pShip->getLife() - 1;
+
+		m_pShip->GetNetworkShip()->setLife(newLife);
+
+		if (newLife <= 0)
+		{
+			m_world.destroyShip(m_pShip->GetNetworkShip());
+		}
+	}
 }
 
 /**
