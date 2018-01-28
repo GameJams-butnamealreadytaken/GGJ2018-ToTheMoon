@@ -437,6 +437,7 @@ Ship * World::createShip(unsigned int team, float x, float y)
 	message.position = vec2(x, y);
 	message.target = vec2(x, y);
 	message.speed = 0.0f;
+	message.team = team;
 
 	m_network.SendMessageToAllClients(message);
 
