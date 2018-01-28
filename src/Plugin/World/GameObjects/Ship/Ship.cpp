@@ -182,6 +182,8 @@ void Ship::SetTarget(float x, float y, Ship * pShip)
 	m_pTargetType = e_type_ship;
 	m_pTargetObject = pShip;
 	m_fAttackRange = 600.0f;
+
+	ShEntity2::SetAlpha(pShip->GetSprite(), 0.5f);
 }
 
 /**
@@ -193,6 +195,8 @@ void Ship::SetTarget(float x, float y, Transmitter * pTrans)
 	m_pTargetType = e_type_transmitter;
 	m_pTargetObject = pTrans;
 	m_fAttackRange = 600.0f;
+
+	ShEntity2::SetAlpha(pTrans->GetSprite(), 0.5f);
 }
 
 /**
