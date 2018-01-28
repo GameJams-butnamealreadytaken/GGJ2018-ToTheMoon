@@ -65,7 +65,10 @@ void ProjectileManager::Release(void)
 */
 void ProjectileManager::Start(EProjectile eProjectile, const CShVector2 & vPosition, const CShVector2 & vDestination, float fSpeed)
 {
-	m_apProjectile[eProjectile][m_aiCurrentProjectile[eProjectile]]->Start(vPosition, vDestination, fSpeed);
+	float direction = atan2(vDestination.m_x - vPosition.m_x, vDestination.m_y - vPosition.m_y) * 180 / SHC_PI;
+	float fAngle = (-direction + 90)*SHC_DEG2RAD;
+
+	m_apProjectile[eProjectile][m_aiCurrentProjectile[eProjectile]]->Start(vPosition, vDestination, fSpeed, fAngle);
 	m_aiCurrentProjectile[eProjectile]++;
 	m_aiCurrentProjectile[eProjectile] %= POOL_PROJECTILE;
 }
