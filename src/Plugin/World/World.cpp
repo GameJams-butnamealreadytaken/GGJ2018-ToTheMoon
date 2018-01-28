@@ -111,6 +111,8 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 void World::Release(void)
 {
 	m_pMiniMap->Release();
+
+	m_world.destroyShip(m_pShip->GetNetworkShip());
 	m_pShip = shNULL;
 
 	int nShipCount = m_apShip.GetCount();
