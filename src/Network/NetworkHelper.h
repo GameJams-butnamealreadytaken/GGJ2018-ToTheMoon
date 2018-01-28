@@ -1,9 +1,13 @@
 #pragma once
 
+#include "utils.h"
+
 struct sockaddr_in;
 
 namespace Network
 {
+
+struct Client;
 
 class NetworkHelper
 {
@@ -53,7 +57,7 @@ public:
 
 	//
 	// ...
-	bool RegisterClient(char * machine);
+	bool RegisterClient(char * machine, const uuid_t & uuid);
 
 	//
 	// ...
@@ -67,7 +71,7 @@ private:
 
 	int m_sock;
 
-	struct sockaddr_in * m_pClients;
+	Client * m_pClients;
 	unsigned int m_iClientCount;
 };
 
