@@ -14,6 +14,7 @@ Transmitter::Transmitter(ShEntity2 * pEntity, const CShVector2 & vPosition)
 , m_pTransmitter(shNULL)
 , m_aNeighbour()
 , m_aPrimitives()
+, m_iLife(LIFE)
 {
 	if (!g_bDisableAnimations)
 	{
