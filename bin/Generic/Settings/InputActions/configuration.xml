@@ -159,4 +159,13 @@
 		</pad>		
 	</event>
 	
+	<event name="camera_mode">
+		<keyboard>
+			<input name="just_pressed">
+				<parameter name="control" value="c"/>
+				<parameter name="threshold" value="0.5"/>
+			</input>
+		</keyboard>	
+	</event>
+	
 </configuration>

@@ -6,7 +6,7 @@
 #include "GameObjects/Ship/Ship.h"
 #include "GameObjects/Planet/Planet.h"
 #include "Team/Team.h"
-
+#include "Camera/CameraPlugin.h"
 
 #define TEST 0
 
@@ -103,6 +103,9 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 
 	m_pMiniMap = new MiniMap();
 	m_pMiniMap->Initialize(levelIdentifier, this);
+
+	m_pCamera = new CameraPlugin();
+	m_pCamera->Initialize(m_pInputs);
 }
 
 /**
@@ -144,6 +147,9 @@ void World::Release(void)
 	m_pInputs->Release();
 	SH_SAFE_DELETE(m_pInputs);
 
+	m_pCamera->Release();
+	SH_SAFE_DELETE(m_pCamera);
+
 	m_world.release();
 }
 
@@ -155,17 +161,22 @@ void World::Update(float dt)
 	m_world.update(dt);
 
 	m_pInputs->Update();
-
-	//
-	// Plugin Inputs
-	if (m_pInputs->LaunchedBeacon())
+	
+	if (m_pShip)
 	{
-		if (m_pShip)
+		m_pCamera->Update(dt, m_pShip->GetPosition2());
+
+		//
+		// Plugin Inputs
+		if (m_pInputs->LaunchedBeacon())
 		{
+
 			CShVector2 & shipPos = m_pShip->GetPosition2();
 			Network::Transmitter * pNetworkTrans = m_world.createTransmitter(m_pShip->GetTeam(), shipPos.m_x, shipPos.m_y);
 			CreateTransmitter(shipPos.m_x, shipPos.m_y, pNetworkTrans);
+
 		}
+
 	}
 
 	//
@@ -190,14 +201,6 @@ void World::Update(float dt)
 	{
 		Ship * pShip = m_apShip[iShip];
 		pShip->Update(dt);
-
-		if (pShip == m_pShip)
-		{
-			ShCamera* pCamera = ShCamera::GetCamera2D();
-			CShVector2 shipPos = m_pShip->GetPosition2();
-			ShCamera::SetPosition2(pCamera, shipPos);
-			ShCamera::SetTarget(pCamera, CShVector3(shipPos, 0.0f));
-		}
 	}
 
 	//
