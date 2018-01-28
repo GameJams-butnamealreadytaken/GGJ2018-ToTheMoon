@@ -3,6 +3,7 @@
 #if __gnu_linux__
 #	include <uuid/uuid.h>
 #else
+#	define _WINSOCKAPI_ 
 #	include <rpc.h>
 #endif // __gnu_linux__
 
