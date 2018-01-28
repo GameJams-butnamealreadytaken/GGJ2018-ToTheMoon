@@ -386,9 +386,17 @@ void World::OnTouchMove(int iTouch, float positionX, float positionY)
 /**
  * @brief World::onShipStateChanged
  */
-/*virtual*/ void World::onShipStateChanged(const Network::Ship * pShip)
+/*virtual*/ void World::onShipStateChanged(const Network::Ship * pNetworkShip)
 {
-	// TODO
+	int iShipCount = m_apShip.GetCount();
+	for (int iShip = 0; iShip < iShipCount; ++iShip)
+	{
+		Ship * pShip = m_apShip[iShip];
+		if (pShip->GetNetworkShip() == pNetworkShip)
+		{
+			pShip->SetTarget(pNetworkShip->getTarget().x, pNetworkShip->getTarget().y, pNetworkShip->getSpeed(), GameObject::e_type_ship);
+		}
+	}
 }
 
 /**
