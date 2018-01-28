@@ -3,10 +3,12 @@
 #if __gnu_linux__
 #	include <uuid/uuid.h>
 #else
-#	define _WINSOCKAPI_ 
-#include <stdio.h>
+#	define _WINSOCKAPI_
 #	include <rpc.h>
 #endif // __gnu_linux__
+
+#include <stdio.h>
+#include <stdarg.h>
 
 #define CURRENT_NETWORK_VERSION (0xFF0002)
 
@@ -25,7 +27,15 @@ inline int NETWORK_DEBUG_LOG(const char* format, ...)
 	return 0;
 }
 #else
-#define NETWORK_DEBUG_LOG printf
+inline int NETWORK_DEBUG_LOG(const char* format, ...)
+{
+	va_list args;
+	va_start(args, format);
+	vprintf(format, args);
+	va_end(args);
+	fflush(stdout);
+	return(0);
+}
 #endif // WIN32
 
 struct vec2

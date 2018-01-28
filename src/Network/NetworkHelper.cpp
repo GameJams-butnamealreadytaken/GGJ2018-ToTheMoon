@@ -279,7 +279,6 @@ void NetworkHelper::UpdateClients(float dt)
 		if (client->inactiveTime > TIMEOUT)
 		{
 			NETWORK_DEBUG_LOG("TIMEOUT\n");
-			fflush(stdout);
 
 			*client = *(m_pClients+m_iClientCount); // swap with last element
 
