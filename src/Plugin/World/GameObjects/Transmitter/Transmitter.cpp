@@ -201,3 +201,8 @@ unsigned int Transmitter::GetTeam(void) const
 {
 	return(m_pTransmitter->getTeam());
 }
+
+Network::Transmitter * Transmitter::GetNetworkTrans(void) const
+{
+	return(m_pTransmitter);
+}
