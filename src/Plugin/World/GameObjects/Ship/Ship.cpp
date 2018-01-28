@@ -223,9 +223,23 @@ void Ship::Attack(void)
 {
 	CShVector2 & vTargetPosition2 = m_pTargetObject->GetPosition2();
 
+	static bool bLeft = true;
+
 	if (m_fFireRate > 0.25f)
 	{
-		m_pProjectileManager->Start(ProjectileManager::e_projectile_bullet, GetPosition2(), vTargetPosition2, 2.0f);
+		float direction = atan2(vTargetPosition2.m_x - GetPosition2().m_x, vTargetPosition2.m_y - GetPosition2().m_y) * 180 / SHC_PI;
+		float fAngle = (-direction + 90)*SHC_DEG2RAD;
+
+		if (bLeft)
+		{
+			m_pProjectileManager->Start(ProjectileManager::e_projectile_bullet, GetPosition2() + 10.0f * CShVector2(cos(fAngle), sin(fAngle)), vTargetPosition2, 4.0f);
+		}
+		else
+		{
+			m_pProjectileManager->Start(ProjectileManager::e_projectile_bullet, GetPosition2() + 10.0f * CShVector2(cos(fAngle - 0.01f), sin(fAngle - 0.01f)), vTargetPosition2, 4.0f);
+		}
+
+		bLeft = !bLeft;
 		m_fFireRate = 0.0f;
 
 		m_pTargetObject->OnHit(this);

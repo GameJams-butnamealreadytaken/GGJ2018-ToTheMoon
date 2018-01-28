@@ -39,7 +39,7 @@ void Projectile::Release(void)
 /**
 * @brief Start
 */
-void Projectile::Start(const CShVector2 & vPosition, const CShVector2 & vDestination, float fSpeed)
+void Projectile::Start(const CShVector2 & vPosition, const CShVector2 & vDestination, float fSpeed, float fAngle)
 {
 	SetState((int)ON);
 	SetShow(true);
@@ -47,6 +47,7 @@ void Projectile::Start(const CShVector2 & vPosition, const CShVector2 & vDestina
 	m_vDestination = vDestination;
 	m_vStartPosition = vPosition;
 	SetPosition2(vPosition);
+	ShEntity2::SetWorldRotation(m_pEntity, CShEulerAngles(0.0f, 0.0f, fAngle));
 	m_fCompletion = 0.0f;
 }
 
