@@ -206,7 +206,18 @@ void World::handleDestroyShipMessage(DestroyShipMessage * msg, char * machine, c
 	printf("DESTROY_SHIP from %s:%s\n", machine, service);
 	fflush(stdout);
 
-	// TODO
+	Ship * ship = findShip(msg->shipId);
+
+	if (ship)
+	{
+		// Notify the game
+		if (m_pListener)
+		{
+			m_pListener->onShipDestroyed(ship);
+		}
+
+		removeShipInternal(ship);
+	}
 }
 
 /**
@@ -273,7 +284,18 @@ void World::handleDestroyTransmitterMessage(DestroyTransmitterMessage * msg, cha
 	printf("DESTROY_TRANSMITTER from %s:%s\n", machine, service);
 	fflush(stdout);
 
-	// TODO
+	Transmitter * transmitter = findTransmitter(msg->transmitterId);
+
+	if (transmitter)
+	{
+		// Notify the game
+		if (m_pListener)
+		{
+			m_pListener->onTransmitterDestroyed(transmitter);
+		}
+
+		removeTransmitterInternal(transmitter);
+	}
 }
 
 /**
@@ -530,12 +552,6 @@ void World::removeShipInternal(Ship * ship)
 	{
 		if (ship == (m_aShips+i))
 		{
-			// Notify the game
-			if (m_pListener)
-			{
-				m_pListener->onShipDestroyed(ship);
-			}
-
 			m_aShips[i] = m_aShips[m_ShipCount];
 			--m_ShipCount;
 			break;
@@ -670,12 +686,6 @@ void World::removeTransmitterInternal(Transmitter * transmitter)
 	{
 		if (transmitter == (m_aTransmitters+i))
 		{
-			// Notify the game
-			if (m_pListener)
-			{
-				m_pListener->onTransmitterDestroyed(transmitter);
-			}
-
 			m_aTransmitters[i] = m_aTransmitters[m_TransmitterCount];
 			--m_TransmitterCount;
 			break;
