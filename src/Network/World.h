@@ -37,12 +37,14 @@ public:
 	Ship *			createShip			(unsigned int team, unsigned int eShipType, unsigned int life, float x, float y);
 	void			destroyShip			(Ship * ship);
 	Ship *			findShip			(const uuid_t & uuid);
+	void			shootShip			(Ship * target, Ship * shooter, unsigned int force);
 
 	//
 	// Create Transmitter
 	Transmitter *	createTransmitter	(unsigned int team, unsigned int life, float x, float y);
 	void			destroyTransmitter	(Transmitter * transmitter);
 	Transmitter *	findTransmitter		(const uuid_t & uuid);
+	void			shootTransmitter	(Transmitter * target, Ship * shooter, unsigned int force);
 
 	//
 	// Listener
@@ -68,10 +70,12 @@ protected:
 	void handleCreateShipMessage(CreateShipMessage * msg, char * machine, char * service);
 	void handleDestroyShipMessage(DestroyShipMessage * msg, char * machine, char * service);
 	void handleSyncShipStateMessage(SyncShipStateMessage * msg, char * machine, char * service);
+	void handleShootShipMessage(ShootShipMessage * msg, char * machine, char * service);
 
 	void handleCreateTransmitterMessage(CreateTransmitterMessage * msg, char * machine, char * service);
 	void handleDestroyTransmitterMessage(DestroyTransmitterMessage * msg, char * machine, char * service);
 	void handleSyncTransmitterStateMessage(SyncTransmitterStateMessage * msg, char * machine, char * service);
+	void handleShootTransmitterMessage(ShootTransmitterMessage * msg, char * machine, char * service);
 
 private:
 
