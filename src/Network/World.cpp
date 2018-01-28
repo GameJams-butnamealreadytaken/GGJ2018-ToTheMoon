@@ -159,6 +159,12 @@ void World::handleHelloMessage(HelloMessage * msg, char * machine, char * servic
 	if (m_network.RegisterClient(machine, msg->helloId))
 	{
 		HelloMessage msg;
+#if __gnu_linux__
+		uuid_copy(msg.helloId, m_MyHelloUUID);
+#else
+		memcpy(&msg.helloId, (void*)&m_MyHelloUUID, sizeof(uuid_t));
+#endif // __gnu_linux__
+
 		m_network.SendMessageToMachine(msg, machine);
 	}
 }
