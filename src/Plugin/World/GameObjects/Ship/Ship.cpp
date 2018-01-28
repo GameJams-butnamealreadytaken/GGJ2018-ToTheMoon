@@ -224,9 +224,9 @@ void Ship::Attack(void)
 	{
 		m_pProjectileManager->Start(ProjectileManager::e_projectile_bullet, GetPosition2(), vTargetPosition2, 2.0f);
 		m_fFireRate = 0.0f;
-	}
 
-	m_pTargetObject->OnHit(this);
+		m_pTargetObject->OnHit(this);
+	}
 
 	//switch (m_type)
 	//{
