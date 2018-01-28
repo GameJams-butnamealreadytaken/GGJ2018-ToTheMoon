@@ -44,7 +44,7 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 
 	m_world.init();
 	m_world.setListener(this);
-	m_pMiniMap->Initialize(this);
+
 	m_explosionManager.Initialize(levelIdentifier);
 	m_projectileManager.Initialize(levelIdentifier);
 
@@ -90,6 +90,9 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 
 	m_pUser = ShUser::GetUser(0);
 	SH_ASSERT(shNULL != m_pUser);
+
+	m_pMiniMap = new MiniMap();
+	m_pMiniMap->Initialize(levelIdentifier, this);
 }
 
 /**
@@ -97,6 +100,7 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 */
 void World::Release(void)
 {
+	m_pMiniMap->Release();
 	m_pShip = shNULL;
 
 	int nShipCount = m_apShip.GetCount();
@@ -125,7 +129,6 @@ void World::Release(void)
 	m_projectileManager.Release();
 	m_explosionManager.Release();
 
-	m_pMiniMap->Release();
 	m_world.release();
 }
 
@@ -135,7 +138,6 @@ void World::Release(void)
 void World::Update(float dt)
 {
 	m_world.update(dt);
-	m_pMiniMap->Update(dt);
 
 	//
 	// Update planets
@@ -189,6 +191,8 @@ void World::Update(float dt)
 			CreateTransmitter(shipPos.m_x, shipPos.m_y, pNetworkTrans);
 		}
 	}
+
+	m_pMiniMap->Update(dt);
 }
 
 /**
@@ -321,10 +325,9 @@ Transmitter * World::CreateTransmitter(float x, float y, const Network::Transmit
 	ShEntity2* pEntity = ShEntity2::Create(m_levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("transmitter_01"), CShVector3(x, y, 2.01f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(0.8f, 0.8f, 1.0f));
 	SH_ASSERT(shNULL != pEntity);
 	Transmitter * pTrans = new Transmitter(pEntity, CShVector2(x, y));
-
-	m_apTransmitter.Add(pTrans);
 	pTrans->Initialize(pNetworkTrans, m_apTransmitter.GetCount() - 1);
 	pTrans->Start(CShVector2(x, y));
+	m_apTransmitter.Add(pTrans);
 	
 	int teamId = 0; // get id from network transmitter
 	m_aTeam[teamId]->AddTransmitter(pTrans);

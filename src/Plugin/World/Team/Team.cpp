@@ -35,6 +35,11 @@ void Team::Initialize(const CShIdentifier & levelIdentifier, const CShVector2 & 
 */
 void Team::Release(void)
 {
+	int nTransCount = m_apTransmitter.GetCount();
+	for (int i = 0; i < nTransCount; ++i)
+	{
+		m_apTransmitter[i]->Release();
+	}
 	m_apTransmitter.Empty();
 }
 
@@ -81,7 +86,8 @@ void Team::AddTransmitter(Transmitter * pTransmitter)
 */
 void Team::RemoveTransmitter(Transmitter * pTransmitter)
 {
-	//TODO
+	m_apTransmitter.RemoveAll(pTransmitter);
+	pTransmitter->Release();
 }
 
 /**

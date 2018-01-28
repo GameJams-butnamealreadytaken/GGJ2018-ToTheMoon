@@ -5,20 +5,32 @@
 
 #include "../World.h"
 
-class World;
-
 class MiniMap 
 {
 public:
 	explicit								MiniMap				(void);
 	virtual									~MiniMap			(void);
 
-	void									Initialize			(World * pWorld);
+	void									Initialize			(const CShIdentifier & levelIdentifier, World * pWorld);
 	void									Release				(void);
 
 	void									Update				(float dt);
 
 protected:
-	World * m_pWorld;
-	float	m_fRatio;
+	CShIdentifier	m_levelIdentifier;
+	World *			m_pWorld;
+
+	ShEntity2*	m_pEntityBackground;
+
+	float	m_fWidth;
+	float	m_fHeight;
+	float   m_fRatio;
+	
+	CShVector2 m_vPosition;
+
+	CShArray<ShEntity2*>	m_apShip;
+	CShArray<ShEntity2*>	m_apTransmitter;
+
+	int						m_iShipCount;
+	int						m_iTransmitterCount;
 };
