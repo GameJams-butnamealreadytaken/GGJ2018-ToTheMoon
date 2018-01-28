@@ -35,6 +35,7 @@ void SoundManager::Initialize(void)
 //--------------------------------------------------------------------------------------------------
 void SoundManager::Release(void)
 {
+	ShSound::StopAll();
 	for (int eSound = 0; eSound < e_sound_fx_max; ++eSound)
 	{
 		m_aSoundFXResource[eSound] = shNULL;
