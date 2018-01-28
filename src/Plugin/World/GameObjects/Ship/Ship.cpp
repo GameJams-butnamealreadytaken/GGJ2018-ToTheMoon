@@ -15,6 +15,7 @@ Ship::Ship(ShEntity2 * pEntity, const CShVector2 & vPosition)
 	, m_pTargetObject(shNULL)
 	, m_pTargetType(e_type_void)
 	, m_fAttackRange(10.0f)
+	, m_iLife(5)
 {
 	SetState((int)IDLE);
 }
@@ -76,20 +77,26 @@ void Ship::Update(float dt)
 
 			if (m_fAttackRange > ComputeVecteurNorme(m_vPosition.m_x, m_vPosition.m_y, targetPos.x, targetPos.y))
 			{
-				m_pNetworkShip->setSpeed(0.0f);
-				SetState((int)IDLE);
-
 				if (e_type_ship == m_pTargetType)
 				{
 					// Attack
+					if (static_cast<Ship *>(m_pTargetObject)->IsDead())
+					{
+						SetIdleState();
+					}
 				}
 				else if (e_type_transmitter == m_pTargetType)
 				{
 					// Attack
+					if (static_cast<Transmitter *>(m_pTargetObject)->IsDead())
+					{
+						SetIdleState();
+					}
 				}
-
-				m_pTargetType = e_type_void;
-				m_pTargetObject = shNULL;
+				else
+				{
+					SetIdleState();
+				}
 			}
 		}
 		break;
@@ -107,7 +114,7 @@ void Ship::Update(float dt)
 */
 /*virtual*/ void Ship::OnHit(GameObject* pObject)
 {
-
+	--m_iLife;
 }
 
 /**
@@ -132,6 +139,11 @@ unsigned int Ship::GetTeam(void) const
 Network::Ship * Ship::GetNetworkShip(void) const
 {
 	return(m_pNetworkShip);
+}
+
+bool Ship::IsDead(void)
+{
+	return(m_iLife <= 0);
 }
 
 /**
@@ -181,6 +193,14 @@ void Ship::SetTarget(float x, float y, float fSpeed, Transmitter * pTrans)
 CShEulerAngles Ship::GetRotation(void)
 {
 	return(ShEntity2::GetWorldRotation(m_pEntity));
+}
+
+void Ship::SetIdleState(void)
+{
+	m_pNetworkShip->setSpeed(0.0f);
+	SetState((int)IDLE);
+	m_pTargetType = e_type_void;
+	m_pTargetObject = shNULL;
 }
 
 /**

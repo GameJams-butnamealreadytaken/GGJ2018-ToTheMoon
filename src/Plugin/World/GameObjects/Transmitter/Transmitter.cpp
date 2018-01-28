@@ -217,6 +217,11 @@ unsigned int Transmitter::GetTeam(void) const
 	return(m_pTransmitter->getTeam());
 }
 
+bool Transmitter::IsDead(void)
+{
+	return(m_iLife <= 0);
+}
+
 Network::Transmitter * Transmitter::GetNetworkTrans(void) const
 {
 	return(m_pTransmitter);

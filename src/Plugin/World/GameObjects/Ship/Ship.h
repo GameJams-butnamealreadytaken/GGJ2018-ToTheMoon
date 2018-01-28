@@ -50,7 +50,10 @@ public:
 	unsigned int				GetTeam					(void) const;
 	Network::Ship *				GetNetworkShip			(void) const;
 
+	bool						IsDead					(void);
+
 private:
+	void						SetIdleState			(void);
 	void						Attack					(void);
 	void						UpdateSprite			(const Network::vec2 & shipPos);
 
@@ -71,4 +74,7 @@ private:
 	float				m_fAttackRange;
 
 	float				m_fAngle;
+
+	int					m_iLife;
+
 };

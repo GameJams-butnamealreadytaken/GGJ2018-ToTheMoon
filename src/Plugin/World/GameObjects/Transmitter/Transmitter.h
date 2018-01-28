@@ -43,6 +43,8 @@ public:
 	int					GetId				(void);
 	unsigned int		GetTeam				(void) const;
 
+	bool				IsDead				(void);
+
 	Network::Transmitter * GetNetworkTrans	(void) const;
 
 private:
