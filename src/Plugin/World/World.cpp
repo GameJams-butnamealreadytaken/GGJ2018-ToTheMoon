@@ -327,6 +327,7 @@ void World::OnTouchMove(int iTouch, float positionX, float positionY)
 			m_apShip[i]->Release();
 			SH_SAFE_DELETE(m_apShip[i]);
 			m_apShip.Remove(i);
+			break;
 		}
 	}
 }
@@ -360,6 +361,7 @@ void World::OnTouchMove(int iTouch, float positionX, float positionY)
 			m_apTransmitter.RemoveAll(m_apTransmitter[i]);
 			
 			SH_SAFE_DELETE(pTransmitter);
+			break;
 		}
 	}
 }
