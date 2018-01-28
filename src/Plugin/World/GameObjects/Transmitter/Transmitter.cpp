@@ -166,6 +166,7 @@ void Transmitter::Update(float dt)
 	if (m_iLife <= 0)
 	{
 		SetState(DESTROYED);
+		Network::DestroyTransmitterMessage(m_pTransmitter);
 	}
 	else
 	{
