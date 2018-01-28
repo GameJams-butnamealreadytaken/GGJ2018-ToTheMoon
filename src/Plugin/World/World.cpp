@@ -237,6 +237,14 @@ Ship * World::GetShip(int iShip)
 }
 
 /**
+* @brief World::GetMyShip
+*/
+Ship * World::GetMyShip(void)
+{
+	return(m_pShip);
+}
+
+/**
 * @brief World::GetTransmitterCount
 */
 int	World::GetTransmitterCount(void)
