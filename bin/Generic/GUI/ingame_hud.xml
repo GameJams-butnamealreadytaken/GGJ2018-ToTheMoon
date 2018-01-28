@@ -1,12 +1,12 @@
 <gui>
 	<sss>
 		<!-- HP -->
-		<style identifier="image_ingame_hud_hp_bg" 						h_pivot="left" v_pivot="bottom" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="2"		position_y="5.5"	width="12"		height="3" color="#FF888888"/>
-		<style identifier="image_ingame_hud_hp_fg" 						h_pivot="left" v_pivot="bottom" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="2"		position_y="5.5"	width="12"		height="3" color="#FFFFFF00"/>
+		<style identifier="image_ingame_hud_hp_bg" 						h_pivot="left" v_pivot="bottom" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="2"		position_y="5.5"	width="12"		height="3" color="#FFFF0000"/>
+		<style identifier="image_ingame_hud_hp_fg" 						h_pivot="left" v_pivot="bottom" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="2"		position_y="5.5"	width="12"		height="3" color="#FF00FF00"/>
 		<style identifier="text_ingame_hud_hp_label" 					h_pivot="left" v_pivot="bottom" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="14.5" 	position_y="5.5" 	width="3"		height="2.7" text_color="#FFFFFFFF" text_align="center_center"/>
 				                                                                                                                                                                                                                                
 		<!-- TC -->		                                                                                                                                                                                                                        
-		<style identifier="image_ingame_hud_transmitter_cooldown_bg" 	h_pivot="left" v_pivot="bottom" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="2"		position_y="2"		width="12"		height="3" color="#FFFF0000"/>
+		<style identifier="image_ingame_hud_transmitter_cooldown_bg" 	h_pivot="left" v_pivot="bottom" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="2"		position_y="2"		width="12"		height="3" color="#FF888888"/>
 		<style identifier="image_ingame_hud_transmitter_cooldown_fg" 	h_pivot="left" v_pivot="bottom" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="2"		position_y="2" 		width="12"		height="3" color="#FF00FF00"/>
 		<style identifier="text_ingame_hud_transmitter_cooldown_label" 	h_pivot="left" v_pivot="bottom" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="14.5" 	position_y="2" 		width="3"		height="2.7" text_color="#FFFFFFFF" text_align="center_center"/>
 			
