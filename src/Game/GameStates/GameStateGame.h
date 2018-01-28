@@ -44,8 +44,21 @@ protected:
 	
 private:
 
+	enum EState
+	{
+		INIT,
+		CONNECTING,
+		PLAYING,
+	};
+
+	//
+	// State
+	EState				m_eState;
+	float				m_ConnectTimer;
+
 	//
 	// GUI
+	ShGUIModalDialog *	m_pConnectDialog;
 	ShGUIModalDialog *	m_pTeamChoiceDialog;
 	ShGUIModalDialog *	m_pQuitDialog;
 	ShGUIControl *		m_pControlHUD;
@@ -54,4 +67,5 @@ private:
 	//
 	// Properties
 	GameStateShipSelection::EShipType m_eShipType;
+
 };

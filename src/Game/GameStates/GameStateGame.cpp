@@ -9,7 +9,10 @@
 * @brief GameStateGame::Constructor
 */
 GameStateGame::GameStateGame(void)
-: m_pQuitDialog(shNULL)
+: m_eState(CONNECTING)
+, m_ConnectTimer(0.0f)
+, m_pConnectDialog(shNULL)
+, m_pQuitDialog(shNULL)
 , m_pTeamChoiceDialog(shNULL)
 , m_pControlHUD(shNULL)
 , m_pControlNotif(shNULL)
@@ -45,6 +48,7 @@ void GameStateGame::init(void)
 		ShGUIControlButton::AddSlotFctPtrClick(pButtonYes, (pSlotSDKButtonClick)OnButtonClickedYes);
 		ShGUIControlButton::AddSlotFctPtrClick(pButtonNo, (pSlotSDKButtonClick)OnButtonClickedNo);
 	}
+
 	{
 		m_pTeamChoiceDialog						= ShGUIModalDialog::Create(CShIdentifier("ingame_team_choice_dialog"));
 		ShGUIControl * pDialogRoot				= ShGUIModalDialog::GetRootControl(m_pTeamChoiceDialog);
@@ -56,6 +60,12 @@ void GameStateGame::init(void)
 		SH_ASSERT(shNULL != pButtonTeamRed);
 		ShGUIControlButton::AddSlotFctPtrClick(pButtonTeamBlue, (pSlotSDKButtonClick)OnButtonClickedTeamBlue);
 		ShGUIControlButton::AddSlotFctPtrClick(pButtonTeamRed, (pSlotSDKButtonClick)OnButtonClickedTeamRed);
+	}
+
+	{
+		m_pConnectDialog						= ShGUIModalDialog::Create(CShIdentifier("ingame_connect_dialog"));
+		ShGUIControl * pDialogRoot				= ShGUIModalDialog::GetRootControl(m_pTeamChoiceDialog);
+		SH_ASSERT(shNULL != pDialogRoot);
 	}
 
 	//
@@ -80,6 +90,9 @@ void GameStateGame::release(void)
 		// Pops current dialog
 		ShGUI::PopModalDialog();
 	}
+
+	ShGUIModalDialog::Destroy(m_pConnectDialog);
+	ShGUIModalDialog::Destroy(m_pTeamChoiceDialog);
 	ShGUIModalDialog::Destroy(m_pQuitDialog);
 
 	//
@@ -93,9 +106,16 @@ void GameStateGame::release(void)
 void GameStateGame::entered(void)
 {
 	//
-	// GUI showing
-	ShGUI::PushModalDialog(m_pTeamChoiceDialog);
+	// State
+	m_eState = INIT;
+	m_ConnectTimer = 0.0f;
 
+	//
+	// GUI showing
+	ShGUI::PushModalDialog(m_pConnectDialog);
+
+	//
+	// Level
 	load();
 }
 
@@ -108,6 +128,8 @@ void GameStateGame::exiting(void)
 	// GUI hiding
 	ShGUIControl::Hide(m_pControlHUD, true);
 
+	//
+	// Level
 	unload();
 }
 
@@ -234,25 +256,50 @@ void GameStateGame::unload(void)
 */
 void GameStateGame::update(float dt)
 {
-	PluginGGJ2018 * pGGJ2018Instance = GetGGJ2018Plugin();
-	SH_ASSERT(shNULL != pGGJ2018Instance);
-	
-	Game & game = Game::instance();
-	if (game.GetInputManager().IsPressEscape())
+	switch (m_eState)
 	{
-		if (!ShGUI::IsModalDialogRunning())
+		case INIT:
 		{
-			//
-			// Pushes current dialog
-			GameStateGame * pGameState = static_cast<GameStateGame*>(game.get(Game::GAME_LEVEL));
-			ShGUI::PushModalDialog(pGameState->m_pQuitDialog);
+			m_eState = CONNECTING;
 		}
-		else
+		break;
+
+		case CONNECTING:
 		{
-			//
-			// Pops current dialog
-			ShGUI::PopModalDialog();
+			m_ConnectTimer += dt;
+
+			if (m_ConnectTimer > 5.0f)
+			{
+				//
+				// GUI showing
+				ShGUI::PushModalDialog(m_pTeamChoiceDialog);
+
+				m_eState = PLAYING;
+			}
 		}
+		break;
+
+		case PLAYING:
+		{
+			Game & game = Game::instance();
+			if (game.GetInputManager().IsPressEscape())
+			{
+				if (!ShGUI::IsModalDialogRunning())
+				{
+					//
+					// Pushes current dialog
+					GameStateGame * pGameState = static_cast<GameStateGame*>(game.get(Game::GAME_LEVEL));
+					ShGUI::PushModalDialog(pGameState->m_pQuitDialog);
+				}
+				else
+				{
+					//
+					// Pops current dialog
+					ShGUI::PopModalDialog();
+				}
+			}
+		}
+		break;
 	}
 }
 
