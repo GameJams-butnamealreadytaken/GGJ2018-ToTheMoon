@@ -80,4 +80,6 @@ private:
 	Ship *								m_pShip;
 
 	CShArray<Team *>					m_aTeam;
+
+	ShPrimitiveRect *					m_pBoundRect;
 };

@@ -27,6 +27,7 @@
 , m_apShip()
 , m_pShip(shNULL)
 , m_aTeam()
+, m_pBoundRect(shNULL)
 {
 	// ...
 }
@@ -49,14 +50,8 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 	//
 	// Create world delimiters
 	{
-		ShPrimitiveSegment * pSegment1 = ShPrimitiveSegment::Create(m_levelIdentifier, GID(NULL), CShVector3(-HALF_SIZE_X, HALF_SIZE_Y, 5.0f), CShVector3(HALF_SIZE_X, HALF_SIZE_Y, 5.0f), CShRGBAf(1.0f, 1.0f, 0.0f, 1.0f));
-		ShPrimitiveSegment * pSegment2 = ShPrimitiveSegment::Create(m_levelIdentifier, GID(NULL), CShVector3(HALF_SIZE_X, HALF_SIZE_Y, 5.0f), CShVector3(HALF_SIZE_X, -HALF_SIZE_Y, 5.0f), CShRGBAf(1.0f, 1.0f, 0.0f, 1.0f));
-		ShPrimitiveSegment * pSegment3 = ShPrimitiveSegment::Create(m_levelIdentifier, GID(NULL), CShVector3(HALF_SIZE_X, -HALF_SIZE_Y, 5.0f), CShVector3(-HALF_SIZE_X, -HALF_SIZE_Y, 5.0f), CShRGBAf(1.0f, 1.0f, 0.0f, 1.0f));
-		ShPrimitiveSegment * pSegment4 = ShPrimitiveSegment::Create(m_levelIdentifier, GID(NULL), CShVector3(-HALF_SIZE_X, -HALF_SIZE_Y, 5.0f), CShVector3(-HALF_SIZE_X, HALF_SIZE_Y, 5.0f), CShRGBAf(1.0f, 1.0f, 0.0f, 1.0f));
-		ShPrimitiveSegment::Set2d(pSegment1, true);
-		ShPrimitiveSegment::Set2d(pSegment2, true);
-		ShPrimitiveSegment::Set2d(pSegment3, true);
-		ShPrimitiveSegment::Set2d(pSegment4, true);
+		m_pBoundRect = ShPrimitiveRect::Create(m_levelIdentifier, GID(NULL), CShVector2(-HALF_SIZE_X, HALF_SIZE_Y), CShVector2(HALF_SIZE_X, -HALF_SIZE_Y), CShRGBAf(1.0f, 1.0f, 0.0f, 1.0f));
+		ShPrimitiveRect::Set2d(m_pBoundRect, true);
 	}
 
 	m_world.init();
@@ -161,6 +156,8 @@ void World::Release(void)
 	SH_SAFE_DELETE(m_pCamera);
 
 	m_world.release();
+
+	ShPrimitiveRect::Destroy(m_pBoundRect);
 }
 
 /**
