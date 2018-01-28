@@ -236,13 +236,13 @@ bool NetworkHelper::RegisterClient(char * machine, const uuid_t & uuid)
 	{
 #if WIN32
 		RPC_STATUS status;
-		bool bEqual = (UuidCompare((uuid_t*)(&uuid), &client->sessionId, &status) == 0);
+		if (UuidCompare((uuid_t*)(&uuid), &client->sessionId, &status) == 0)
 #else // WIN32
-		bool bEqual = (uuid_compare(uuid, client->sessionId) == 0);
+		if (uuid_compare(uuid, client->sessionId) == 0)
 #endif // WIN32
-
-		assert(!bEqual);
-		//return(false);
+		{
+			return(false);
+		}
 	}
 
 	unsigned int index = m_iClientCount;
