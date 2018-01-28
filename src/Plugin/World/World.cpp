@@ -394,7 +394,13 @@ void World::OnTouchMove(int iTouch, float positionX, float positionY)
 		Ship * pShip = m_apShip[iShip];
 		if (pShip->GetNetworkShip() == pNetworkShip)
 		{
-			pShip->SetTarget(pNetworkShip->getTarget().x, pNetworkShip->getTarget().y, pNetworkShip->getSpeed());
+			const Network::vec2 & shipPos = pNetworkShip->getPosition();
+			const Network::vec2 & targetPos = pNetworkShip->getTarget();
+
+			float direction = atan2(targetPos.x - shipPos.x, targetPos.y - shipPos.y) * 180 / SHC_PI;
+			float fAngle = (-direction + 90)*SHC_DEG2RAD;
+
+			pShip->SetAngle(fAngle);
 		}
 	}
 }

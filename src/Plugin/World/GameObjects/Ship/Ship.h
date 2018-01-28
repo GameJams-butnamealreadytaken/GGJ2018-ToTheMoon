@@ -41,6 +41,8 @@ public:
 	virtual void				OnHit					(GameObject* pObject);
 	virtual GameObject::EType	GetType					(void) { return(e_type_ship); }
 
+
+	void						SetAngle				(float fAngle);
 	void						SetTarget				(float x, float y, float fSpeed, Ship * pShip);
 	void						SetTarget				(float x, float y, float fSpeed, Transmitter * pTrans);
 	void						SetTarget				(float x, float y, float fSpeed);

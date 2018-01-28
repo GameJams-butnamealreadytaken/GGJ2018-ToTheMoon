@@ -149,6 +149,15 @@ bool Ship::IsDead(void)
 /**
 * @brief SetTarget
 */
+void Ship::SetAngle(float fAngle)
+{
+	m_fAngle = fAngle;
+	ShEntity2::SetWorldRotation(m_pEntity, CShEulerAngles(0.0f, 0.0f, m_fAngle));
+}
+
+/**
+* @brief SetTarget
+*/
 void Ship::SetTarget(float x, float y, float fSpeed)
 {
 	m_pNetworkShip->setTarget(x, y);
