@@ -26,6 +26,9 @@
 #define BRD_HELO_ADDR	"192.168.1.255"
 #define BRD_HELO_PORT	(PORT)
 
+#define ENABLE_TIMEOUT 0
+#define TIMEOUT (5.0f)
+
 static_assert(sizeof(uuid_t) == 16, "Size of 'uuid_t' must be 16");
 
 namespace Network
@@ -34,7 +37,9 @@ namespace Network
 struct Client
 {
 	struct sockaddr_in addr;
-	uuid_t sessionId;
+	//uuid_t sessionId;
+	char szUsername [16];
+	float inactiveTime;
 };
 
 /**
@@ -213,7 +218,7 @@ bool NetworkHelper::Receive(char * buffer, unsigned int & size, char * machine, 
  * @brief NetworkHelper::RegisterClient
  * @param machine
  */
-bool NetworkHelper::RegisterClient(char * machine, const uuid_t & uuid)
+bool NetworkHelper::RegisterClient(char * machine)
 {
 #if WIN32
 	unsigned int long machine_addr = inet_addr(machine);
@@ -232,17 +237,10 @@ bool NetworkHelper::RegisterClient(char * machine, const uuid_t & uuid)
 			break;
 		}
 	}
+
 	if (nullptr != client)
 	{
-#if WIN32
-		RPC_STATUS status;
-		bool bEqual = (UuidCompare((uuid_t*)(&uuid), &client->sessionId, &status) == 0);
-#else // WIN32
-		bool bEqual = (uuid_compare(uuid, client->sessionId) == 0);
-#endif // WIN32
-
-		assert(!bEqual);
-		//return(false);
+		return(false);
 	}
 
 	unsigned int index = m_iClientCount;
@@ -262,13 +260,56 @@ bool NetworkHelper::RegisterClient(char * machine, const uuid_t & uuid)
 	client->addr.sin_port = htons(PORT);
 	client->addr.sin_addr.s_addr = machine_addr;
 
-#if __gnu_linux__
-	uuid_copy(client->sessionId, uuid);
-#else
-	memcpy(&client->sessionId, (void*)&uuid, sizeof(uuid_t));
-#endif // __gnu_linux__
-
 	return(true);
+}
+
+/**
+ * @brief NetworkHelper::UpdateClients
+ * @param dt
+ */
+void NetworkHelper::UpdateClients(float dt)
+{
+#if ENABLE_TIMEOUT
+	for (int i = 0; i < m_iClientCount; ++i)
+	{
+		Client * client = (m_pClients+i);
+
+		client->inactiveTime += dt;
+
+		if (client->inactiveTime > TIMEOUT)
+		{
+			NETWORK_DEBUG_LOG("TIMEOUT\n");
+			fflush(stdout);
+
+			*client = *(m_pClients+m_iClientCount); // swap with last element
+
+			--m_iClientCount;
+
+			m_pClients = (Client*)realloc(m_pClients, sizeof(Client) * m_iClientCount);
+
+			break; // we'll clean the other one on next frame anyway ...
+		}
+	}
+#endif // ENABLE_TIMEOUT
+}
+
+void NetworkHelper::ResetInactiveTimer(char * machine)
+{
+#if WIN32
+	unsigned int long machine_addr = inet_addr(machine);
+#else // WIN32
+	in_addr_t machine_addr = inet_addr(machine);
+#endif // WIN32
+
+	// Already exists ?
+	for (int i = 0; i < m_iClientCount; ++i)
+	{
+		if (m_pClients[i].addr.sin_addr.s_addr == machine_addr)
+		{
+			m_pClients[i].inactiveTime = 0.0f;
+			break;
+		}
+	}
 }
 
 /**

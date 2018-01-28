@@ -6,9 +6,13 @@ namespace Network
 /**
  * @brief Constructor
  */
-Transmitter::Transmitter(void) : m_position(0.0f, 0.0f)
+Transmitter::Transmitter(void) : m_position(0.0f, 0.0f), m_team(0)
 {
-	// ...
+#if __gnu_linux__
+	uuid_clear(m_uuid);
+#else
+	memset(&m_uuid, 0, sizeof(uuid_t));
+#endif // __gnu_linux__
 }
 
 /**

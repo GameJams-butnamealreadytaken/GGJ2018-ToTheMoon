@@ -79,6 +79,7 @@ void Ship::update(float dt, NetworkHelper & network)
 		message.position = m_position;
 		message.target = m_target;
 		message.speed = m_speed;
+		message.team = m_team;
 
 		network.SendMessageToAllClients(message);
 

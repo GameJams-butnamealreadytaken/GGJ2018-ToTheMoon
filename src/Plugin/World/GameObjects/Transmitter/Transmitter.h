@@ -43,10 +43,14 @@ public:
 	int					GetId				(void);
 	unsigned int		GetTeam				(void) const;
 
+	Network::Transmitter * GetNetworkTrans	(void) const;
+
 private:
 
 	AnimatedSpriteManager	m_animationManagerDeploy;
-	AnimatedSpriteManager	m_animationManagerIdle;
+	AnimatedSpriteManager	m_animationManagerIdleRed;
+	AnimatedSpriteManager	m_animationManagerIdleBlue;
+	AnimatedSpriteManager * m_pCurrentAnimationIdle;
 
 	int						m_id;
 

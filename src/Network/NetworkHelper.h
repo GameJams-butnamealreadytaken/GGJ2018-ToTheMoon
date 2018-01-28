@@ -54,8 +54,13 @@ public:
 	bool Receive(char * buffer, unsigned int & size, char * machine, char * service);
 
 	//
-	// ...
-	bool RegisterClient(char * machine, const uuid_t & uuid);
+	// Clients
+	bool RegisterClient(char * machine);
+
+	void UpdateClients(float dt);
+
+	void ResetInactiveTimer(char * machine);
+
 
 	//
 	// ...

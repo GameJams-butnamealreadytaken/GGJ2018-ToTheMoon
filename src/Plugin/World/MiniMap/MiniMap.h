@@ -30,6 +30,7 @@ protected:
 
 	CShArray<ShEntity2*>	m_apShip;
 	CShArray<ShEntity2*>	m_apTransmitter;
+	CShArray<ShEntity2*>	m_apPlanet;
 
 	int						m_iShipCount;
 	int						m_iTransmitterCount;

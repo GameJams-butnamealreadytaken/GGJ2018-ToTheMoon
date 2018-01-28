@@ -35,6 +35,10 @@ source_group("World" FILES ${SOURCES_World})
 set(SOURCES_MiniMap World/MiniMap/MiniMap.cpp World/MiniMap/MiniMap.h)
 source_group("World\\MiniMap" FILES ${SOURCES_MiniMap}) 
 
+# Inputs files
+set(SOURCES_Inputs World/Inputs/InputManager.cpp World/Inputs/InputManager.h)
+source_group("World\\Inputs" FILES ${SOURCES_Inputs}) 
+
 # GameObject files
 set(SOURCES_GameObject World/GameObjects/GameObject.cpp World/GameObjects/GameObject.h)
 source_group("World\\GameObject" FILES ${SOURCES_GameObject})
@@ -93,6 +97,7 @@ ${SOURCES_Bullet}
 ${SOURCES_Ship}
 ${SOURCES_Transmitter}
 ${SOURCES_Team}
+${SOURCES_Inputs}
 )
 
 # Compile to use it on Runtime

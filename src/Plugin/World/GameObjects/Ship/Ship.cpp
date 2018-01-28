@@ -40,6 +40,8 @@ void Ship::Initialize(EShipType type, const Network::Ship * pNetworkShip, Projec
 void Ship::Release(void)
 {
 	m_pNetworkShip = shNULL;
+	ShEntity2::Destroy(m_pEntity);
+	m_pEntity = shNULL;
 }
 
 /**
@@ -116,6 +118,10 @@ unsigned int Ship::GetTeam(void) const
 {
 	return(m_pNetworkShip->getTeam());
 }
+Network::Ship * Ship::GetNetworkShip(void) const
+{
+	return(m_pNetworkShip);
+}
 /**
 * @brief SetTarget
 */
@@ -124,6 +130,14 @@ void Ship::SetTarget(float x, float y, float fSpeed)
 	m_pNetworkShip->setTarget(x, y);
 	m_pNetworkShip->setSpeed(fSpeed);
 	SetState((int)TRAVEL);
+}
+
+/**
+* @brief GameObject::GetRotationZ
+*/
+CShEulerAngles Ship::GetRotation(void)
+{
+	return(ShEntity2::GetWorldRotation(m_pEntity));
 }
 
 /**

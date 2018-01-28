@@ -1,5 +1,6 @@
 #include "World.h"
 
+#include "Inputs/InputManager.h"
 #include "MiniMap/MiniMap.h"
 #include "GameObjects/Transmitter/Transmitter.h"
 #include "GameObjects/Ship/Ship.h"
@@ -17,6 +18,7 @@
 , m_world(5.0f * 2048.0f, 5.0f * 1152.0f)
 , m_pMiniMap(shNULL)
 , m_pUser(shNULL)
+, m_pInputs(shNULL)
 , m_explosionManager()
 , m_projectileManager()
 , m_apTransmitter()
@@ -60,28 +62,28 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 		// Moon
 		{
 			ShEntity2* pEntity = ShEntity2::Find(levelIdentifier, CShIdentifier("sprite_ggj_moon_01_001"));
-			m_aPlanet[0] = new Planet(Planet::e_planet_moon, pEntity);
+			m_aPlanet.Add(new Planet(Planet::e_planet_moon, pEntity));
 		}
 
 		//
 		// Earth
 		{
 			ShEntity2* pEntity = ShEntity2::Find(levelIdentifier, CShIdentifier("sprite_ggj_earth_01_001")); 
-			m_aPlanet[1] = new Planet(Planet::e_planet_earth, pEntity);
+			m_aPlanet.Add(new Planet(Planet::e_planet_earth, pEntity));
 		}
 
 		//
 		// Mars
 		{
 			ShEntity2* pEntity = ShEntity2::Find(levelIdentifier, CShIdentifier("sprite_ggj_mars_01_001"));
-			m_aPlanet[2] = new Planet(Planet::e_planet_mars, pEntity);
+			m_aPlanet.Add(new Planet(Planet::e_planet_mars, pEntity));
 		}
 
 		//
 		// Jupiter
 		{
 			ShEntity2* pEntity = ShEntity2::Find(levelIdentifier, CShIdentifier("sprite_ggj_jupiter_01_001"));
-			m_aPlanet[3] = new Planet(Planet::e_planet_jupiter, pEntity);
+			m_aPlanet.Add(new Planet(Planet::e_planet_jupiter, pEntity));
 		}
 	}
 
@@ -96,6 +98,9 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 	m_pUser = ShUser::GetUser(0);
 	SH_ASSERT(shNULL != m_pUser);
 
+	m_pInputs = new PluginInputs();
+	m_pInputs->Initialize(m_pUser);
+
 	m_pMiniMap = new MiniMap();
 	m_pMiniMap->Initialize(levelIdentifier, this);
 }
@@ -106,6 +111,8 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 void World::Release(void)
 {
 	m_pMiniMap->Release();
+
+	m_world.destroyShip(m_pShip->GetNetworkShip());
 	m_pShip = shNULL;
 
 	int nShipCount = m_apShip.GetCount();
@@ -134,6 +141,9 @@ void World::Release(void)
 	m_projectileManager.Release();
 	m_explosionManager.Release();
 
+	m_pInputs->Release();
+	SH_SAFE_DELETE(m_pInputs);
+
 	m_world.release();
 }
 
@@ -143,6 +153,20 @@ void World::Release(void)
 void World::Update(float dt)
 {
 	m_world.update(dt);
+
+	m_pInputs->Update();
+
+	//
+	// Plugin Inputs
+	if (m_pInputs->LaunchedBeacon())
+	{
+		if (m_pShip)
+		{
+			CShVector2 & shipPos = m_pShip->GetPosition2();
+			Network::Transmitter * pNetworkTrans = m_world.createTransmitter(m_pShip->GetTeam(), shipPos.m_x, shipPos.m_y);
+			CreateTransmitter(shipPos.m_x, shipPos.m_y, pNetworkTrans);
+		}
+	}
 
 	//
 	// Update planets
@@ -185,21 +209,6 @@ void World::Update(float dt)
 		pTransmitter->Update(dt);
 	}
 
-	//
-	// Plugin Inputs
-	if (m_pShip)
-	{
-		if (m_pUser)
-		{
-			if (ShUser::HasTriggeredAction(m_pUser, CShIdentifier("beacon")))
-			{
-				CShVector2 & shipPos = m_pShip->GetPosition2();
-				Network::Transmitter * pNetworkTrans = m_world.createTransmitter(m_pShip->GetTeam(), shipPos.m_x, shipPos.m_y);
-				CreateTransmitter(shipPos.m_x, shipPos.m_y, pNetworkTrans);
-			}
-		}
-	}
-
 	m_pMiniMap->Update(dt);
 }
 
@@ -235,6 +244,21 @@ Transmitter * World::GetTransmitter(int iTransmitter)
 	return(m_apTransmitter[iTransmitter]);
 }
 
+/**
+* @brief World::GetPlanetCount
+*/
+int	World::GetPlanetCount(void)
+{
+	return(m_aPlanet.GetCount());
+}
+
+/**
+* @brief World::GetPlanet
+*/
+Planet * World::GetPlanet(int iPlanet)
+{
+	return(m_aPlanet[iPlanet]);
+}
 
 /**
 * @brief World::OnTouchDown
@@ -262,7 +286,6 @@ void World::OnTouchDown(int iTouch, float positionX, float positionY)
 
 #if TEST
 	//m_explosionManager.Start(CShVector2(worldPosition.m_x, worldPosition.m_y));
-	CreateTransmitter(worldPosition.m_x, worldPosition.m_y);
 #endif //TEST
 }
 
@@ -283,8 +306,8 @@ void World::OnTouchMove(int iTouch, float positionX, float positionY)
 }
 
 /**
-* @brief World::onShipCreated
-*/
+ * @brief World::onShipCreated
+ */
 /*virtual*/ void World::onShipCreated(const Network::Ship * pShip)
 {
 	Network::vec2 pos = pShip->getPosition();
@@ -292,12 +315,55 @@ void World::OnTouchMove(int iTouch, float positionX, float positionY)
 }
 
 /**
+ * @brief World::onShipDestroyed
+ */
+/*virtual*/ void World::onShipDestroyed(const Network::Ship * pShip)
+{
+	int nShipCount = m_apShip.GetCount();
+	for (int i = 0; i < nShipCount; ++i)
+	{
+		if (pShip == m_apShip[i]->GetNetworkShip())
+		{
+			m_apShip[i]->Release();
+			SH_SAFE_DELETE(m_apShip[i]);
+			m_apShip.Remove(i);
+			break;
+		}
+	}
+}
+
+/**
 * @brief World::onTransmitterCreate
 */
-/*virtual*/ void World::onTransmitterCreate(const Network::Transmitter * pTrans)
+/*virtual*/ void World::onTransmitterCreated(const Network::Transmitter * pTrans)
 {
 	Network::vec2 pos = pTrans->getPosition();
 	CreateTransmitter(pos.x, pos.y, pTrans);
+}
+
+/**
+ * @brief World::onTransmitterDestroyed
+ */
+/*virtual*/ void World::onTransmitterDestroyed(const Network::Transmitter * pTrans)
+{
+	int nTransCount = m_apTransmitter.GetCount();
+	for (int i = 0; i < nTransCount; ++i)
+	{
+		if (pTrans == m_apTransmitter[i]->GetNetworkTrans())
+		{
+			Transmitter * pTransmitter = m_apTransmitter[i];
+			int nTeamCount = m_aTeam.GetCount();
+			for (int j = 0; j < nTeamCount; ++j)
+			{
+				m_aTeam[j]->RemoveTransmitter(m_apTransmitter[i]);
+			}
+			
+			m_apTransmitter.RemoveAll(m_apTransmitter[i]);
+			
+			SH_SAFE_DELETE(pTransmitter);
+			break;
+		}
+	}
 }
 
 /**

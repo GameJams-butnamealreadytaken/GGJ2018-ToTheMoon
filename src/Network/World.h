@@ -34,14 +34,18 @@ public:
 
 	//
 	// Create Ship
-	Ship * createShip	(unsigned int team, float x, float y);
-	Ship * findShip		(const uuid_t & uuid);
+	Ship *			createShip			(unsigned int team, float x, float y);
+	void			destroyShip			(Ship * ship);
+	Ship *			findShip			(const uuid_t & uuid);
 
 	//
 	// Create Transmitter
-	Transmitter * createTransmitter	(unsigned int team, float x, float y);
-	Transmitter * findTransmitter	(const uuid_t & uuid);
+	Transmitter *	createTransmitter	(unsigned int team, float x, float y);
+	void			destroyTransmitter	(Transmitter * transmitter);
+	Transmitter *	findTransmitter		(const uuid_t & uuid);
 
+	//
+	// Listener
 	void setListener(WorldListener * pListener)
 	{
 		m_pListener = pListener;
@@ -49,12 +53,16 @@ public:
 
 protected:
 
-	Transmitter * createTransmitterInternal(const uuid_t & uuid, unsigned int team, float x, float y);
 	Ship * createShipInternal(const uuid_t & uuid, unsigned int team, float x, float y);
+	void removeShipInternal(Ship * ship);
+
+	Transmitter * createTransmitterInternal(const uuid_t & uuid, unsigned int team, float x, float y);
+	void removeTransmitterInternal(Transmitter * transmitter);
 
 	bool broadcastHelloMessage(void);
 
 	void handleHelloMessage(HelloMessage * msg, char * machine, char * service);
+	void handleWelcomeMessage(WelcomeMessage * msg, char * machine, char * service);
 	void handlePingMessage(PingMessage * msg, char * machine, char * service);
 
 	void handleCreateShipMessage(CreateShipMessage * msg, char * machine, char * service);
@@ -90,6 +98,8 @@ private:
 	WorldListener * m_pListener;
 
 	uuid_t m_MyHelloUUID;
+
+	float m_fTimeBeforePing;
 };
 
 }

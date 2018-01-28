@@ -18,7 +18,8 @@ Transmitter::Transmitter(ShEntity2 * pEntity, const CShVector2 & vPosition)
 	if (!g_bDisableAnimations)
 	{
 		m_animationManagerDeploy = AnimatedSpriteManager(pEntity, CShString("ggj"), CShString("transmitter"), CShVector2(0.5f, 0.5f), 0.03f, 75, false, true);
-		m_animationManagerIdle = AnimatedSpriteManager(pEntity, CShString("ggj"), CShString("transmitter_idle_red"), CShVector2(0.5f, 0.5f), 0.03f, 75, false, false);
+		m_animationManagerIdleRed = AnimatedSpriteManager(pEntity, CShString("ggj"), CShString("transmitter_idle_red"), CShVector2(0.5f, 0.5f), 0.03f, 75, false, false);
+		m_animationManagerIdleBlue = AnimatedSpriteManager(pEntity, CShString("ggj"), CShString("transmitter_idle_blue"), CShVector2(0.5f, 0.5f), 0.03f, 75, false, false);
 	}
 
 	SetState((int)OFF);
@@ -48,6 +49,8 @@ void Transmitter::Initialize(const Network::Transmitter * pNetworkTransmitter, i
 void Transmitter::Release(void)
 {
 	m_pTransmitter = shNULL;
+	ShEntity2::Destroy(m_pEntity);
+	m_pEntity = shNULL;
 
 	int nNeighboorCount = m_aNeighbour.GetCount();
 	for (int i = 0; i < nNeighboorCount; ++i)
@@ -103,7 +106,20 @@ void Transmitter::Update(float dt)
 			{
 				if (!m_animationManagerDeploy.IsPlaying())
 				{
-					m_animationManagerIdle.Play();
+					if (GetTeam() == 0)
+					{
+						m_pCurrentAnimationIdle = &m_animationManagerIdleBlue;
+					}
+					else if (GetTeam() == 1)
+					{
+						m_pCurrentAnimationIdle = &m_animationManagerIdleRed;
+					}
+					else
+					{
+						SH_ASSERT_ALWAYS();
+					}
+
+					m_pCurrentAnimationIdle->Play();
 					SetState((int)IDLE);
 				}
 			}
@@ -120,7 +136,7 @@ void Transmitter::Update(float dt)
 		{
 			if (!g_bDisableAnimations)
 			{
-				m_animationManagerIdle.Update(dt);
+				m_pCurrentAnimationIdle->Update(dt);
 			}
 		}
 		break;
@@ -200,4 +216,9 @@ int Transmitter::GetId(void)
 unsigned int Transmitter::GetTeam(void) const
 {
 	return(m_pTransmitter->getTeam());
+}
+
+Network::Transmitter * Transmitter::GetNetworkTrans(void) const
+{
+	return(m_pTransmitter);
 }

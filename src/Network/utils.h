@@ -12,6 +12,21 @@
 namespace Network
 {
 
+#if WIN32
+inline int NETWORK_DEBUG_LOG(const char* format, ...)
+{
+	static char s_printf_buf[1024];
+	va_list args;
+	va_start(args, format);
+	_vsnprintf(s_printf_buf, sizeof(s_printf_buf), format, args);
+	va_end(args);
+	OutputDebugStringA(s_printf_buf);
+	return 0;
+}
+#else
+#define NETWORK_DEBUG_LOG printf
+#endif // WIN32
+
 struct vec2
 {
 	vec2(void)
@@ -34,7 +49,8 @@ enum MSG_ID
 {
 	// Service messages
 	HELLO					= 0x0001,
-	PING					= 0x0002,
+	WELCOME					= 0x0002,
+	PING					= 0x0003,
 
 	// Ship messages
 	SHIP_CREATE				= 0x0011,
@@ -60,6 +76,17 @@ struct HelloMessage
 
 	unsigned int version;
 };
+
+struct WelcomeMessage
+{
+	WelcomeMessage()
+	{
+		id = WELCOME;
+	}
+
+	MSG_ID id;
+};
+
 
 struct PingMessage
 {

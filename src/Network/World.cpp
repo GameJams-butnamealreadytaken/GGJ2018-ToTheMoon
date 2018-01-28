@@ -12,6 +12,8 @@
 #define ENABLE_DEBUG_PRINT 0
 #define ENABLE_CHECKS 1
 
+#define PING_INTERVAL (1.0f)
+
 namespace Network
 {
 
@@ -23,6 +25,7 @@ World::World(float size_x, float size_y)
 , m_TransmitterCount(0)
 , m_halfSize(size_x, size_y)
 , m_pListener(nullptr)
+, m_fTimeBeforePing(PING_INTERVAL)
 {
 	memset(m_aShips, 0, sizeof(m_aShips));
 	memset(m_aOwnedShips, 0, sizeof(m_aOwnedShips));
@@ -96,7 +99,7 @@ bool World::broadcastHelloMessage(void)
  */
 void World::handleHelloMessage(HelloMessage * msg, char * machine, char * service)
 {
-	printf("HELLO from %s:%s\n", machine, service);
+	NETWORK_DEBUG_LOG("HELLO from %s:%s\n", machine, service);
 	fflush(stdout);
 
 #if WIN32
@@ -111,7 +114,7 @@ void World::handleHelloMessage(HelloMessage * msg, char * machine, char * servic
 
 	if (CURRENT_NETWORK_VERSION != msg->version)
 	{
-		printf("BAD VERSION !\n");
+		NETWORK_DEBUG_LOG("BAD VERSION !\n");
 		return; // BAD VERSION !
 	}
 
@@ -153,11 +156,23 @@ void World::handleHelloMessage(HelloMessage * msg, char * machine, char * servic
 
 	//
 	// Say HELLO to the new client
-	if (m_network.RegisterClient(machine, msg->helloId))
+	m_network.RegisterClient(machine);
+
 	{
-		HelloMessage msg;
+		WelcomeMessage msg;
 		m_network.SendMessageToMachine(msg, machine);
 	}
+}
+
+/**
+ * @brief World::handleWelcomeMessage
+ */
+void World::handleWelcomeMessage(WelcomeMessage * msg, char * machine, char * service)
+{
+	NETWORK_DEBUG_LOG("WELCOME from %s:%s\n", machine, service);
+	fflush(stdout);
+
+	m_network.RegisterClient(machine);
 }
 
 /**
@@ -165,10 +180,11 @@ void World::handleHelloMessage(HelloMessage * msg, char * machine, char * servic
  */
 void World::handlePingMessage(PingMessage * msg, char * machine, char * service)
 {
-	printf("PING from %s:%s\n", machine, service);
+	NETWORK_DEBUG_LOG("PING from %s:%s\n", machine, service);
 	fflush(stdout);
 
-	// TODO
+	m_network.ResetInactiveTimer(machine);
+	m_network.RegisterClient(machine);
 }
 
 /**
@@ -176,7 +192,7 @@ void World::handlePingMessage(PingMessage * msg, char * machine, char * service)
  */
 void World::handleCreateShipMessage(CreateShipMessage * msg, char * machine, char * service)
 {
-	printf("CREATE_SHIP from %s:%s\n", machine, service);
+	NETWORK_DEBUG_LOG("CREATE_SHIP from %s:%s\n", machine, service);
 	fflush(stdout);
 
 	Ship * ship = createShipInternal(msg->shipId, 0, 0.0f, 0.0f);
@@ -200,10 +216,21 @@ void World::handleCreateShipMessage(CreateShipMessage * msg, char * machine, cha
  */
 void World::handleDestroyShipMessage(DestroyShipMessage * msg, char * machine, char * service)
 {
-	printf("DESTROY_SHIP from %s:%s\n", machine, service);
+	NETWORK_DEBUG_LOG("DESTROY_SHIP from %s:%s\n", machine, service);
 	fflush(stdout);
 
-	// TODO
+	Ship * ship = findShip(msg->shipId);
+
+	if (ship)
+	{
+		// Notify the game
+		if (m_pListener)
+		{
+			m_pListener->onShipDestroyed(ship);
+		}
+
+		removeShipInternal(ship);
+	}
 }
 
 /**
@@ -211,7 +238,7 @@ void World::handleDestroyShipMessage(DestroyShipMessage * msg, char * machine, c
  */
 void World::handleSyncShipStateMessage(SyncShipStateMessage * msg, char * machine, char * service)
 {
-	printf("SYNC_SHIP_STATE from %s:%s\n", machine, service);
+	NETWORK_DEBUG_LOG("SYNC_SHIP_STATE from %s:%s\n", machine, service);
 	fflush(stdout);
 
 	bool bCreated = false;
@@ -245,7 +272,7 @@ void World::handleSyncShipStateMessage(SyncShipStateMessage * msg, char * machin
  */
 void World::handleCreateTransmitterMessage(CreateTransmitterMessage * msg, char * machine, char * service)
 {
-	printf("CREATE_TRANSMITTER from %s:%s\n", machine, service);
+	NETWORK_DEBUG_LOG("CREATE_TRANSMITTER from %s:%s\n", machine, service);
 	fflush(stdout);
 
 	Transmitter * transmitter = createTransmitterInternal(msg->transmitterId, 0, 0.0f, 0.0f);
@@ -258,7 +285,7 @@ void World::handleCreateTransmitterMessage(CreateTransmitterMessage * msg, char 
 	// Notify the game
 	if (m_pListener)
 	{
-		m_pListener->onTransmitterCreate(transmitter);
+		m_pListener->onTransmitterCreated(transmitter);
 	}
 }
 
@@ -267,10 +294,21 @@ void World::handleCreateTransmitterMessage(CreateTransmitterMessage * msg, char 
  */
 void World::handleDestroyTransmitterMessage(DestroyTransmitterMessage * msg, char * machine, char * service)
 {
-	printf("DESTROY_TRANSMITTER from %s:%s\n", machine, service);
+	NETWORK_DEBUG_LOG("DESTROY_TRANSMITTER from %s:%s\n", machine, service);
 	fflush(stdout);
 
-	// TODO
+	Transmitter * transmitter = findTransmitter(msg->transmitterId);
+
+	if (transmitter)
+	{
+		// Notify the game
+		if (m_pListener)
+		{
+			m_pListener->onTransmitterDestroyed(transmitter);
+		}
+
+		removeTransmitterInternal(transmitter);
+	}
 }
 
 /**
@@ -278,7 +316,7 @@ void World::handleDestroyTransmitterMessage(DestroyTransmitterMessage * msg, cha
  */
 void World::handleSyncTransmitterStateMessage(SyncTransmitterStateMessage * msg, char * machine, char * service)
 {
-	printf("SYNC_TRANSMITTER_STATE from %s:%s\n", machine, service);
+	NETWORK_DEBUG_LOG("SYNC_TRANSMITTER_STATE from %s:%s\n", machine, service);
 	fflush(stdout);
 
 	bool bCreated = false;
@@ -298,9 +336,10 @@ void World::handleSyncTransmitterStateMessage(SyncTransmitterStateMessage * msg,
 
 	if (bCreated)
 	{
+		// Notify the game
 		if (m_pListener)
 		{
-			m_pListener->onTransmitterCreate(transmitter);
+			m_pListener->onTransmitterCreated(transmitter);
 		}
 	}
 }
@@ -311,6 +350,19 @@ void World::handleSyncTransmitterStateMessage(SyncTransmitterStateMessage * msg,
  */
 void World::update(float dt)
 {
+	m_fTimeBeforePing -= dt;
+
+	if (m_fTimeBeforePing < 0.0f)
+	{
+		PingMessage msg;
+
+		m_network.SendMessageToAllClients(msg);
+
+		m_fTimeBeforePing = PING_INTERVAL;
+	}
+
+	m_network.UpdateClients(dt);
+
 	for (unsigned int i = 0; i < m_ShipCount; ++i)
 	{
 		Ship & ship = m_aShips[i];
@@ -348,6 +400,14 @@ void World::update(float dt)
 					static_assert(sizeof(HelloMessage) < MAX_MESSAGE_SIZE, "HelloMessage is too big !");
 					assert(sizeof(HelloMessage) == size);
 					handleHelloMessage((HelloMessage*)MSG, machine, service);
+				}
+				break;
+
+				case WELCOME:
+				{
+					static_assert(sizeof(WelcomeMessage) < MAX_MESSAGE_SIZE, "WelcomeMessage is too big !");
+					assert(sizeof(WelcomeMessage) == size);
+					handleWelcomeMessage((WelcomeMessage*)MSG, machine, service);
 				}
 				break;
 
@@ -437,6 +497,7 @@ Ship * World::createShip(unsigned int team, float x, float y)
 	message.position = vec2(x, y);
 	message.target = vec2(x, y);
 	message.speed = 0.0f;
+	message.team = team;
 
 	m_network.SendMessageToAllClients(message);
 
@@ -474,6 +535,49 @@ Ship * World::createShipInternal(const uuid_t & uuid, unsigned int team, float x
 	*ship = Ship(uuid, team, x, y);
 
 	return(ship);
+}
+
+/**
+ * @brief World::destroyShip
+ * @param ship
+ */
+void World::destroyShip(Ship * ship)
+{
+	DestroyShipMessage message;
+#if __gnu_linux__
+	uuid_copy(message.shipId, ship->m_uuid);
+#else
+	memcpy(&message.shipId, (void*)&ship->m_uuid, sizeof(uuid_t));
+#endif // __gnu_linux__
+
+	m_network.SendMessageToAllClients(message);
+
+	removeShipInternal(ship);
+}
+
+/**
+ * @brief World::removeShipInternal
+ * @param ship
+ */
+void World::removeShipInternal(Ship * ship)
+{
+	for (int i = 0; i < MAX_SHIPS; ++i)
+	{
+		if (ship == m_aOwnedShips[i])
+		{
+			m_aOwnedShips[i] = nullptr;
+		}
+	}
+
+	for (int i = 0; i < m_ShipCount; ++i)
+	{
+		if (ship == (m_aShips+i))
+		{
+			m_aShips[i] = m_aShips[m_ShipCount];
+			--m_ShipCount;
+			break;
+		}
+	}
 }
 
 /**
@@ -526,6 +630,7 @@ Transmitter * World::createTransmitter(unsigned int team, float x, float y)
 	memcpy(&message.transmitterId, (void*)&uuid, sizeof(uuid_t));
 #endif // __gnu_linux__
 	message.position = vec2(x, y);
+	message.team = team;
 
 	m_network.SendMessageToAllClients(message);
 
@@ -564,6 +669,49 @@ Transmitter * World::createTransmitterInternal(const uuid_t & uuid, unsigned int
 	*transmitter = Transmitter(uuid, team, x, y);
 
 	return(transmitter);
+}
+
+/**
+ * @brief World::destroyTransmitter
+ * @param transmitter
+ */
+void World::destroyTransmitter(Transmitter * transmitter)
+{
+	DestroyTransmitterMessage message;
+#if __gnu_linux__
+	uuid_copy(message.transmitterId, transmitter->m_uuid);
+#else
+	memcpy(&message.transmitterId, (void*)&transmitter->m_uuid, sizeof(uuid_t));
+#endif // __gnu_linux__
+
+	m_network.SendMessageToAllClients(message);
+
+	removeTransmitterInternal(transmitter);
+}
+
+/**
+ * @brief World::removeTransmitterInternal
+ * @param uuid
+ */
+void World::removeTransmitterInternal(Transmitter * transmitter)
+{
+	for (int i = 0; i < MAX_TRANSMITTERS; ++i)
+	{
+		if (transmitter == m_aOwnedTransmitters[i])
+		{
+			m_aOwnedTransmitters[i] = nullptr;
+		}
+	}
+
+	for (int i = 0; i < m_TransmitterCount; ++i)
+	{
+		if (transmitter == (m_aTransmitters+i))
+		{
+			m_aTransmitters[i] = m_aTransmitters[m_TransmitterCount];
+			--m_TransmitterCount;
+			break;
+		}
+	}
 }
 
 /**
