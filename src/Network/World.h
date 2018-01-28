@@ -62,6 +62,7 @@ protected:
 	bool broadcastHelloMessage(void);
 
 	void handleHelloMessage(HelloMessage * msg, char * machine, char * service);
+	void handleWelcomeMessage(WelcomeMessage * msg, char * machine, char * service);
 	void handlePingMessage(PingMessage * msg, char * machine, char * service);
 
 	void handleCreateShipMessage(CreateShipMessage * msg, char * machine, char * service);

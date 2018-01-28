@@ -156,18 +156,25 @@ void World::handleHelloMessage(HelloMessage * msg, char * machine, char * servic
 
 	//
 	// Say HELLO to the new client
-	if (m_network.RegisterClient(machine, msg->helloId))
-	{
-		HelloMessage msg;
-#if __gnu_linux__
-		uuid_copy(msg.helloId, m_MyHelloUUID);
-#else
-		memcpy(&msg.helloId, (void*)&m_MyHelloUUID, sizeof(uuid_t));
-#endif // __gnu_linux__
+	m_network.RegisterClient(machine);
 
+	{
+		WelcomeMessage msg;
 		m_network.SendMessageToMachine(msg, machine);
 	}
 }
+
+/**
+ * @brief World::handleWelcomeMessage
+ */
+void World::handleWelcomeMessage(WelcomeMessage * msg, char * machine, char * service)
+{
+	printf("WELCOME from %s:%s\n", machine, service);
+	fflush(stdout);
+
+	m_network.RegisterClient(machine);
+}
+
 
 /**
  * @brief World::handlePingMessage
@@ -393,6 +400,14 @@ void World::update(float dt)
 					static_assert(sizeof(HelloMessage) < MAX_MESSAGE_SIZE, "HelloMessage is too big !");
 					assert(sizeof(HelloMessage) == size);
 					handleHelloMessage((HelloMessage*)MSG, machine, service);
+				}
+				break;
+
+				case WELCOME:
+				{
+					static_assert(sizeof(WelcomeMessage) < MAX_MESSAGE_SIZE, "WelcomeMessage is too big !");
+					assert(sizeof(WelcomeMessage) == size);
+					handleWelcomeMessage((WelcomeMessage*)MSG, machine, service);
 				}
 				break;
 

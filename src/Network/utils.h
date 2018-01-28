@@ -34,7 +34,8 @@ enum MSG_ID
 {
 	// Service messages
 	HELLO					= 0x0001,
-	PING					= 0x0002,
+	WELCOME					= 0x0002,
+	PING					= 0x0003,
 
 	// Ship messages
 	SHIP_CREATE				= 0x0011,
@@ -60,6 +61,17 @@ struct HelloMessage
 
 	unsigned int version;
 };
+
+struct WelcomeMessage
+{
+	WelcomeMessage()
+	{
+		id = WELCOME;
+	}
+
+	MSG_ID id;
+};
+
 
 struct PingMessage
 {

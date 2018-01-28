@@ -37,7 +37,7 @@ namespace Network
 struct Client
 {
 	struct sockaddr_in addr;
-	uuid_t sessionId;
+	//uuid_t sessionId;
 	char szUsername [16];
 	float inactiveTime;
 };
@@ -218,7 +218,7 @@ bool NetworkHelper::Receive(char * buffer, unsigned int & size, char * machine, 
  * @brief NetworkHelper::RegisterClient
  * @param machine
  */
-bool NetworkHelper::RegisterClient(char * machine, const uuid_t & uuid)
+bool NetworkHelper::RegisterClient(char * machine)
 {
 #if WIN32
 	unsigned int long machine_addr = inet_addr(machine);
@@ -240,15 +240,7 @@ bool NetworkHelper::RegisterClient(char * machine, const uuid_t & uuid)
 
 	if (nullptr != client)
 	{
-#if WIN32
-		RPC_STATUS status;
-		if (UuidCompare((uuid_t*)(&uuid), &client->sessionId, &status) == 0)
-#else // WIN32
-		if (uuid_compare(uuid, client->sessionId) == 0)
-#endif // WIN32
-		{
-			return(false);
-		}
+		return(false);
 	}
 
 	unsigned int index = m_iClientCount;
@@ -267,12 +259,6 @@ bool NetworkHelper::RegisterClient(char * machine, const uuid_t & uuid)
 	client->addr.sin_family = AF_INET;
 	client->addr.sin_port = htons(PORT);
 	client->addr.sin_addr.s_addr = machine_addr;
-
-#if __gnu_linux__
-	uuid_copy(client->sessionId, uuid);
-#else
-	memcpy(&client->sessionId, (void*)&uuid, sizeof(uuid_t));
-#endif // __gnu_linux__
 
 	return(true);
 }

@@ -55,7 +55,7 @@ public:
 
 	//
 	// Clients
-	bool RegisterClient(char * machine, const uuid_t & uuid);
+	bool RegisterClient(char * machine);
 
 	void UpdateClients(float dt);
 
