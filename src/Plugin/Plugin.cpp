@@ -104,3 +104,12 @@ void PluginGGJ2018::OnTouchMove(int iTouch, float positionX, float positionY)
 {
 	m_world.OnTouchMove(iTouch, positionX * m_fTouchRatio, positionY * m_fTouchRatio);
 }
+
+/**
+ * @brief PluginGGJ2018::Start
+ * @param team
+ */
+void PluginGGJ2018::Start(int team)
+{
+	m_world.Start(team);
+}
