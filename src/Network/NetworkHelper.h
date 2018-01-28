@@ -2,8 +2,6 @@
 
 #include "utils.h"
 
-struct sockaddr_in;
-
 namespace Network
 {
 
