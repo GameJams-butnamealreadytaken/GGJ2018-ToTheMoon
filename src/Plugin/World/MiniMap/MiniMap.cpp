@@ -96,7 +96,7 @@ void MiniMap::Initialize(const CShIdentifier & levelIdentifier, World * pWorld)
 			SH_ASSERT_ALWAYS();
 		}
 
-		ShEntity2* pEntityShip = ShEntity2::Create(levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier(szSpriteIdentifier), CShVector3(0.0f, 0.0f, 101.0f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
+		ShEntity2* pEntityShip = ShEntity2::Create(levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier(szSpriteIdentifier), CShVector3(0.0f, 0.0f, 103.0f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
 		m_apShip.Add(pEntityShip);
 		ShEntity2::Link(m_pEntityBackground, pEntityShip);
 		m_iShipCount++;
@@ -123,7 +123,7 @@ void MiniMap::Initialize(const CShIdentifier & levelIdentifier, World * pWorld)
 			SH_ASSERT_ALWAYS();
 		}
 
-		ShEntity2* pEntityTransmitter = ShEntity2::Create(levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier(szSpriteIdentifier), CShVector3(0.0f, 0.0f, 101.0f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
+		ShEntity2* pEntityTransmitter = ShEntity2::Create(levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier(szSpriteIdentifier), CShVector3(0.0f, 0.0f, 102.0f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
 		m_apTransmitter.Add(pEntityTransmitter);
 		ShEntity2::Link(m_pEntityBackground, pEntityTransmitter);
 		m_iTransmitterCount++;
@@ -170,7 +170,7 @@ void MiniMap::Update(float dt)
 				SH_ASSERT_ALWAYS();
 			}
 
-			ShEntity2* pEntityShip = ShEntity2::Create(m_levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier(szSpriteIdentifier), CShVector3(0.0f, 0.0f, 101.0f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
+			ShEntity2* pEntityShip = ShEntity2::Create(m_levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier(szSpriteIdentifier), CShVector3(0.0f, 0.0f, 103.0f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
 			m_apShip.Add(pEntityShip);
 			ShEntity2::Link(m_pEntityBackground, pEntityShip);
 			m_iShipCount++;
@@ -204,7 +204,7 @@ void MiniMap::Update(float dt)
 				SH_ASSERT_ALWAYS();
 			}
 
-			ShEntity2* pEntityTransmitter = ShEntity2::Create(m_levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier(szSpriteIdentifier), CShVector3(0.0f, 0.0f, 101.0f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
+			ShEntity2* pEntityTransmitter = ShEntity2::Create(m_levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier(szSpriteIdentifier), CShVector3(0.0f, 0.0f, 102.0f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
 			m_apTransmitter.Add(pEntityTransmitter);
 			ShEntity2::Link(m_pEntityBackground, pEntityTransmitter);
 			m_iTransmitterCount++;
