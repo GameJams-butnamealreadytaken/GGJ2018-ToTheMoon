@@ -79,9 +79,6 @@ private:
 	CShArray<Ship *>					m_apShip;
 	Ship *								m_pShip;
 
-	int									m_iTeam;
-	int									m_iShipType;
-
 	CShArray<Team *>					m_aTeam;
 
 	ShPrimitiveRect *					m_pBoundRect;

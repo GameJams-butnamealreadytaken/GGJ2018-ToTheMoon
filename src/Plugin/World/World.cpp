@@ -61,11 +61,6 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 	m_projectileManager.Initialize(levelIdentifier);
 
 	//
-	// Create player's Ship
-	Network::Ship * pNetworkShip = m_world.createShip(m_iTeam, m_iShipType, 0.0f, 0.0f);
-	m_pShip = CreateShip(0.0f, 0.0f, pNetworkShip);
-
-	//
 	// Create Planets
 	{
 		//
@@ -392,10 +387,12 @@ void World::OnTouchMove(int iTouch, float positionX, float positionY)
 /**
 * @brief World::Start
 */
-void World::Start(unsigned int team, unsigned int iShipType)
+void World::Start(unsigned int team, unsigned int eShipType)
 {
-	m_iTeam = team;
-	m_iShipType = iShipType;
+	//
+	// Create player's Ship
+	Network::Ship * pNetworkShip = m_world.createShip(team, eShipType, 0.0f, 0.0f);
+	m_pShip = CreateShip(0.0f, 0.0f, pNetworkShip);
 }
 
 /**
