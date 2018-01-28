@@ -16,6 +16,10 @@ public:
 
 	void									Update				(float dt);
 
+private:
+	void									CreateShip			(Ship * pShip);
+	void									CreateTransmitter	(Transmitter * pTransmitter);
+
 protected:
 	CShIdentifier	m_levelIdentifier;
 	World *			m_pWorld;
