@@ -278,7 +278,19 @@ void World::handleSyncShipStateMessage(SyncShipStateMessage * msg, char * machin
  */
 void World::handleShootShipMessage(ShootShipMessage * msg, char * machine, char * service)
 {
-	// TODO
+	NETWORK_DEBUG_LOG("SHOOT_SHIP from %s:%s\n", machine, service);
+
+	Ship * ship = findShip(msg->shipId);
+	Ship * shooter = findShip(msg->shooterId);
+
+	// Notify the game
+	if (ship && shooter)
+	{
+		if (m_pListener)
+		{
+			m_pListener->onShipShooted(ship, shooter);
+		}
+	}
 }
 
 /**
@@ -367,7 +379,19 @@ void World::handleSyncTransmitterStateMessage(SyncTransmitterStateMessage * msg,
  */
 void World::handleShootTransmitterMessage(ShootTransmitterMessage * msg, char * machine, char * service)
 {
-	// TODO
+	NETWORK_DEBUG_LOG("SHOOT_TRANSMITTER from %s:%s\n", machine, service);
+
+	Transmitter * transmitter = findTransmitter(msg->transmitterId);
+	Ship * shooter = findShip(msg->shooterId);
+
+	// Notify the game
+	if (transmitter && shooter)
+	{
+		if (m_pListener)
+		{
+			m_pListener->onTransmitterShooted(transmitter, shooter);
+		}
+	}
 }
 
 /**
