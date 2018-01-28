@@ -60,21 +60,18 @@ void Ship::Update(float dt)
 	const Network::vec2 & shipPos = m_pNetworkShip->getPosition();
 	const Network::vec2 & targetPos = m_pNetworkShip->getTarget();
 
-	UpdateTarget();
-	UpdateSprite(shipPos);
-
 	m_fFireRate += dt;
 
 	switch (m_iState)
 	{
 	case IDLE:
 		{
-
 		}
 		break;
 
 	case TRAVEL:
 		{
+			UpdateTarget();
 			if (m_fAttackRange > ComputeVecteurNorme(m_vPosition.m_x, m_vPosition.m_y, targetPos.x, targetPos.y))
 			{
 				if (e_type_ship == m_pTargetType)
@@ -97,6 +94,10 @@ void Ship::Update(float dt)
 				{
 					SetIdleState();
 				}
+			}
+			else
+			{
+				UpdateSprite(shipPos);
 			}
 		}
 		break;
@@ -194,6 +195,8 @@ void Ship::SetTarget(float x, float y, Transmitter * pTrans)
 	m_pTargetType = e_type_transmitter;
 	m_pTargetObject = pTrans;
 	m_fAttackRange = 600.0f;
+
+	ShEntity2::SetAlpha(pTrans->GetSprite(), 0.5f);
 }
 
 /**
