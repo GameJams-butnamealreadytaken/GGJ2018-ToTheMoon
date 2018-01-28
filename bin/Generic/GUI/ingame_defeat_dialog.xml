@@ -1,0 +1,16 @@
+<gui>
+	<sss>
+		<style identifier="panel_ingame_defeat_dialog_bg"					h_pivot="left"  v_pivot="top" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="0"	position_y="0" 		width="100"		height="100"	color="#33888888" sprite_library="ggj_ui" background_image="image_white"/>
+		<style identifier="panel_ingame_defeat_dialog_main_panel"			h_pivot="left"  v_pivot="top" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="30"	position_y="35" 	width="40"		height="20"		color="#FFFFFFFF" sprite_library="ggj_ui" background_image="image_standard_panel_background"/>
+		<style identifier="text_ingame_defeat_dialog_main_panel"			h_pivot="left"  v_pivot="top" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="0"	position_y="10" 	width="100"		height="90"		color="#FFFFFFFF" text_align="top_center"/>
+		<style identifier="button_ingame_defeat_dialog_main_panel"			h_pivot="left"  v_pivot="top" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="25"	position_y="45" 	width="50"		height="10"		color="#FFDDDDDD" sprite_library="ggj_ui" background_image="standard_button"/>
+	</sss>                                         
+	<root>		
+		<panel id="panel_ingame_defeat_dialog_bg">
+			<panel id="panel_ingame_defeat_dialog_main_panel">
+				<text id="text_ingame_defeat_dialog_main_panel" text="You have been defeated !"/>
+				<button id="button_ingame_defeat_dialog_main_panel" text="go back to main menu"/>
+			</panel>
+		</panel>
+	</root>
+</gui>                        

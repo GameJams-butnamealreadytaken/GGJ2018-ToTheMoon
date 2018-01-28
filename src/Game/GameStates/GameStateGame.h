@@ -41,7 +41,7 @@ protected:
 
 	static bool			OnButtonClickedYes		(ShGUIControlButton * pButton);
 	static bool			OnButtonClickedNo		(ShGUIControlButton * pButton);
-	
+
 private:
 
 	enum EState
@@ -61,8 +61,16 @@ private:
 	ShGUIModalDialog *	m_pConnectDialog;
 	ShGUIModalDialog *	m_pTeamChoiceDialog;
 	ShGUIModalDialog *	m_pQuitDialog;
-	ShGUIControl *		m_pControlHUD;
-	ShGUIControl *		m_pControlNotif;
+	ShGUIModalDialog *	m_pVictoryDialog;
+	ShGUIModalDialog *	m_pDefeatDialog;
+
+	ShGUIControl *		m_pPanelHUD;
+	ShGUIControl *		m_pPanelNotif;
+	ShGUIControlImage *	m_pImageHPBG;
+	ShGUIControlImage *	m_pImageHPFG;
+	
+	ShGUIControl *		m_pImageTCBG;
+	ShGUIControl *		m_pImageTCFG;
 
 	//
 	// Properties

@@ -1,6 +1,7 @@
 #include "GameStateGame.h"
 
 #include "../Game.h"
+#include "../Plugin/World/GameObjects/Ship/Ship.h"
 
 #include "Plugin.h"
 #include "PluginFactory.h"
@@ -14,8 +15,14 @@ GameStateGame::GameStateGame(void)
 , m_pConnectDialog(shNULL)
 , m_pQuitDialog(shNULL)
 , m_pTeamChoiceDialog(shNULL)
-, m_pControlHUD(shNULL)
-, m_pControlNotif(shNULL)
+, m_pVictoryDialog(shNULL)
+, m_pDefeatDialog(shNULL)
+, m_pPanelHUD(shNULL)
+, m_pPanelNotif(shNULL)
+, m_pImageHPBG(shNULL)
+, m_pImageHPFG(shNULL)
+, m_pImageTCBG(shNULL)
+, m_pImageTCFG(shNULL)
 , m_eShipType(GameStateShipSelection::e_ship_type_base)
 {
 	// ...
@@ -64,17 +71,44 @@ void GameStateGame::init(void)
 
 	{
 		m_pConnectDialog						= ShGUIModalDialog::Create(CShIdentifier("ingame_connect_dialog"));
-		ShGUIControl * pDialogRoot				= ShGUIModalDialog::GetRootControl(m_pTeamChoiceDialog);
+	}
+
+	{
+		m_pVictoryDialog						= ShGUIModalDialog::Create(CShIdentifier("ingame_victory_dialog"));
+		ShGUIControl * pDialogRoot				= ShGUIModalDialog::GetRootControl(m_pVictoryDialog);
 		SH_ASSERT(shNULL != pDialogRoot);
+
+		ShGUIControlButton * pButtonBack		= (ShGUIControlButton*)ShGUIControl::GetElementById(CShIdentifier("button_ingame_victory_dialog_main_panel"), pDialogRoot);
+		ShGUIControlButton::AddSlotFctPtrClick(pButtonBack, (pSlotSDKButtonClick)OnButtonClickedYes);
+	}
+
+	{
+		m_pDefeatDialog							= ShGUIModalDialog::Create(CShIdentifier("ingame_defeat_dialog"));
+		ShGUIControl * pDialogRoot				= ShGUIModalDialog::GetRootControl(m_pDefeatDialog);
+		SH_ASSERT(shNULL != pDialogRoot);
+
+		ShGUIControlButton * pButtonBack		= (ShGUIControlButton*)ShGUIControl::GetElementById(CShIdentifier("button_ingame_defeat_dialog_main_panel"), pDialogRoot);
+		ShGUIControlButton::AddSlotFctPtrClick(pButtonBack, (pSlotSDKButtonClick)OnButtonClickedYes);
 	}
 
 	//
 	// GUI
-	m_pControlHUD	= ShGUI::LoadGUIAndSSS(CShIdentifier("ingame_hud"));
-	SH_ASSERT(shNULL != m_pControlHUD);
-	m_pControlNotif	= ShGUIControl::GetElementById(CShIdentifier("text_ingame_hud_notifications"), m_pControlHUD);
-	SH_ASSERT(shNULL != m_pControlNotif);
-	ShGUIControl::Hide(m_pControlHUD, true);
+	m_pPanelHUD	= ShGUI::LoadGUIAndSSS(CShIdentifier("ingame_hud"));
+	SH_ASSERT(shNULL != m_pPanelHUD);
+	m_pPanelNotif	= (ShGUIControlImage*)ShGUIControl::GetElementById(CShIdentifier("text_ingame_hud_notifications"), m_pPanelHUD);
+	m_pImageHPBG	= (ShGUIControlImage*)ShGUIControl::GetElementById(CShIdentifier("image_ingame_hud_hp_bg"), m_pPanelHUD);
+	m_pImageHPFG	= (ShGUIControlImage*)ShGUIControl::GetElementById(CShIdentifier("image_ingame_hud_hp_fg"), m_pPanelHUD);
+	m_pImageTCBG	= (ShGUIControlImage*)ShGUIControl::GetElementById(CShIdentifier("image_ingame_hud_transmitter_cooldown_bg"), m_pPanelHUD);
+	m_pImageTCFG	= (ShGUIControlImage*)ShGUIControl::GetElementById(CShIdentifier("image_ingame_hud_transmitter_cooldown_fg"), m_pPanelHUD);
+	SH_ASSERT(shNULL != m_pPanelNotif);
+	SH_ASSERT(shNULL != m_pImageHPBG);
+	SH_ASSERT(shNULL != m_pImageHPFG);
+	SH_ASSERT(shNULL != m_pImageTCBG);
+	SH_ASSERT(shNULL != m_pImageTCFG);
+
+	//
+	// Hide everything
+	ShGUIControl::Hide(m_pPanelHUD, true);
 }
 
 /**
@@ -93,11 +127,13 @@ void GameStateGame::release(void)
 
 	ShGUIModalDialog::Destroy(m_pConnectDialog);
 	ShGUIModalDialog::Destroy(m_pTeamChoiceDialog);
+	ShGUIModalDialog::Destroy(m_pDefeatDialog);
+	ShGUIModalDialog::Destroy(m_pVictoryDialog);
 	ShGUIModalDialog::Destroy(m_pQuitDialog);
 
 	//
 	// GUI
-	ShGUIControl::RemoveFromParent(m_pControlHUD);
+	ShGUIControl::RemoveFromParent(m_pPanelHUD);
 }
 
 /**
@@ -126,7 +162,7 @@ void GameStateGame::exiting(void)
 {
 	//
 	// GUI hiding
-	ShGUIControl::Hide(m_pControlHUD, true);
+	ShGUIControl::Hide(m_pPanelHUD, true);
 
 	//
 	// Level
@@ -191,7 +227,7 @@ void GameStateGame::unload(void)
 
 	//
 	// Show GUI
-	ShGUIControl::Show(pGameState->m_pControlHUD, true);
+	ShGUIControl::Show(pGameState->m_pPanelHUD, true);
 
 	return(true);
 }
@@ -217,7 +253,7 @@ void GameStateGame::unload(void)
 
 	//
 	// Show GUI
-	ShGUIControl::Show(pGameState->m_pControlHUD, true);
+	ShGUIControl::Show(pGameState->m_pPanelHUD, true);
 	
 	return(true);
 }
@@ -281,6 +317,44 @@ void GameStateGame::update(float dt)
 		case PLAYING:
 		{
 			Game & game = Game::instance();
+
+			//
+			// Updates GUI from Plugin
+			{
+				PluginGGJ2018 * pPlugin = (PluginGGJ2018*)ShApplication::FindPlugin(CShIdentifier("PluginGGJ2018"));
+				SH_ASSERT(shNULL != pPlugin);
+
+				Ship * pShip = pPlugin->GetWorld()->GetMyShip();
+				if (shNULL != pShip)
+				{
+					//
+					// Life
+					{
+						const unsigned int iCurrentLife = pShip->GetLife();
+						const unsigned int iMaxLife = pShip->GetMaxLife();
+						
+						float fBGWidth	= ShGUIControl::GetWidth(m_pImageHPBG);
+						float fFGWidth	= iCurrentLife * fBGWidth / iMaxLife;
+
+						ShGUIControl::OverloadWidth(m_pImageHPFG, fFGWidth);
+					}
+
+					//
+					// Transmitter Cooldown
+					{
+
+					}
+				}
+			}
+
+			//
+			// Checks victory/defeat condition
+			{
+
+			}
+
+			//
+			// Checks inputs
 			if (game.GetInputManager().IsPressEscape())
 			{
 				if (!ShGUI::IsModalDialogRunning())
@@ -289,12 +363,6 @@ void GameStateGame::update(float dt)
 					// Pushes current dialog
 					GameStateGame * pGameState = static_cast<GameStateGame*>(game.get(Game::GAME_LEVEL));
 					ShGUI::PushModalDialog(pGameState->m_pQuitDialog);
-				}
-				else
-				{
-					//
-					// Pops current dialog
-					ShGUI::PopModalDialog();
 				}
 			}
 		}

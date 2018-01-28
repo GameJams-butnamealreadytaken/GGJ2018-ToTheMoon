@@ -3,7 +3,6 @@
 #include "NetworkHelper.h"
 
 #include <string.h> // memcpy
-#include <math.h>
 
 namespace Network
 {
@@ -11,7 +10,7 @@ namespace Network
 /**
  * @brief Default constructor
  */
-Ship::Ship(void) : m_position(0.0f, 0.0f), m_target(0.0f, 0.0f), m_speed(0.0f), m_team(0), m_eShipType(0), m_life(0), m_bNeedSync(false)
+Ship::Ship(void) : m_position(0.0f, 0.0f), m_target(0.0f, 0.0f), m_speed(0.0f), m_team(0), m_bNeedSync(false)
 {
 #if __gnu_linux__
 	uuid_clear(m_uuid);
@@ -24,7 +23,7 @@ Ship::Ship(void) : m_position(0.0f, 0.0f), m_target(0.0f, 0.0f), m_speed(0.0f), 
  * @brief Constructor
  * @param id
  */
-Ship::Ship(const uuid_t & id, unsigned int team, unsigned int life, unsigned int eShipType) : m_position(0.0f, 0.0f), m_target(0.0f, 0.0f), m_speed(0.0f), m_team(team), m_life(life), m_eShipType(eShipType), m_bNeedSync(false)
+Ship::Ship(const uuid_t & id, unsigned int team) : m_position(0.0f, 0.0f), m_target(0.0f, 0.0f), m_speed(0.0f), m_team(team), m_bNeedSync(false)
 {
 #if __gnu_linux__
 	uuid_copy(m_uuid, id);
@@ -39,7 +38,7 @@ Ship::Ship(const uuid_t & id, unsigned int team, unsigned int life, unsigned int
  * @param x
  * @param y
  */
-Ship::Ship(const uuid_t & id, unsigned int team, unsigned int life, unsigned int eShipType, float x, float y) : m_position(x, y), m_target(x, y), m_speed(0.0f), m_team(team), m_life(life), m_eShipType(eShipType), m_bNeedSync(false)
+Ship::Ship(const uuid_t & id, unsigned int team, float x, float y) : m_position(x, y), m_target(x, y), m_speed(0.0f), m_team(team), m_bNeedSync(false)
 {
 #if __gnu_linux__
 	uuid_copy(m_uuid, id);
@@ -66,21 +65,8 @@ void Ship::update(float dt, NetworkHelper & network)
 	direction.x = m_target.x - m_position.x;
 	direction.y = m_target.y - m_position.y;
 
-	float norm = sqrt((direction.x*direction.x) + (direction.y*direction.y));
-
-	if (norm > 0.0001f)
-	{
-		direction.x /= norm;
-		direction.y /= norm;
-
-		m_position.x += direction.x * m_speed * dt;
-		m_position.y += direction.y * m_speed * dt;
-	}
-	else
-	{
-		m_position.x = m_target.x;
-		m_position.y = m_target.y;
-	}
+	m_position.x += direction.x * m_speed * dt;
+	m_position.y += direction.y * m_speed * dt;
 
 	if (m_bNeedSync)
 	{
@@ -93,9 +79,7 @@ void Ship::update(float dt, NetworkHelper & network)
 		message.position = m_position;
 		message.target = m_target;
 		message.speed = m_speed;
-		message.life = m_life;
 		message.team = m_team;
-		message.shipType = m_eShipType;
 
 		network.SendMessageToAllClients(message);
 

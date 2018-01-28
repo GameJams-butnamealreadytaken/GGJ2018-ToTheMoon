@@ -113,3 +113,11 @@ void PluginGGJ2018::Start(int team, unsigned int eShipType)
 {
 	m_world.Start(team, eShipType);
 }
+
+/**
+ * @brief PluginGGJ2018::GetWorld
+ */
+World * PluginGGJ2018::GetWorld(void)
+{
+	return(&m_world);
+}

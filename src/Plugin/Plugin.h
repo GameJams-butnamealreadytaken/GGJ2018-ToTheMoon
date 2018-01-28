@@ -33,6 +33,10 @@ public:
 	//
 	// Misc
 	void					Start				(int team, unsigned int eShipType);
+
+	//
+	// Getters
+	World *					GetWorld			(void);
 private:
 
 	CShIdentifier	m_levelIdentifier;

@@ -141,6 +141,22 @@ Network::Ship * Ship::GetNetworkShip(void) const
 	return(m_pNetworkShip);
 }
 
+/**
+* @brief GetNetworkShip
+*/
+unsigned int Ship::GetLife(void) const
+{
+	return(m_iLife);
+}
+
+/**
+* @brief GetNetworkShip
+*/
+unsigned int Ship::GetMaxLife(void) const
+{
+	return(m_iMaxLife);
+}
+
 bool Ship::IsDead(void)
 {
 	return(m_iLife <= 0);

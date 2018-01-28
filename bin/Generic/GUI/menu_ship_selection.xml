@@ -5,13 +5,8 @@
 		<style identifier="text_ship_selection_title" 					h_pivot="left" v_pivot="top" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="0"		position_y="3" 		width="100"	height="100" text_color="#FFFFFFFF" text_align="top_center"/>
 		
 		<style identifier="imagelist_ship_selection_selectable_ships"	h_pivot="left" v_pivot="top" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="0"		position_y="0" 		width="100"	height="86"/>
-		<style identifier="panel_ship_selection_stats"					h_pivot="left" v_pivot="top" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="25"	position_y="10" 	width="35"	height="65" sprite_library="ggj_ui" background_image="image_white" color="#AA666666"/>
-		<style identifier="image_ship_selection_stats_hp"				h_pivot="left" v_pivot="top" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="35"	position_y="5" 		width="55"	height="10"/>
-		<style identifier="image_ship_selection_stats_attack"			h_pivot="left" v_pivot="top" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="35"	position_y="25" 	width="55"	height="10"/>
-		<style identifier="image_ship_selection_stats_speed"			h_pivot="left" v_pivot="top" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="35"	position_y="45" 	width="55"	height="10"/>
-		<style identifier="image_ship_selection_stats_tc"				h_pivot="left" v_pivot="top" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="35"	position_y="65" 	width="55"	height="10"/>
-		<style identifier="text_ship_selection_stats_desc"				h_pivot="left" v_pivot="top" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="5"		position_y="85" 	width="90"	height="13" text_color="#FFFFFFFF" text_wrap="true" text_align="top_left"/>
-		<style identifier="button_ship_selection_stats_exit"			h_pivot="right" v_pivot="top" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="0"	position_y="0" 		width="10"	height="10" sprite_library="ggj_ui" background_image="button_exit"/>
+		<style identifier="panel_ship_selection_stats"					h_pivot="right" v_pivot="top" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="0"	position_y="3" 		width="35"	height="83" sprite_library="ggj_ui" background_image="image_white"/>
+		<style identifier="button_ship_selection_stats_exit"			h_pivot="right" v_pivot="top" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="0"	position_y="0" 		width="16"	height="10" sprite_library="ggj_ui" background_image="button_exit"/>
 		<style identifier="button_ship_selection_stats_exit"			pseudo_state="pressed" sprite_library="ggj_ui" background_image="button_exit_pressed"/>
 		
 		<style identifier="button_ship_selection_select_previous_ship"	h_pivot="left"  v_pivot="bottom" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="5"	position_y="2" 	width="7"	height="10" sprite_library="ggj_ui" background_image="button_previous"/>
@@ -31,11 +26,6 @@
 			<image_list id="imagelist_ship_selection_selectable_ships" animation="none"/>
 			
 			<panel id="panel_ship_selection_stats">
-				<image id="image_ship_selection_stats_hp"		/>
-				<image id="image_ship_selection_stats_attack"	/>
-				<image id="image_ship_selection_stats_speed"	/>
-				<image id="image_ship_selection_stats_tc"		/>
-				<text  id="text_ship_selection_stats_desc"		/>
 				<button id="button_ship_selection_stats_exit"/>
 			</panel>
 			

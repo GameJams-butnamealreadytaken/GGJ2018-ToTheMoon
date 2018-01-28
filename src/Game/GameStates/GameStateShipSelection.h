@@ -65,6 +65,7 @@ private:
 	ShGUIControlImageList *		m_pImageListShips;
 
 	ShGUIControl *				m_pPanelStats;
+	ShGUIControlButton *		m_pButtonStatsExit;
 
 	ShGUIControlButton *		m_pButtonPrevious;
 	ShGUIControlButton *		m_pButtonNext;

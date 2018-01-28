@@ -52,6 +52,9 @@ public:
 	EShipType					GetShipType				(void) const;
 	unsigned int				GetTeam					(void) const;
 	Network::Ship *				GetNetworkShip			(void) const;
+	
+	unsigned int				GetLife					(void) const;
+	unsigned int				GetMaxLife				(void) const;
 
 	bool						IsDead					(void);
 
@@ -76,8 +79,9 @@ private:
 	float				m_fAttackRange;
 
 	float				m_fAngle;
-
+	
 	int					m_iLife;
+	unsigned int		m_iMaxLife;
 	float				m_fSpeed;
 
 };
