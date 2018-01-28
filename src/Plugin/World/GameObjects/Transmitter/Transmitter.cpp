@@ -49,6 +49,8 @@ void Transmitter::Initialize(const Network::Transmitter * pNetworkTransmitter, i
 void Transmitter::Release(void)
 {
 	m_pTransmitter = shNULL;
+	ShEntity2::Destroy(m_pEntity);
+	m_pEntity = shNULL;
 
 	int nNeighboorCount = m_aNeighbour.GetCount();
 	for (int i = 0; i < nNeighboorCount; ++i)

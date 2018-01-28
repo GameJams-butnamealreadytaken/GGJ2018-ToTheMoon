@@ -111,6 +111,8 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 void World::Release(void)
 {
 	m_pMiniMap->Release();
+
+	m_world.destroyShip(m_pShip->GetNetworkShip());
 	m_pShip = shNULL;
 
 	int nShipCount = m_apShip.GetCount();
@@ -325,6 +327,7 @@ void World::OnTouchMove(int iTouch, float positionX, float positionY)
 			m_apShip[i]->Release();
 			SH_SAFE_DELETE(m_apShip[i]);
 			m_apShip.Remove(i);
+			break;
 		}
 	}
 }
@@ -358,6 +361,7 @@ void World::OnTouchMove(int iTouch, float positionX, float positionY)
 			m_apTransmitter.RemoveAll(m_apTransmitter[i]);
 			
 			SH_SAFE_DELETE(pTransmitter);
+			break;
 		}
 	}
 }
