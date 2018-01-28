@@ -9,8 +9,7 @@ GameStateShipSelection::GameStateShipSelection(void)
 : m_eCurrentState(IDLE)
 , m_pPanelBackground(shNULL)
 , m_pImageListShips(shNULL)
-, m_pImageStats(shNULL)
-, m_pButtonStatsExit(shNULL)
+, m_pPanelStats(shNULL)
 , m_pButtonPrevious(shNULL)
 , m_pButtonNext(shNULL)
 , m_pButtonBack(shNULL)
@@ -46,16 +45,16 @@ void GameStateShipSelection::init(void)
 		SH_ASSERT(shNULL != m_pPanelBackground);
 
 		m_pImageListShips	= (ShGUIControlImageList*)ShGUIControl::GetElementById(CShIdentifier("imagelist_ship_selection_selectable_ships"), m_pPanelBackground);
-		m_pImageStats		= ShGUIControl::GetElementById(CShIdentifier("image_ship_selection_stats"), m_pPanelBackground);
-		m_pButtonStatsExit	= (ShGUIControlButton*)ShGUIControl::GetElementById(CShIdentifier("button_ship_selection_stats_exit"), m_pPanelBackground);
+		m_pPanelStats		= ShGUIControl::GetElementById(CShIdentifier("panel_ship_selection_stats"), m_pPanelBackground);
+		ShGUIControlButton * pButtonStatsExit	= (ShGUIControlButton*)ShGUIControl::GetElementById(CShIdentifier("button_ship_selection_stats_exit"), m_pPanelBackground);
 		m_pButtonPrevious	= (ShGUIControlButton*)ShGUIControl::GetElementById(CShIdentifier("button_ship_selection_select_previous_ship"), m_pPanelBackground);
 		m_pButtonNext		= (ShGUIControlButton*)ShGUIControl::GetElementById(CShIdentifier("button_ship_selection_select_next_ship"), m_pPanelBackground);
 		m_pButtonBack		= (ShGUIControlButton*)ShGUIControl::GetElementById(CShIdentifier("button_ship_selection_go_back_main_menu"), m_pPanelBackground);
 		m_pButtonValidate	= (ShGUIControlButton*)ShGUIControl::GetElementById(CShIdentifier("button_ship_selection_validate"), m_pPanelBackground);
 		m_pButtonStats		= (ShGUIControlButton*)ShGUIControl::GetElementById(CShIdentifier("button_ship_selection_stats"), m_pPanelBackground);
 		SH_ASSERT(shNULL != m_pImageListShips);
-		SH_ASSERT(shNULL != m_pImageStats);
-		SH_ASSERT(shNULL != m_pButtonStatsExit);
+		SH_ASSERT(shNULL != m_pPanelStats);
+		SH_ASSERT(shNULL != pButtonStatsExit);
 		SH_ASSERT(shNULL != m_pButtonPrevious);
 		SH_ASSERT(shNULL != m_pButtonNext);
 		SH_ASSERT(shNULL != m_pButtonBack);
@@ -64,7 +63,7 @@ void GameStateShipSelection::init(void)
 		
 		//
 		// Slots
-		ShGUIControlButton::AddSlotFctPtrClick(m_pButtonStatsExit,	(pSlotSDKButtonClick)OnButtonClickedStatsExit);
+		ShGUIControlButton::AddSlotFctPtrClick(pButtonStatsExit,	(pSlotSDKButtonClick)OnButtonClickedStatsExit);
 		ShGUIControlButton::AddSlotFctPtrClick(m_pButtonPrevious,	(pSlotSDKButtonClick)OnButtonClickedPrevious);
 		ShGUIControlButton::AddSlotFctPtrClick(m_pButtonNext,		(pSlotSDKButtonClick)OnButtonClickedNext);
 		ShGUIControlButton::AddSlotFctPtrClick(m_pButtonBack,		(pSlotSDKButtonClick)OnButtonClickedBack);
@@ -83,6 +82,8 @@ void GameStateShipSelection::init(void)
 			float fRatio			= fOriginalWidth / fOriginalHeight;
 			float fNewHeight		= fWidth / fRatio;
 			ShGUIControl * pImageShip = ShGUIControlImage::Create(CShIdentifier(CShString("image_ship_selection_ship_") + CShString::FromInt(iShipTypeIndex)), 0.0f, 0.0f, fWidth, fNewHeight, pSprite, m_pImageListShips);
+
+			ShGUI::LoadGUIAndSSS(CShIdentifier(CShString("menu_ship_selection_stats_ship_") + CShString::FromInt(iShipTypeIndex)), m_pPanelStats);
 		}
 
 		ShGUIControl::Hide(m_pPanelBackground, true);	
@@ -112,8 +113,7 @@ void GameStateShipSelection::entered(void)
 	GameStateShipSelection * pGameState = static_cast<GameStateShipSelection*>(game.get(Game::SHIP_SELECTION));
 	
 	ShGUIControl::Show(pGameState->m_pPanelBackground, true);
-	ShGUIControl::Hide(pGameState->m_pImageStats);
-	ShGUIControl::Hide(pGameState->m_pButtonStatsExit);
+	ShGUIControl::Hide(pGameState->m_pPanelStats, true);
 	ShGUIControl::Hide(pGameState->m_pButtonPrevious);
 	if (ShGUIControl::GetChildrenCount(pGameState->m_pImageListShips) > 0)
 	{
@@ -232,8 +232,7 @@ void GameStateShipSelection::setState(GameStateShipSelection::EState eState)
 	GameStateShipSelection * pGameState = static_cast<GameStateShipSelection*>(game.get(Game::SHIP_SELECTION));
 	SH_ASSERT(shNULL != pGameState);
 	
-	ShGUIControl::Hide(pGameState->m_pImageStats);
-	ShGUIControl::Hide(pGameState->m_pButtonStatsExit);
+	ShGUIControl::Hide(pGameState->m_pPanelStats, true);
 
 	return(true);
 }
@@ -251,8 +250,12 @@ void GameStateShipSelection::setState(GameStateShipSelection::EState eState)
 	ShGUIControlButton * pButtonNext		= pGameStateShipSelection->m_pButtonNext;
 	ShGUIControlButton * pButtonPrevious	= pGameStateShipSelection->m_pButtonPrevious;
 
+	ShGUIControl::Hide(ShGUIControl::GetChild(pGameStateShipSelection->m_pPanelStats, ShGUIControlImageList::GetCurrentImageIndex(pGameStateShipSelection->m_pImageListShips)), true);
+
 	int iIndex = shMin(ShGUIControlImageList::GetCurrentImageIndex(pImageList) + 1, ShGUIControl::GetChildrenCount(pImageList) - 1);
 	ShGUIControlImageList::SetCurrentImageIndex(pImageList, iIndex);
+
+	ShGUIControl::Show(ShGUIControl::GetChild(pGameStateShipSelection->m_pPanelStats, ShGUIControlImageList::GetCurrentImageIndex(pGameStateShipSelection->m_pImageListShips)), true);
 
 	if (iIndex == ShGUIControl::GetChildrenCount(pImageList) - 1)	{	ShGUIControl::Hide(pButtonNext);		}
 	else															{	ShGUIControl::Show(pButtonPrevious);	}
@@ -276,9 +279,13 @@ void GameStateShipSelection::setState(GameStateShipSelection::EState eState)
 	ShGUIControlImageList * pImageList		= pGameState->m_pImageListShips;
 	ShGUIControlButton * pButtonPrevious	= pGameState->m_pButtonPrevious;
 	ShGUIControlButton * pButtonNext		= pGameState->m_pButtonNext;
+	
+	ShGUIControl::Hide(ShGUIControl::GetChild(pGameState->m_pPanelStats, ShGUIControlImageList::GetCurrentImageIndex(pGameState->m_pImageListShips)), true);
 
 	int iIndex = shMax(ShGUIControlImageList::GetCurrentImageIndex(pImageList) - 1, 0);
 	ShGUIControlImageList::SetCurrentImageIndex(pImageList, iIndex);
+	
+	ShGUIControl::Show(ShGUIControl::GetChild(pGameState->m_pPanelStats, ShGUIControlImageList::GetCurrentImageIndex(pGameState->m_pImageListShips)), true);
 
 	if (iIndex == 0)	{	ShGUIControl::Hide(pButtonPrevious);	}
 	else				{	ShGUIControl::Show(pButtonNext);		}
@@ -335,7 +342,8 @@ void GameStateShipSelection::setState(GameStateShipSelection::EState eState)
 
 	//
 	// Show stats
-	ShGUIControl::Show(pGameState->m_pImageStats);
+	ShGUIControl::Show(pGameState->m_pPanelStats);
+	ShGUIControl::Show(ShGUIControl::GetChild(pGameState->m_pPanelStats, ShGUIControlImageList::GetCurrentImageIndex(pGameState->m_pImageListShips)), true);
 
 	return(true);
 }

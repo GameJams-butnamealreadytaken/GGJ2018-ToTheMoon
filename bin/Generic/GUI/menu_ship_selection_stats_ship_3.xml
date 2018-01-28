@@ -1,0 +1,16 @@
+<gui>
+	<sss>
+		<style identifier="image_ship_selection_stats_hp_ship_3"		h_pivot="left" v_pivot="top" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="35"	position_y="5" 		width="55"	height="10"/>
+		<style identifier="image_ship_selection_stats_attack_ship_3"	h_pivot="left" v_pivot="top" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="35"	position_y="25" 	width="55"	height="10"/>
+		<style identifier="image_ship_selection_stats_speed_ship_3"		h_pivot="left" v_pivot="top" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="35"	position_y="45" 	width="55"	height="10"/>
+		<style identifier="image_ship_selection_stats_tc_ship_3"		h_pivot="left" v_pivot="top" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="35"	position_y="65" 	width="55"	height="10"/>
+		<style identifier="text_ship_selection_stats_desc_ship_3"		h_pivot="left" v_pivot="top" position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent" position_x="5"		position_y="85" 	width="90"	height="13" text_color="#FFFFFFFF" text_wrap="true" text_align="top_left"/>
+	</sss>                                         
+	<root>
+		<image id="image_ship_selection_stats_hp_ship_3"		sprite_library="ggj_ui" image="stat_hp_1"/>
+		<image id="image_ship_selection_stats_attack_ship_3"	sprite_library="ggj_ui" image="stat_attack_5"/>
+		<image id="image_ship_selection_stats_speed_ship_3"		sprite_library="ggj_ui" image="stat_speed_2"/>
+		<image id="image_ship_selection_stats_tc_ship_3"		sprite_library="ggj_ui" image="stat_tc_2"/>
+		<text  id="text_ship_selection_stats_desc_ship_3"		text="Super vaisseau de la mort qui tue - 0"/>
+	</root>
+</gui>

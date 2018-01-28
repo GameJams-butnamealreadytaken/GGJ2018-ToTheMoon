@@ -1,9 +1,9 @@
 <gui>
 	<sss>							
-		<style identifier="button_main_menu_1_play" 							position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent"  v_pivot="top" h_pivot="left" position_x="20"	position_y="80" width="25"	height="10" sprite_library="ggj_ui" background_image="standard_button"/>
-		<style identifier="button_main_menu_1_play" pseudo_state="pressed"		background_image="standard_button_pressed"  sprite_library="ggj_ui" />
-		<style identifier="button_main_menu_1_settings" 						position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent"  v_pivot="top" h_pivot="left" position_x="55"	position_y="80" width="25"	height="10" sprite_library="ggj_ui" background_image="standard_button"/>
-		<style identifier="button_main_menu_1_settings" pseudo_state="pressed"	background_image="standard_button_pressed"  sprite_library="ggj_ui" />
+		<style identifier="button_main_menu_1_play" 							position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent"  v_pivot="top" h_pivot="left" position_x="20"	position_y="80" width="25"	height="10" sprite_library="ggj_ui" background_image="standard_button" color="#FF0BE900"/>
+		<style identifier="button_main_menu_1_settings" 						position_x_unit="percent" position_y_unit="percent" width_unit="percent"  height_unit="percent"  v_pivot="top" h_pivot="left" position_x="55"	position_y="80" width="25"	height="10" sprite_library="ggj_ui" background_image="standard_button" color="#FF0BE900"/>
+		<style identifier="button_main_menu_1_play" 	pseudo_state="pressed"	color="#FF068500" />
+		<style identifier="button_main_menu_1_settings" pseudo_state="pressed"	color="#FF068500" />
 	</sss>
 	<root>
 		<button id="button_main_menu_1_play" text="Play"/>
