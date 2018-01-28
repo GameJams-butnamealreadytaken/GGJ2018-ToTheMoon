@@ -116,6 +116,10 @@ unsigned int Ship::GetTeam(void) const
 {
 	return(m_pNetworkShip->getTeam());
 }
+Network::Ship * Ship::GetNetworkShip(void) const
+{
+	return(m_pNetworkShip);
+}
 /**
 * @brief SetTarget
 */

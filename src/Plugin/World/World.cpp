@@ -242,7 +242,6 @@ Transmitter * World::GetTransmitter(int iTransmitter)
 	return(m_apTransmitter[iTransmitter]);
 }
 
-
 /**
 * @brief World::OnTouchDown
 */
@@ -302,7 +301,16 @@ void World::OnTouchMove(int iTouch, float positionX, float positionY)
  */
 /*virtual*/ void World::onShipDestroyed(const Network::Ship * pShip)
 {
-	// TODO
+	int nShipCount = m_apShip.GetCount();
+	for (int i = 0; i < nShipCount; ++i)
+	{
+		if (pShip == m_apShip[i]->GetNetworkShip())
+		{
+			m_apShip[i]->Release();
+			SH_SAFE_DELETE(m_apShip[i]);
+			m_apShip.Remove(i);
+		}
+	}
 }
 
 /**
@@ -319,7 +327,23 @@ void World::OnTouchMove(int iTouch, float positionX, float positionY)
  */
 /*virtual*/ void World::onTransmitterDestroyed(const Network::Transmitter * pTrans)
 {
-	// TODO
+	int nTransCount = m_apTransmitter.GetCount();
+	for (int i = 0; i < nTransCount; ++i)
+	{
+		if (pTrans == m_apTransmitter[i]->GetNetworkTrans())
+		{
+			Transmitter * pTransmitter = m_apTransmitter[i];
+			int nTeamCount = m_aTeam.GetCount();
+			for (int j = 0; j < nTeamCount; ++j)
+			{
+				m_aTeam[j]->RemoveTransmitter(m_apTransmitter[i]);
+			}
+			
+			m_apTransmitter.RemoveAll(m_apTransmitter[i]);
+			
+			SH_SAFE_DELETE(pTransmitter);
+		}
+	}
 }
 
 /**

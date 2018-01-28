@@ -41,6 +41,7 @@ public:
 	CShEulerAngles				GetRotation				(void);
 	EShipType					GetShipType				(void) const;
 	unsigned int				GetTeam					(void) const;
+	Network::Ship *				GetNetworkShip			(void) const;
 
 private:
 	void						UpdateSprite			(const Network::vec2 & shipPos, const Network::vec2 & targetPos, float fAngle);
