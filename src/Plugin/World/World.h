@@ -19,33 +19,38 @@ class World : public Network::WorldListener
 {
 public:
 
-	explicit		World				(void);
-	virtual			~World				(void);
+	explicit		World					(void);
+	virtual			~World					(void);
 
-	void			Initialize			(const CShIdentifier & levelIdentifier);
-	void			Release				(void);
+	void			Initialize				(const CShIdentifier & levelIdentifier);
+	void			Release					(void);
 
-	void			Update				(float dt);
+	void			Update					(float dt);
 
-	int				GetShipCount		(void);
-	Ship *			GetShip				(int iShip);
+	int				GetShipCount			(void);
+	Ship *			GetShip					(int iShip);
 
-	int				GetTransmitterCount	(void);
-	Transmitter *	GetTransmitter		(int iTransmitter);
+	int				GetTransmitterCount		(void);
+	Transmitter *	GetTransmitter			(int iTransmitter);
 
 	//
 	// Touch Events
-	void			OnTouchDown			(int iTouch, float positionX, float positionY);
-	void			OnTouchUp			(int iTouch, float positionX, float positionY);
-	void			OnTouchMove			(int iTouch, float positionX, float positionY);
+	void			OnTouchDown				(int iTouch, float positionX, float positionY);
+	void			OnTouchUp				(int iTouch, float positionX, float positionY);
+	void			OnTouchMove				(int iTouch, float positionX, float positionY);
 	
-	virtual void	onShipCreated		(const Network::Ship * pShip);
-	virtual void	onTransmitterCreate	(const Network::Transmitter * pTrans);
+	virtual void	onShipCreated			(const Network::Ship * pShip);
+	virtual void	onShipDestroyed			(const Network::Ship * pShip);
+
+	virtual void	onTransmitterCreated	(const Network::Transmitter * pTrans);
+	virtual void	onTransmitterDestroyed	(const Network::Transmitter * pTrans);
 	
-	void			Start				(unsigned int team);
+	void			Start					(unsigned int team);
+
 private:
-	Ship *			CreateShip			(float x, float y, const Network::Ship * pShip);
-	Transmitter *	CreateTransmitter	(float x, float y, const Network::Transmitter * pTransmitter);
+
+	Ship *			CreateShip				(float x, float y, const Network::Ship * pShip);
+	Transmitter *	CreateTransmitter		(float x, float y, const Network::Transmitter * pTransmitter);
 
 private:
 

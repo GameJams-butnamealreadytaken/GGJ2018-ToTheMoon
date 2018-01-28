@@ -283,8 +283,8 @@ void World::OnTouchMove(int iTouch, float positionX, float positionY)
 }
 
 /**
-* @brief World::onShipCreated
-*/
+ * @brief World::onShipCreated
+ */
 /*virtual*/ void World::onShipCreated(const Network::Ship * pShip)
 {
 	Network::vec2 pos = pShip->getPosition();
@@ -292,12 +292,28 @@ void World::OnTouchMove(int iTouch, float positionX, float positionY)
 }
 
 /**
+ * @brief World::onShipDestroyed
+ */
+/*virtual*/ void World::onShipDestroyed(const Network::Ship * pShip)
+{
+	// TODO
+}
+
+/**
 * @brief World::onTransmitterCreate
 */
-/*virtual*/ void World::onTransmitterCreate(const Network::Transmitter * pTrans)
+/*virtual*/ void World::onTransmitterCreated(const Network::Transmitter * pTrans)
 {
 	Network::vec2 pos = pTrans->getPosition();
 	CreateTransmitter(pos.x, pos.y, pTrans);
+}
+
+/**
+ * @brief World::onTransmitterDestroyed
+ */
+/*virtual*/ void World::onTransmitterDestroyed(const Network::Transmitter * pTrans)
+{
+	// TODO
 }
 
 /**
