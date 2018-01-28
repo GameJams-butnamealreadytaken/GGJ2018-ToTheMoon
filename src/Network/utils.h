@@ -12,6 +12,21 @@
 namespace Network
 {
 
+#if WIN32
+int NETWORK_DEBUG_LOG(const char* format, ...)
+{
+	static char s_printf_buf[1024];
+	va_list args;
+	va_start(args, format);
+	_vsnprintf(s_printf_buf, sizeof(s_printf_buf), format, args);
+	va_end(args);
+	OutputDebugStringA(s_printf_buf);
+	return 0;
+}
+#else
+#define NETWORK_DEBUG_LOG printf
+#endif // WIN32
+
 struct vec2
 {
 	vec2(void)

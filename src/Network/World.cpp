@@ -12,7 +12,7 @@
 #define ENABLE_DEBUG_PRINT 0
 #define ENABLE_CHECKS 1
 
-#define PING_INTERVAL (1.0f)
+#define PING_INTERVAL (100000.0f)
 
 namespace Network
 {
@@ -99,7 +99,7 @@ bool World::broadcastHelloMessage(void)
  */
 void World::handleHelloMessage(HelloMessage * msg, char * machine, char * service)
 {
-	printf("HELLO from %s:%s\n", machine, service);
+	NETWORK_DEBUG_LOG("HELLO from %s:%s\n", machine, service);
 	fflush(stdout);
 
 #if WIN32
@@ -114,7 +114,7 @@ void World::handleHelloMessage(HelloMessage * msg, char * machine, char * servic
 
 	if (CURRENT_NETWORK_VERSION != msg->version)
 	{
-		printf("BAD VERSION !\n");
+		NETWORK_DEBUG_LOG("BAD VERSION !\n");
 		return; // BAD VERSION !
 	}
 
@@ -169,19 +169,18 @@ void World::handleHelloMessage(HelloMessage * msg, char * machine, char * servic
  */
 void World::handleWelcomeMessage(WelcomeMessage * msg, char * machine, char * service)
 {
-	printf("WELCOME from %s:%s\n", machine, service);
+	NETWORK_DEBUG_LOG("WELCOME from %s:%s\n", machine, service);
 	fflush(stdout);
 
 	m_network.RegisterClient(machine);
 }
-
 
 /**
  * @brief World::handlePingMessage
  */
 void World::handlePingMessage(PingMessage * msg, char * machine, char * service)
 {
-	printf("PING from %s:%s\n", machine, service);
+	NETWORK_DEBUG_LOG("PING from %s:%s\n", machine, service);
 	fflush(stdout);
 
 	m_network.ResetInactiveTimer(machine);
@@ -192,7 +191,7 @@ void World::handlePingMessage(PingMessage * msg, char * machine, char * service)
  */
 void World::handleCreateShipMessage(CreateShipMessage * msg, char * machine, char * service)
 {
-	printf("CREATE_SHIP from %s:%s\n", machine, service);
+	NETWORK_DEBUG_LOG("CREATE_SHIP from %s:%s\n", machine, service);
 	fflush(stdout);
 
 	Ship * ship = createShipInternal(msg->shipId, 0, 0.0f, 0.0f);
@@ -216,7 +215,7 @@ void World::handleCreateShipMessage(CreateShipMessage * msg, char * machine, cha
  */
 void World::handleDestroyShipMessage(DestroyShipMessage * msg, char * machine, char * service)
 {
-	printf("DESTROY_SHIP from %s:%s\n", machine, service);
+	NETWORK_DEBUG_LOG("DESTROY_SHIP from %s:%s\n", machine, service);
 	fflush(stdout);
 
 	Ship * ship = findShip(msg->shipId);
@@ -238,7 +237,7 @@ void World::handleDestroyShipMessage(DestroyShipMessage * msg, char * machine, c
  */
 void World::handleSyncShipStateMessage(SyncShipStateMessage * msg, char * machine, char * service)
 {
-	printf("SYNC_SHIP_STATE from %s:%s\n", machine, service);
+	NETWORK_DEBUG_LOG("SYNC_SHIP_STATE from %s:%s\n", machine, service);
 	fflush(stdout);
 
 	bool bCreated = false;
@@ -272,7 +271,7 @@ void World::handleSyncShipStateMessage(SyncShipStateMessage * msg, char * machin
  */
 void World::handleCreateTransmitterMessage(CreateTransmitterMessage * msg, char * machine, char * service)
 {
-	printf("CREATE_TRANSMITTER from %s:%s\n", machine, service);
+	NETWORK_DEBUG_LOG("CREATE_TRANSMITTER from %s:%s\n", machine, service);
 	fflush(stdout);
 
 	Transmitter * transmitter = createTransmitterInternal(msg->transmitterId, 0, 0.0f, 0.0f);
@@ -294,7 +293,7 @@ void World::handleCreateTransmitterMessage(CreateTransmitterMessage * msg, char 
  */
 void World::handleDestroyTransmitterMessage(DestroyTransmitterMessage * msg, char * machine, char * service)
 {
-	printf("DESTROY_TRANSMITTER from %s:%s\n", machine, service);
+	NETWORK_DEBUG_LOG("DESTROY_TRANSMITTER from %s:%s\n", machine, service);
 	fflush(stdout);
 
 	Transmitter * transmitter = findTransmitter(msg->transmitterId);
@@ -316,7 +315,7 @@ void World::handleDestroyTransmitterMessage(DestroyTransmitterMessage * msg, cha
  */
 void World::handleSyncTransmitterStateMessage(SyncTransmitterStateMessage * msg, char * machine, char * service)
 {
-	printf("SYNC_TRANSMITTER_STATE from %s:%s\n", machine, service);
+	NETWORK_DEBUG_LOG("SYNC_TRANSMITTER_STATE from %s:%s\n", machine, service);
 	fflush(stdout);
 
 	bool bCreated = false;

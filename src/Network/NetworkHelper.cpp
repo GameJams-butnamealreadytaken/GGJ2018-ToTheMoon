@@ -26,7 +26,7 @@
 #define BRD_HELO_ADDR	"192.168.1.255"
 #define BRD_HELO_PORT	(PORT)
 
-#define ENABLE_TIMEOUT 1
+#define ENABLE_TIMEOUT 0
 #define TIMEOUT (5.0f)
 
 static_assert(sizeof(uuid_t) == 16, "Size of 'uuid_t' must be 16");
@@ -278,7 +278,7 @@ void NetworkHelper::UpdateClients(float dt)
 
 		if (client->inactiveTime > TIMEOUT)
 		{
-			printf("TIMEOUT\n");
+			NETWORK_DEBUG_LOG("TIMEOUT\n");
 			fflush(stdout);
 
 			*client = *(m_pClients+m_iClientCount); // swap with last element
