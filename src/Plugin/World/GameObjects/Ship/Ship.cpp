@@ -62,41 +62,6 @@ void Ship::Update(float dt)
 
 	m_fFireRate += dt;
 
-	switch (m_type)
-	{
-		case BASE :
-		{
-			if (m_fFireRate > 0.5f)
-			{
-				m_pProjectileManager->Start(ProjectileManager::e_projectile_bullet, GetPosition2(), GetPosition2() + CShVector2(cos(m_fAngle) * 1500.0f, sin(m_fAngle) * 1500.0f), 2.0f);
-				m_fFireRate = 0.0f;
-			}
-		}
-		break;
-
-		case TANK :
-		{
-			if (m_fFireRate > 0.5f)
-			{
-				m_pProjectileManager->Start(ProjectileManager::e_projectile_bullet, GetPosition2(), GetPosition2() + CShVector2(cos(m_fAngle) * 1500.0f, sin(m_fAngle) * 1500.0f), 4.0f);
-				m_fFireRate = 0.0f;
-			}
-		}
-		break;
-
-		case TRORAPIDE : 
-		{
-
-		}
-		break;
-
-		case PERE_NOWEL : 
-		{
-
-		}
-		break;
-	}
-
 	switch (m_iState)
 	{
 	case IDLE:
@@ -216,6 +181,55 @@ void Ship::SetTarget(float x, float y, float fSpeed, Transmitter * pTrans)
 CShEulerAngles Ship::GetRotation(void)
 {
 	return(ShEntity2::GetWorldRotation(m_pEntity));
+}
+
+/**
+* @brief GameObject::UpdateSprite
+*/
+void Ship::Attack(void)
+{
+	CShVector2 & vTargetPosition2 = m_pTargetObject->GetPosition2();
+	
+	if (m_fFireRate > 0.25f)
+	{
+		m_pProjectileManager->Start(ProjectileManager::e_projectile_bullet, GetPosition2(), vTargetPosition2, 2.0f);
+		m_fFireRate = 0.0f;
+	}
+
+	//switch (m_type)
+	//{
+	//	case BASE:
+	//	{
+	//		if (m_fFireRate > 0.25f)
+	//		{
+	//			m_pProjectileManager->Start(ProjectileManager::e_projectile_bullet, GetPosition2(), GetPosition2() + CShVector2(cos(m_fAngle) * 1500.0f, sin(m_fAngle) * 1500.0f), 2.0f);
+	//			m_fFireRate = 0.0f;
+	//		}
+	//	}
+	//	break;
+	//
+	//	case TANK:
+	//	{
+	//		if (m_fFireRate > 0.5f)
+	//		{
+	//			m_pProjectileManager->Start(ProjectileManager::e_projectile_bullet, GetPosition2(), GetPosition2() + CShVector2(cos(m_fAngle) * 1500.0f, sin(m_fAngle) * 1500.0f), 4.0f);
+	//			m_fFireRate = 0.0f;
+	//		}
+	//	}
+	//	break;
+	//
+	//	case TRORAPIDE:
+	//	{
+	//
+	//	}
+	//	break;
+	//
+	//	case PERE_NOWEL:
+	//	{
+	//
+	//	}
+	//	break;
+	//}
 }
 
 /**

@@ -51,6 +51,7 @@ public:
 	Network::Ship *				GetNetworkShip			(void) const;
 
 private:
+	void						Attack					(void);
 	void						UpdateSprite			(const Network::vec2 & shipPos);
 
 	float						ComputeVecteurNorme		(float Ax, float Ay, float Bx, float By);
