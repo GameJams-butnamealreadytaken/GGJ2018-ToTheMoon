@@ -113,6 +113,7 @@ struct CreateShipMessage
 	vec2 target;
 	float speed;
 	unsigned int team;
+	unsigned int shipType;
 };
 
 struct DestroyShipMessage
@@ -140,6 +141,7 @@ struct SyncShipStateMessage
 	vec2 target;
 	float speed;
 	unsigned int team;
+	unsigned int shipType;
 };
 
 struct CreateTransmitterMessage
