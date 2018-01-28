@@ -11,11 +11,14 @@
 class Ship : public GameObject
 {
 public:
+	//
+	// BEWARE ! This enum must match Game/State/ShipSelection/GameStateShipSelection::EShipType
 	enum EShipType
 	{
 		BASE,
 		TANK,
 		TRORAPIDE,
+		PERE_NOWEL,
 	};
 
 	enum EShipState

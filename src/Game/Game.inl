@@ -15,6 +15,12 @@ inline GameState * Game::get(EState state)
 		}
 		break;
 
+		case SHIP_SELECTION:
+		{
+			return(&m_stateShipSelection);
+		}
+		break;
+
 		case GAME_LEVEL:
 		{
 			return(&m_stateGame);
@@ -23,6 +29,7 @@ inline GameState * Game::get(EState state)
 
 		default:
 		{
+			SH_ASSERT_ALWAYS();
 			return((GameState*)0); // this should never happen
 		}
 	}
