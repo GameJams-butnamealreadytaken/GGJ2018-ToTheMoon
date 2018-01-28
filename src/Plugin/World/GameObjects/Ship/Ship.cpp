@@ -16,6 +16,7 @@ Ship::Ship(ShEntity2 * pEntity, const CShVector2 & vPosition)
 	, m_pTargetType(e_type_void)
 	, m_fAttackRange(10.0f)
 	, m_iLife(5)
+	, m_fSpeed(800.0f)
 {
 	SetState((int)IDLE);
 }
@@ -158,10 +159,10 @@ void Ship::SetAngle(float fAngle)
 /**
 * @brief SetTarget
 */
-void Ship::SetTarget(float x, float y, float fSpeed)
+void Ship::SetTarget(float x, float y)
 {
 	m_pNetworkShip->setTarget(x, y);
-	m_pNetworkShip->setSpeed(fSpeed);
+	m_pNetworkShip->setSpeed(m_fSpeed);
 
 	const Network::vec2 & shipPos = m_pNetworkShip->getPosition();
 	const Network::vec2 & targetPos = m_pNetworkShip->getTarget();
@@ -177,9 +178,9 @@ void Ship::SetTarget(float x, float y, float fSpeed)
 /**
 * @brief SetTarget
 */
-void Ship::SetTarget(float x, float y, float fSpeed, Ship * pShip)
+void Ship::SetTarget(float x, float y, Ship * pShip)
 {
-	SetTarget(x, y, fSpeed);
+	SetTarget(x, y);
 	m_pTargetType = e_type_ship;
 	m_pTargetObject = pShip;
 	m_fAttackRange = 200.0f;
@@ -188,9 +189,9 @@ void Ship::SetTarget(float x, float y, float fSpeed, Ship * pShip)
 /**
 * @brief SetTarget
 */
-void Ship::SetTarget(float x, float y, float fSpeed, Transmitter * pTrans)
+void Ship::SetTarget(float x, float y, Transmitter * pTrans)
 {
-	SetTarget(x, y, fSpeed);
+	SetTarget(x, y);
 	m_pTargetType = e_type_transmitter;
 	m_pTargetObject = pTrans;
 	m_fAttackRange = 200.0f;

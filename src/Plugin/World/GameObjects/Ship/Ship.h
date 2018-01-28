@@ -43,9 +43,9 @@ public:
 
 
 	void						SetAngle				(float fAngle);
-	void						SetTarget				(float x, float y, float fSpeed, Ship * pShip);
-	void						SetTarget				(float x, float y, float fSpeed, Transmitter * pTrans);
-	void						SetTarget				(float x, float y, float fSpeed);
+	void						SetTarget				(float x, float y, Ship * pShip);
+	void						SetTarget				(float x, float y, Transmitter * pTrans);
+	void						SetTarget				(float x, float y);
 
 	CShEulerAngles				GetRotation				(void);
 	EShipType					GetShipType				(void) const;
@@ -78,5 +78,6 @@ private:
 	float				m_fAngle;
 
 	int					m_iLife;
+	float				m_fSpeed;
 
 };
