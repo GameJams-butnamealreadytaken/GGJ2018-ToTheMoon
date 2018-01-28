@@ -146,7 +146,7 @@
 	<event name="beacon">
 		<keyboard>
 			<input name="just_pressed">
-				<parameter name="control" value="a"/>
+			        <parameter name="control" value="a"/>
 				<parameter name="threshold" value="0.5"/>
 			</input>
 		</keyboard>
