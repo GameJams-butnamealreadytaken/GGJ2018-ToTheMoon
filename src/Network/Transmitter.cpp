@@ -6,7 +6,7 @@ namespace Network
 /**
  * @brief Constructor
  */
-Transmitter::Transmitter(void) : m_position(0.0f, 0.0f)
+Transmitter::Transmitter(void) : m_position(0.0f, 0.0f), m_team(0)
 {
 	// ...
 }
