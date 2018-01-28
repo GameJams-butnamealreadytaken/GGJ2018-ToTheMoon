@@ -31,6 +31,7 @@ public:
 
 	int				GetShipCount			(void);
 	Ship *			GetShip					(int iShip);
+	Ship *			GetMyShip				(void);
 
 	int				GetTransmitterCount		(void);
 	Transmitter *	GetTransmitter			(int iTransmitter);
