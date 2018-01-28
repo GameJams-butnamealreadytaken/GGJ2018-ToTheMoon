@@ -12,6 +12,8 @@
 #define ENABLE_DEBUG_PRINT 0
 #define ENABLE_CHECKS 1
 
+#define PING_INTERVAL (1.0f)
+
 namespace Network
 {
 
@@ -23,6 +25,7 @@ World::World(float size_x, float size_y)
 , m_TransmitterCount(0)
 , m_halfSize(size_x, size_y)
 , m_pListener(nullptr)
+, m_fTimeBeforePing(PING_INTERVAL)
 {
 	memset(m_aShips, 0, sizeof(m_aShips));
 	memset(m_aOwnedShips, 0, sizeof(m_aOwnedShips));
@@ -168,7 +171,7 @@ void World::handlePingMessage(PingMessage * msg, char * machine, char * service)
 	printf("PING from %s:%s\n", machine, service);
 	fflush(stdout);
 
-	// TODO
+	m_network.ResetInactiveTimer(machine);
 }
 
 /**
@@ -312,6 +315,19 @@ void World::handleSyncTransmitterStateMessage(SyncTransmitterStateMessage * msg,
  */
 void World::update(float dt)
 {
+	m_fTimeBeforePing -= dt;
+
+	if (m_fTimeBeforePing < 0.0f)
+	{
+		PingMessage msg;
+
+		m_network.SendMessageToAllClients(msg);
+
+		m_fTimeBeforePing = PING_INTERVAL;
+	}
+
+	m_network.UpdateClients(dt);
+
 	for (unsigned int i = 0; i < m_ShipCount; ++i)
 	{
 		Ship & ship = m_aShips[i];

@@ -97,6 +97,8 @@ private:
 	WorldListener * m_pListener;
 
 	uuid_t m_MyHelloUUID;
+
+	float m_fTimeBeforePing;
 };
 
 }
