@@ -21,7 +21,7 @@ public:
 	void									Initialize			(void);
 	void									Release				(void);
 
-	void									Start				(const CShVector2 & vPosition, const CShVector2 & vDestination, float fSpeed);
+	void									Start				(const CShVector2 & vPosition, const CShVector2 & vDestination, float fSpeed, float fAngle);
 	void									Stop				(void);
 
 	void									Update				(float dt);

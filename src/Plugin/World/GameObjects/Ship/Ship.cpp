@@ -2,6 +2,7 @@
 
 #include "../Projectile/ProjectileManager.h"
 #include "../Transmitter/Transmitter.h"
+#include "../../World.h"
 
 /**
  * @brief Constructor
@@ -60,22 +61,21 @@ void Ship::Update(float dt)
 	const Network::vec2 & shipPos = m_pNetworkShip->getPosition();
 	const Network::vec2 & targetPos = m_pNetworkShip->getTarget();
 
-	UpdateTarget();
-	UpdateSprite(shipPos);
-
 	m_fFireRate += dt;
+
+	UpdateSprite(shipPos);
+	UpdateTarget();
 
 	switch (m_iState)
 	{
 	case IDLE:
 		{
-
 		}
 		break;
 
 	case TRAVEL:
 		{
-			if (m_fAttackRange > ComputeVecteurNorme(m_vPosition.m_x, m_vPosition.m_y, targetPos.x, targetPos.y))
+			if (m_fAttackRange > World::ComputeVecteurNorme(m_vPosition.m_x, m_vPosition.m_y, targetPos.x, targetPos.y))
 			{
 				if (e_type_ship == m_pTargetType)
 				{
@@ -172,6 +172,11 @@ void Ship::SetTarget(float x, float y)
 	ShEntity2::SetWorldRotation(m_pEntity, CShEulerAngles(0.0f, 0.0f, m_fAngle));
 
 	SetState((int)TRAVEL);
+
+	if (e_type_void == m_pTargetType)
+	{
+		m_pTargetObject = shNULL;
+	}
 }
 
 /**
@@ -179,10 +184,11 @@ void Ship::SetTarget(float x, float y)
 */
 void Ship::SetTarget(float x, float y, Ship * pShip)
 {
-	SetTarget(x, y);
 	m_pTargetType = e_type_ship;
 	m_pTargetObject = pShip;
 	m_fAttackRange = 600.0f;
+
+	SetTarget(x, y);
 }
 
 /**
@@ -190,10 +196,21 @@ void Ship::SetTarget(float x, float y, Ship * pShip)
 */
 void Ship::SetTarget(float x, float y, Transmitter * pTrans)
 {
-	SetTarget(x, y);
 	m_pTargetType = e_type_transmitter;
 	m_pTargetObject = pTrans;
 	m_fAttackRange = 600.0f;
+
+	SetTarget(x, y);
+
+	ShEntity2::SetAlpha(pTrans->GetSprite(), 0.5f);
+}
+
+void Ship::SetVoidTarget(float x, float y)
+{
+	m_pTargetType = e_type_void;
+	m_pTargetObject = shNULL;
+	m_fAttackRange = 30.0f;
+	SetTarget(x, y);
 }
 
 /**
@@ -218,11 +235,27 @@ void Ship::SetIdleState(void)
 */
 void Ship::Attack(void)
 {
+	m_pNetworkShip->setSpeed(0.0f);
+
 	CShVector2 & vTargetPosition2 = m_pTargetObject->GetPosition2();
+
+	static bool bLeft = true;
 
 	if (m_fFireRate > 0.25f)
 	{
-		m_pProjectileManager->Start(ProjectileManager::e_projectile_bullet, GetPosition2(), vTargetPosition2, 2.0f);
+		float direction = atan2(vTargetPosition2.m_x - GetPosition2().m_x, vTargetPosition2.m_y - GetPosition2().m_y) * 180 / SHC_PI;
+		float fAngle = (-direction + 90)*SHC_DEG2RAD;
+
+		if (bLeft)
+		{
+			m_pProjectileManager->Start(ProjectileManager::e_projectile_bullet, GetPosition2() + 10.0f * CShVector2(cos(fAngle), sin(fAngle)), vTargetPosition2, 4.0f);
+		}
+		else
+		{
+			m_pProjectileManager->Start(ProjectileManager::e_projectile_bullet, GetPosition2() + 10.0f * CShVector2(cos(fAngle - 0.01f), sin(fAngle - 0.01f)), vTargetPosition2, 4.0f);
+		}
+
+		bLeft = !bLeft;
 		m_fFireRate = 0.0f;
 
 		m_pTargetObject->OnHit(this);
@@ -261,9 +294,4 @@ void Ship::UpdateTarget(void)
 			SetIdleState();
 		}
 	}
-}
-
-float Ship::ComputeVecteurNorme(float Ax, float Ay, float Bx, float By)
-{
-	return sqrt(((Bx - Ax)*(Bx - Ax)) + ((By - Ay)*(By - Ay)));
 }

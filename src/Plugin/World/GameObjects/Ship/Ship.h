@@ -45,6 +45,7 @@ public:
 	void						SetAngle				(float fAngle);
 	void						SetTarget				(float x, float y, Ship * pShip);
 	void						SetTarget				(float x, float y, Transmitter * pTrans);
+	void						SetVoidTarget			(float x, float y);
 	void						SetTarget				(float x, float y);
 
 	CShEulerAngles				GetRotation				(void);
@@ -59,8 +60,6 @@ private:
 	void						Attack					(void);
 	void						UpdateSprite			(const Network::vec2 & shipPos);
 	void						UpdateTarget			(void);
-
-	float						ComputeVecteurNorme		(float Ax, float Ay, float Bx, float By);
 
 private:
 

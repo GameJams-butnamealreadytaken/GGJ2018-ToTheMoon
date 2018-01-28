@@ -53,7 +53,9 @@ public:
 	virtual void	onTransmitterDestroyed		(const Network::Transmitter * pTrans);
 	virtual void	onTransmitterStateChanged	(const Network::Transmitter * pTrans);
 	
-	void			Start					(unsigned int team, unsigned int eShipType);
+	void			Start						(unsigned int team, unsigned int eShipType);
+	
+	static float	ComputeVecteurNorme			(float Ax, float Ay, float Bx, float By);
 
 private:
 
