@@ -9,6 +9,7 @@
 Ship::Ship(ShEntity2 * pEntity, const CShVector2 & vPosition)
 	: GameObject(pEntity, vPosition)
 	, m_pNetworkShip(shNULL)
+	, m_fAngle(0.0f)
 	, m_pProjectileManager(shNULL)
 	, m_fFireRate(0.0f)
 	, m_pTargetObject(shNULL)
@@ -57,17 +58,43 @@ void Ship::Update(float dt)
 	const Network::vec2 & shipPos = m_pNetworkShip->getPosition();
 	const Network::vec2 & targetPos = m_pNetworkShip->getTarget();
 
-	float direction = atan2(targetPos.x - shipPos.x, targetPos.y - shipPos.y) * 180 / SHC_PI;
-	float fAngle = (-direction + 90)*SHC_DEG2RAD;
-
 	UpdateSprite(shipPos);
 
 	m_fFireRate += dt;
 
-	if (m_fFireRate > 0.1f)
+	switch (m_type)
 	{
-		m_pProjectileManager->Start(ProjectileManager::e_projectile_bullet, GetPosition2(), GetPosition2() + CShVector2(cos(fAngle) * 1500.0f, sin(fAngle) * 1500.0f), 4.0f);
-		m_fFireRate = 0.0f;
+		case BASE :
+		{
+			if (m_fFireRate > 0.5f)
+			{
+				m_pProjectileManager->Start(ProjectileManager::e_projectile_bullet, GetPosition2(), GetPosition2() + CShVector2(cos(m_fAngle) * 1500.0f, sin(m_fAngle) * 1500.0f), 2.0f);
+				m_fFireRate = 0.0f;
+			}
+		}
+		break;
+
+		case TANK :
+		{
+			if (m_fFireRate > 0.5f)
+			{
+				m_pProjectileManager->Start(ProjectileManager::e_projectile_bullet, GetPosition2(), GetPosition2() + CShVector2(cos(m_fAngle) * 1500.0f, sin(m_fAngle) * 1500.0f), 4.0f);
+				m_fFireRate = 0.0f;
+			}
+		}
+		break;
+
+		case TRORAPIDE : 
+		{
+
+		}
+		break;
+
+		case PERE_NOWEL : 
+		{
+
+		}
+		break;
 	}
 
 	switch (m_iState)
@@ -154,9 +181,9 @@ void Ship::SetTarget(float x, float y, float fSpeed)
 	const Network::vec2 & targetPos = m_pNetworkShip->getTarget();
 
 	float direction = atan2(targetPos.x - shipPos.x, targetPos.y - shipPos.y) * 180 / SHC_PI;
-	float fAngle = (-direction + 90)*SHC_DEG2RAD;
+	m_fAngle = (-direction + 90)*SHC_DEG2RAD;
 
-	ShEntity2::SetWorldRotation(m_pEntity, CShEulerAngles(0.0f, 0.0f, fAngle));
+	ShEntity2::SetWorldRotation(m_pEntity, CShEulerAngles(0.0f, 0.0f, m_fAngle));
 
 	SetState((int)TRAVEL);
 }

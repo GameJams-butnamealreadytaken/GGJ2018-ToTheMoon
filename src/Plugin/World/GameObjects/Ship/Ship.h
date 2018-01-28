@@ -68,4 +68,6 @@ private:
 	float				m_fFireRate;
 
 	float				m_fAttackRange;
+
+	float				m_fAngle;
 };

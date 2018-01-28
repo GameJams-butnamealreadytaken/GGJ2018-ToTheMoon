@@ -55,14 +55,14 @@ public:
 	}
 
 	//
-	// Team
+	// Team (getter only)
 	unsigned int getTeam(void) const
 	{
 		return(m_team);
 	}
 
 	//
-	// Team
+	// Type (getter only)
 	unsigned int getType(void) const
 	{
 		return(m_eShipType);
