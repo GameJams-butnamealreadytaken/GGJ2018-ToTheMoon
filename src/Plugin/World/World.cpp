@@ -384,6 +384,14 @@ void World::OnTouchMove(int iTouch, float positionX, float positionY)
 }
 
 /**
+ * @brief World::onShipStateChanged
+ */
+/*virtual*/ void World::onShipStateChanged(const Network::Ship * pShip)
+{
+	// TODO
+}
+
+/**
 * @brief World::onTransmitterCreate
 */
 /*virtual*/ void World::onTransmitterCreated(const Network::Transmitter * pTrans)
@@ -415,6 +423,14 @@ void World::OnTouchMove(int iTouch, float positionX, float positionY)
 			break;
 		}
 	}
+}
+
+/**
+ * @brief World::onTransmitterStateChanged
+ */
+/*virtual*/ void World::onTransmitterStateChanged(const Network::Transmitter * pTrans)
+{
+	// TODO
 }
 
 /**

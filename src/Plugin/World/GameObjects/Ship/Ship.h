@@ -39,6 +39,8 @@ public:
 	virtual void				OnHit					(GameObject* pObject);
 	virtual GameObject::EType	GetType					(void) { return(e_type_ship); }
 
+	//void						SetTarget				(float x, float y, float fSpeed);
+	//void						SetTarget				(float x, float y, float fSpeed, );
 	void						SetTarget				(float x, float y, float fSpeed, EType targetType);
 
 	CShEulerAngles				GetRotation				(void);
