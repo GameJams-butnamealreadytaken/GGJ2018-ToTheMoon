@@ -130,9 +130,9 @@ bool NetworkHelper::BroadcastMessage(void * msg, unsigned int size)
 	addr.sin_addr.s_addr = inet_addr(BRD_HELO_ADDR);
 
 #if WIN32
-	/*SSIZE_T size =*/ sendto(m_sock, (const char*)msg, size, 0, (sockaddr*)&addr, sizeof(addr));
+	/*SSIZE_T size =*/ sendto(m_sock, (const char*)msg, size, 0, (sockaddr*)&addr, sizeof(sockaddr_in));
 #else // WIN32
-	/*ssize_t size =*/ sendto(m_sock, (void*)msg, size, 0, (sockaddr*)&addr, sizeof(addr));
+	/*ssize_t size =*/ sendto(m_sock, (void*)msg, size, 0, (sockaddr*)&addr, sizeof(sockaddr_in));
 #endif // WIN32
 
 	return(true);
@@ -149,9 +149,9 @@ bool NetworkHelper::SendMessageToAllClients(void * msg, unsigned int size)
 	for (int i = 0; i < m_iClientCount; ++i)
 	{
 #if WIN32
-		/*SSIZE_T size =*/ sendto(m_sock, (const char*)msg, size, 0, (sockaddr*)m_pClients+i, sizeof(sockaddr_in));
+		/*SSIZE_T size =*/ sendto(m_sock, (const char*)msg, size, 0, (sockaddr*)&((m_pClients+i)->addr), sizeof(sockaddr_in));
 #else // WIN32
-		/*ssize_t size =*/ sendto(m_sock, (void*)msg, size, 0, (sockaddr*)m_pClients+i, sizeof(sockaddr_in));
+		/*ssize_t size =*/ sendto(m_sock, (void*)msg, size, 0, (sockaddr*)&((m_pClients+i)->addr), sizeof(sockaddr_in));
 #endif // WIN32
 	}
 
@@ -172,9 +172,9 @@ bool NetworkHelper::SendMessageToMachine(void * msg, unsigned int size, char * m
 	addr.sin_addr.s_addr = inet_addr(machine);
 
 #if WIN32
-	/*SSIZE_T size =*/ sendto(m_sock, (const char*)msg, size, 0, (sockaddr*)&addr, sizeof(addr));
+	/*SSIZE_T size =*/ sendto(m_sock, (const char*)msg, size, 0, (sockaddr*)&addr, sizeof(sockaddr_in));
 #else // WIN32
-	/*ssize_t size =*/ sendto(m_sock, (void*)msg, size, 0, (sockaddr*)&addr, sizeof(addr));
+	/*ssize_t size =*/ sendto(m_sock, (void*)msg, size, 0, (sockaddr*)&addr, sizeof(sockaddr_in));
 #endif // WIN32
 
 	return(true);
