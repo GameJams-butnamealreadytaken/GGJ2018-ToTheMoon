@@ -8,6 +8,8 @@
 #include "../Projectile/ProjectileManager.h"
 #include "../../../../Network/World.h"
 
+class Transmitter;
+
 class Ship : public GameObject
 {
 public:
@@ -39,9 +41,9 @@ public:
 	virtual void				OnHit					(GameObject* pObject);
 	virtual GameObject::EType	GetType					(void) { return(e_type_ship); }
 
-	//void						SetTarget				(float x, float y, float fSpeed);
-	//void						SetTarget				(float x, float y, float fSpeed, );
-	void						SetTarget				(float x, float y, float fSpeed, EType targetType);
+	void						SetTarget				(float x, float y, float fSpeed, Ship * pShip);
+	void						SetTarget				(float x, float y, float fSpeed, Transmitter * pTrans);
+	void						SetTarget				(float x, float y, float fSpeed);
 
 	CShEulerAngles				GetRotation				(void);
 	EShipType					GetShipType				(void) const;
@@ -59,6 +61,11 @@ private:
 
 	Network::Ship *		m_pNetworkShip;
 
+	GameObject *		m_pTargetObject;
+	EType				m_pTargetType;
+
 	ProjectileManager *	m_pProjectileManager;
 	float				m_fFireRate;
+
+	float				m_fAttackRange;
 };

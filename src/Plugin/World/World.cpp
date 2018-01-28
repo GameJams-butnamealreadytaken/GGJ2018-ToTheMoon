@@ -298,8 +298,6 @@ void World::OnTouchDown(int iTouch, float positionX, float positionY)
 	// Set new ship target
 	if (shNULL != m_pShip)
 	{
-		GameObject::EType targetType = GameObject::e_type_void;
-
 		// Check target type
 		int iShipCount = m_apShip.GetCount();
 		for (int iShip = 0; iShip < iShipCount; ++iShip)
@@ -311,7 +309,8 @@ void World::OnTouchDown(int iTouch, float positionX, float positionY)
 				{
 					if (ShEntity2::Includes(pShip->GetSprite(), CShVector2(worldPosition.m_x, worldPosition.m_y)))
 					{
-						targetType = GameObject::e_type_ship;
+						m_pShip->SetTarget(worldPosition.m_x, worldPosition.m_y, 800.0f, pShip); // todo move speed on her right place
+						return;
 					}
 				}
 			}
@@ -327,12 +326,13 @@ void World::OnTouchDown(int iTouch, float positionX, float positionY)
 			{
 				if (ShEntity2::Includes(pTransmitter->GetSprite(), CShVector2(worldPosition.m_x, worldPosition.m_y)))
 				{
-					targetType = GameObject::e_type_transmitter;
+					m_pShip->SetTarget(worldPosition.m_x, worldPosition.m_y, 800.0f, pTransmitter); // todo move speed on her right place
+					return;
 				}
 			}
 		}
 
-		m_pShip->SetTarget(worldPosition.m_x, worldPosition.m_y, 800.0f, targetType); // todo move speed on her right place
+		m_pShip->SetTarget(worldPosition.m_x, worldPosition.m_y, 800.0f); // todo move speed on her right place
 	}
 
 #if TEST

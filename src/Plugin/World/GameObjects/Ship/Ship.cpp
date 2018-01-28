@@ -1,6 +1,7 @@
 #include "Ship.h"
 
 #include "../Projectile/ProjectileManager.h"
+#include "../Transmitter/Transmitter.h"
 
 /**
  * @brief Constructor
@@ -10,6 +11,9 @@ Ship::Ship(ShEntity2 * pEntity, const CShVector2 & vPosition)
 	, m_pNetworkShip(shNULL)
 	, m_pProjectileManager(shNULL)
 	, m_fFireRate(0.0f)
+	, m_pTargetObject(shNULL)
+	, m_pTargetType(e_type_void)
+	, m_fAttackRange(10.0f)
 {
 	SetState((int)IDLE);
 }
@@ -76,16 +80,24 @@ void Ship::Update(float dt)
 
 	case TRAVEL:
 		{
-			{
-				const Network::vec2 & targetPos = m_pNetworkShip->getTarget();
+			const Network::vec2 & targetPos = m_pNetworkShip->getTarget();
 
-				if (10.0f > ComputeVecteurNorme(m_vPosition.m_x, m_vPosition.m_y, targetPos.x, targetPos.y))
+			if (m_fAttackRange > ComputeVecteurNorme(m_vPosition.m_x, m_vPosition.m_y, targetPos.x, targetPos.y))
+			{
+				m_pNetworkShip->setSpeed(0.0f);
+				SetState((int)IDLE);
+
+				if (e_type_ship == m_pTargetType)
 				{
-					// setSpeed à 0 & setState à Idle si pos, FIGHT sinon
-					m_pNetworkShip->setSpeed(0.0f);
-					SetState((int)IDLE);
+					// Attack
+				}
+				else if (e_type_transmitter == m_pTargetType)
+				{
+					// Attack
 				}
 
+				m_pTargetType = e_type_void;
+				m_pTargetObject = shNULL;
 			}
 		}
 		break;
@@ -133,7 +145,7 @@ Network::Ship * Ship::GetNetworkShip(void) const
 /**
 * @brief SetTarget
 */
-void Ship::SetTarget(float x, float y, float fSpeed, EType targetType)
+void Ship::SetTarget(float x, float y, float fSpeed)
 {
 	m_pNetworkShip->setTarget(x, y);
 	m_pNetworkShip->setSpeed(fSpeed);
@@ -147,6 +159,28 @@ void Ship::SetTarget(float x, float y, float fSpeed, EType targetType)
 	ShEntity2::SetWorldRotation(m_pEntity, CShEulerAngles(0.0f, 0.0f, fAngle));
 
 	SetState((int)TRAVEL);
+}
+
+/**
+* @brief SetTarget
+*/
+void Ship::SetTarget(float x, float y, float fSpeed, Ship * pShip)
+{
+	SetTarget(x, y, fSpeed);
+	m_pTargetType = e_type_ship;
+	m_pTargetObject = pShip;
+	m_fAttackRange = 200.0f;
+}
+
+/**
+* @brief SetTarget
+*/
+void Ship::SetTarget(float x, float y, float fSpeed, Transmitter * pTrans)
+{
+	SetTarget(x, y, fSpeed);
+	m_pTargetType = e_type_transmitter;
+	m_pTargetObject = pTrans;
+	m_fAttackRange = 200.0f;
 }
 
 /**
