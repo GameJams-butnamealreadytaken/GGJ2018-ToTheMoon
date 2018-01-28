@@ -3,6 +3,7 @@
 #include "NetworkHelper.h"
 
 #include <string.h> // memcpy
+#include <math.h>
 
 namespace Network
 {
@@ -64,6 +65,11 @@ void Ship::update(float dt, NetworkHelper & network)
 	vec2 direction;
 	direction.x = m_target.x - m_position.x;
 	direction.y = m_target.y - m_position.y;
+
+	float norm = sqrt((direction.x*direction.x) + (direction.y*direction.y));
+
+	direction.x /= norm;
+	direction.y /= norm;
 
 	m_position.x += direction.x * m_speed * dt;
 	m_position.y += direction.y * m_speed * dt;
