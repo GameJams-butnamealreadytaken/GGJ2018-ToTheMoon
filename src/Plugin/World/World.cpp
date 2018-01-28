@@ -62,28 +62,28 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 		// Moon
 		{
 			ShEntity2* pEntity = ShEntity2::Find(levelIdentifier, CShIdentifier("sprite_ggj_moon_01_001"));
-			m_aPlanet[0] = new Planet(Planet::e_planet_moon, pEntity);
+			m_aPlanet.Add(new Planet(Planet::e_planet_moon, pEntity));
 		}
 
 		//
 		// Earth
 		{
 			ShEntity2* pEntity = ShEntity2::Find(levelIdentifier, CShIdentifier("sprite_ggj_earth_01_001")); 
-			m_aPlanet[1] = new Planet(Planet::e_planet_earth, pEntity);
+			m_aPlanet.Add(new Planet(Planet::e_planet_earth, pEntity));
 		}
 
 		//
 		// Mars
 		{
 			ShEntity2* pEntity = ShEntity2::Find(levelIdentifier, CShIdentifier("sprite_ggj_mars_01_001"));
-			m_aPlanet[2] = new Planet(Planet::e_planet_mars, pEntity);
+			m_aPlanet.Add(new Planet(Planet::e_planet_mars, pEntity));
 		}
 
 		//
 		// Jupiter
 		{
 			ShEntity2* pEntity = ShEntity2::Find(levelIdentifier, CShIdentifier("sprite_ggj_jupiter_01_001"));
-			m_aPlanet[3] = new Planet(Planet::e_planet_jupiter, pEntity);
+			m_aPlanet.Add(new Planet(Planet::e_planet_jupiter, pEntity));
 		}
 	}
 
@@ -240,6 +240,22 @@ int	World::GetTransmitterCount(void)
 Transmitter * World::GetTransmitter(int iTransmitter)
 {
 	return(m_apTransmitter[iTransmitter]);
+}
+
+/**
+* @brief World::GetTransmitter
+*/
+int	World::GetPlanetCount(void)
+{
+	return(m_aPlanet.GetCount());
+}
+
+/**
+* @brief World::GetTransmitter
+*/
+Planet * World::GetPlanet(int iPlanet)
+{
+	return(m_aPlanet[iPlanet]);
 }
 
 

@@ -34,6 +34,9 @@ public:
 	int				GetTransmitterCount		(void);
 	Transmitter *	GetTransmitter			(int iTransmitter);
 
+	int				GetPlanetCount			(void);
+	Planet *		GetPlanet				(int iPlanet);
+
 	//
 	// Touch Events
 	void			OnTouchDown				(int iTouch, float positionX, float positionY);
@@ -67,7 +70,7 @@ private:
 	ExplosionManager					m_explosionManager;
 	ProjectileManager					m_projectileManager;
 
-	Planet*								m_aPlanet[4];
+	CShArray<Planet*>					m_aPlanet;
 	CShArray<Transmitter *>				m_apTransmitter;
 	CShArray<Ship *>					m_apShip;
 	Ship *								m_pShip;
