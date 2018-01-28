@@ -393,6 +393,21 @@ void World::Start(unsigned int team, unsigned int eShipType)
 	// Create player's Ship
 	Network::Ship * pNetworkShip = m_world.createShip(team, eShipType, 0.0f, 0.0f);
 	m_pShip = CreateShip(0.0f, 0.0f, pNetworkShip);
+
+	if (m_pShip->GetTeam() == 0)
+	{
+		ShEntity2::SetColor(m_pShip->GetSprite(), CShRGBAf(0.0f, 0.0f, 1.0f, 1.0f));
+	}
+	else if (m_pShip->GetTeam() == 1)
+	{
+		ShEntity2::SetColor(m_pShip->GetSprite(), CShRGBAf(1.0f, 0.0f, 0.0f, 1.0f));
+	}
+	else
+	{
+		SH_ASSERT_ALWAYS();
+	}
+
+	m_pMiniMap->SetShip(m_pShip);
 }
 
 /**
@@ -404,6 +419,20 @@ Ship * World::CreateShip(float x, float y, const Network::Ship * pNetworkShip)
 	SH_ASSERT(shNULL != pEntity);
 	Ship * pShip = new Ship(pEntity, CShVector2(x, y));
 	pShip->Initialize((Ship::EShipType)(pNetworkShip->getType()), pNetworkShip, &m_projectileManager);
+
+	if (pShip->GetTeam() == 0)
+	{
+		ShEntity2::SetColor(pEntity, CShRGBAf(0.0f, 0.0f, 1.0f, 1.0f));
+	}
+	else if (pShip->GetTeam() == 1)
+	{
+		ShEntity2::SetColor(pEntity, CShRGBAf(1.0f, 0.0f, 0.0f, 1.0f));
+	}
+	else
+	{
+		SH_ASSERT_ALWAYS();
+	}
+
 	m_apShip.Add(pShip);
 
 	return(pShip);
