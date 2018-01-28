@@ -12,7 +12,7 @@
 #define ENABLE_DEBUG_PRINT 0
 #define ENABLE_CHECKS 1
 
-#define PING_INTERVAL (100000.0f)
+#define PING_INTERVAL (1.0f)
 
 namespace Network
 {
@@ -184,6 +184,7 @@ void World::handlePingMessage(PingMessage * msg, char * machine, char * service)
 	fflush(stdout);
 
 	m_network.ResetInactiveTimer(machine);
+	m_network.RegisterClient(machine);
 }
 
 /**
