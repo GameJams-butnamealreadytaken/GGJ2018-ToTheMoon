@@ -15,6 +15,7 @@ class Transmitter;
 class Team;
 class MiniMap;
 class PluginInputs;
+class CameraPlugin;
 
 class World : public Network::WorldListener
 {
@@ -63,6 +64,8 @@ private:
 	Network::World						m_world;
 
 	MiniMap *							m_pMiniMap;
+
+	CameraPlugin *						m_pCamera;
 
 	ShUser *							m_pUser;
 
