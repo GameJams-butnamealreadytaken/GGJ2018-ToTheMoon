@@ -193,3 +193,11 @@ int Transmitter::GetId(void)
 {
 	return(m_id);
 }
+
+/**
+* @brief GetTeam
+*/
+unsigned int Transmitter::GetTeam(void) const
+{
+	return(m_pTransmitter->getTeam());
+}

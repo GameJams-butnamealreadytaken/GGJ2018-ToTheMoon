@@ -41,6 +41,7 @@ public:
 	Transmitter *		GetNeighbour		(int id);
 
 	int					GetId				(void);
+	unsigned int		GetTeam				(void) const;
 
 private:
 
