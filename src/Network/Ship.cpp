@@ -68,28 +68,31 @@ void Ship::update(float dt, NetworkHelper & network)
 
 	float norm = sqrt((direction.x*direction.x) + (direction.y*direction.y));
 
-	direction.x /= norm;
-	direction.y /= norm;
-
-	m_position.x += direction.x * m_speed * dt;
-	m_position.y += direction.y * m_speed * dt;
-
-	if (m_bNeedSync)
+	if (norm > 0.0001f)
 	{
-		SyncShipStateMessage message;
+		direction.x /= norm;
+		direction.y /= norm;
+
+		m_position.x += direction.x * m_speed * dt;
+		m_position.y += direction.y * m_speed * dt;
+
+		if (m_bNeedSync)
+		{
+			SyncShipStateMessage message;
 #if __gnu_linux__
-		uuid_copy(message.shipId, m_uuid);
+			uuid_copy(message.shipId, m_uuid);
 #else
-		memcpy(&message.shipId, (void*)&m_uuid, sizeof(uuid_t));
+			memcpy(&message.shipId, (void*)&m_uuid, sizeof(uuid_t));
 #endif // __gnu_linux__
-		message.position = m_position;
-		message.target = m_target;
-		message.speed = m_speed;
-		message.team = m_team;
+			message.position = m_position;
+			message.target = m_target;
+			message.speed = m_speed;
+			message.team = m_team;
 
-		network.SendMessageToAllClients(message);
+			network.SendMessageToAllClients(message);
 
-		m_bNeedSync = false;
+			m_bNeedSync = false;
+		}
 	}
 }
 
