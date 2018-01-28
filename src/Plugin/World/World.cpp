@@ -15,6 +15,8 @@
 #define DEFAULT_TRANSMITTER_LIFE 10
 #define DEFAULT_SHIP_LIFE 10
 
+ExplosionManager g_explosionManager;
+
 /**
 * @brief Constructor
 */
@@ -24,7 +26,6 @@
 , m_pMiniMap(shNULL)
 , m_pUser(shNULL)
 , m_pInputs(shNULL)
-, m_explosionManager()
 , m_projectileManager()
 , m_apTransmitter()
 , m_apShip()
@@ -60,7 +61,7 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 	m_world.init();
 	m_world.setListener(this);
 
-	m_explosionManager.Initialize(levelIdentifier);
+	g_explosionManager.Initialize(levelIdentifier);
 	m_projectileManager.Initialize(levelIdentifier);
 
 	//
@@ -150,7 +151,7 @@ void World::Release(void)
 	m_apTransmitter.Empty();
 
 	m_projectileManager.Release();
-	m_explosionManager.Release();
+	g_explosionManager.Release();
 
 	m_pInputs->Release();
 	SH_SAFE_DELETE(m_pInputs);
@@ -198,7 +199,7 @@ void World::Update(float dt)
 
 	//
 	// Update explosion manager
-	m_explosionManager.Update(dt);
+	g_explosionManager.Update(dt);
 
 	//
 	// Update projectile manager

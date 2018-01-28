@@ -192,9 +192,9 @@ bool NetworkHelper::Receive(char * buffer, unsigned int & size, char * machine, 
 
 	struct timeval timeout;
 	timeout.tv_sec = 0;
-	timeout.tv_usec = 5000; // 5 ms
+	timeout.tv_usec = 0; // 5 ms
 
-	while (timeout.tv_usec > 0)
+	//while (timeout.tv_usec > 0)
 	{
 #if WIN32
 		DWORD before = GetTickCount();

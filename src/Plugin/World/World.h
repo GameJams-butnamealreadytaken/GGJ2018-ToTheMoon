@@ -77,7 +77,6 @@ private:
 
 	PluginInputs *						m_pInputs;
 
-	ExplosionManager					m_explosionManager;
 	ProjectileManager					m_projectileManager;
 
 	CShArray<Planet*>					m_aPlanet;
