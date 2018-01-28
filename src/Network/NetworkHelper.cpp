@@ -192,23 +192,26 @@ bool NetworkHelper::Receive(char * buffer, unsigned int & size, char * machine, 
 
 	struct timeval timeout;
 	timeout.tv_sec = 0;
-	timeout.tv_usec = 0;
+	timeout.tv_usec = 5000; // 5 ms
 
-	if (select(m_sock+1, &fdset, nullptr, nullptr, &timeout) > 0)
+	while (timeout.tv_usec > 0)
 	{
-		struct sockaddr_storage sender;
-		socklen_t sendsize = sizeof(sender);
-		memset(&sender, 0, sizeof(sender));
-
-		size = recvfrom(m_sock, buffer, size, 0, (sockaddr*)&sender, &sendsize);
-
-		if (machine && service)
+		if (select(m_sock+1, &fdset, nullptr, nullptr, &timeout) > 0)
 		{
-			int res = getnameinfo((sockaddr*)&sender, sendsize, machine, NI_MAXHOST, service, NI_MAXSERV, NI_NUMERICHOST|NI_NUMERICSERV);
-			assert(res == 0);
-		}
+			struct sockaddr_storage sender;
+			socklen_t sendsize = sizeof(sender);
+			memset(&sender, 0, sizeof(sender));
 
-		return(true);
+			size = recvfrom(m_sock, buffer, size, 0, (sockaddr*)&sender, &sendsize);
+
+			if (machine && service)
+			{
+				int res = getnameinfo((sockaddr*)&sender, sendsize, machine, NI_MAXHOST, service, NI_MAXSERV, NI_NUMERICHOST|NI_NUMERICSERV);
+				assert(res == 0);
+			}
+
+			return(true);
+		}
 	}
 
 	return(false);
