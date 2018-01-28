@@ -48,10 +48,12 @@ public:
 	virtual void	onShipCreated			(const Network::Ship * pShip);
 	virtual void	onShipDestroyed			(const Network::Ship * pShip);
 	virtual void	onShipStateChanged		(const Network::Ship * pShip);
+	virtual void	onShipShooted			(const Network::Ship * pShip, const Network::Ship * pShooterShip);
 
 	virtual void	onTransmitterCreated		(const Network::Transmitter * pTrans);
 	virtual void	onTransmitterDestroyed		(const Network::Transmitter * pTrans);
 	virtual void	onTransmitterStateChanged	(const Network::Transmitter * pTrans);
+	virtual void	onTransmitterShooted		(const Network::Transmitter * pTrans, const Network::Ship * pShooterShip);
 	
 	void			Start						(unsigned int team, unsigned int eShipType);
 	
@@ -75,7 +77,6 @@ private:
 
 	PluginInputs *						m_pInputs;
 
-	ExplosionManager					m_explosionManager;
 	ProjectileManager					m_projectileManager;
 
 	CShArray<Planet*>					m_aPlanet;

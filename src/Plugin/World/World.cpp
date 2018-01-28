@@ -15,6 +15,8 @@
 #define DEFAULT_TRANSMITTER_LIFE 10
 #define DEFAULT_SHIP_LIFE 10
 
+ExplosionManager g_explosionManager;
+
 /**
 * @brief Constructor
 */
@@ -24,7 +26,6 @@
 , m_pMiniMap(shNULL)
 , m_pUser(shNULL)
 , m_pInputs(shNULL)
-, m_explosionManager()
 , m_projectileManager()
 , m_apTransmitter()
 , m_apShip()
@@ -60,7 +61,7 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 	m_world.init();
 	m_world.setListener(this);
 
-	m_explosionManager.Initialize(levelIdentifier);
+	g_explosionManager.Initialize(levelIdentifier);
 	m_projectileManager.Initialize(levelIdentifier);
 
 	//
@@ -150,7 +151,7 @@ void World::Release(void)
 	m_apTransmitter.Empty();
 
 	m_projectileManager.Release();
-	m_explosionManager.Release();
+	g_explosionManager.Release();
 
 	m_pInputs->Release();
 	SH_SAFE_DELETE(m_pInputs);
@@ -198,7 +199,7 @@ void World::Update(float dt)
 
 	//
 	// Update explosion manager
-	m_explosionManager.Update(dt);
+	g_explosionManager.Update(dt);
 
 	//
 	// Update projectile manager
@@ -418,6 +419,14 @@ float World::ComputeVecteurNorme(float Ax, float Ay, float Bx, float By)
 }
 
 /**
+ * @brief World::onShipShooted
+ */
+/*virtual*/ void World::onShipShooted(const Network::Ship * pShip, const Network::Ship * pShooterShip)
+{
+	m_projectileManager.Start(ProjectileManager::e_projectile_bullet, CShVector2(pShooterShip->getPosition().x, pShooterShip->getPosition().y), CShVector2(pShip->getPosition().x, pShip->getPosition().y), 4.0f);
+}
+
+/**
 * @brief World::onTransmitterCreate
 */
 /*virtual*/ void World::onTransmitterCreated(const Network::Transmitter * pTrans)
@@ -457,6 +466,14 @@ float World::ComputeVecteurNorme(float Ax, float Ay, float Bx, float By)
 /*virtual*/ void World::onTransmitterStateChanged(const Network::Transmitter * pTrans)
 {
 	// TODO
+}
+
+/**
+ * @brief World::onTransmitterShooted
+ */
+/*virtual*/ void World::onTransmitterShooted(const Network::Transmitter * pTrans, const Network::Ship * pShooterShip)
+{
+	m_projectileManager.Start(ProjectileManager::e_projectile_bullet, CShVector2(pShooterShip->getPosition().x, pShooterShip->getPosition().y), CShVector2(pTrans->getPosition().x, pTrans->getPosition().y), 4.0f);
 }
 
 /**
