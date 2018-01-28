@@ -258,7 +258,7 @@ void World::handleCreateTransmitterMessage(CreateTransmitterMessage * msg, char 
 	// Notify the game
 	if (m_pListener)
 	{
-		m_pListener->onTransmitterCreate(transmitter);
+		m_pListener->onTransmitterCreated(transmitter);
 	}
 }
 
@@ -298,9 +298,10 @@ void World::handleSyncTransmitterStateMessage(SyncTransmitterStateMessage * msg,
 
 	if (bCreated)
 	{
+		// Notify the game
 		if (m_pListener)
 		{
-			m_pListener->onTransmitterCreate(transmitter);
+			m_pListener->onTransmitterCreated(transmitter);
 		}
 	}
 }
@@ -478,6 +479,55 @@ Ship * World::createShipInternal(const uuid_t & uuid, unsigned int team, float x
 }
 
 /**
+ * @brief World::destroyShip
+ * @param ship
+ */
+void World::destroyShip(Ship * ship)
+{
+	DestroyShipMessage message;
+#if __gnu_linux__
+	uuid_copy(message.shipId, ship->m_uuid);
+#else
+	memcpy(&message.shipId, (void*)&ship->m_uuid, sizeof(uuid_t));
+#endif // __gnu_linux__
+
+	m_network.SendMessageToAllClients(message);
+
+	removeShipInternal(ship);
+}
+
+/**
+ * @brief World::removeShipInternal
+ * @param ship
+ */
+void World::removeShipInternal(Ship * ship)
+{
+	for (int i = 0; i < MAX_SHIPS; ++i)
+	{
+		if (ship == m_aOwnedShips[i])
+		{
+			m_aOwnedShips[i] = nullptr;
+		}
+	}
+
+	for (int i = 0; i < m_ShipCount; ++i)
+	{
+		if (ship == (m_aShips+i))
+		{
+			// Notify the game
+			if (m_pListener)
+			{
+				m_pListener->onShipDestroyed(ship);
+			}
+
+			m_aShips[i] = m_aShips[m_ShipCount];
+			--m_ShipCount;
+			break;
+		}
+	}
+}
+
+/**
  * @brief World::findShip
  * @param uuid
  * @return
@@ -566,6 +616,55 @@ Transmitter * World::createTransmitterInternal(const uuid_t & uuid, unsigned int
 	*transmitter = Transmitter(uuid, team, x, y);
 
 	return(transmitter);
+}
+
+/**
+ * @brief World::destroyTransmitter
+ * @param transmitter
+ */
+void World::destroyTransmitter(Transmitter * transmitter)
+{
+	DestroyTransmitterMessage message;
+#if __gnu_linux__
+	uuid_copy(message.transmitterId, transmitter->m_uuid);
+#else
+	memcpy(&message.transmitterId, (void*)&transmitter->m_uuid, sizeof(uuid_t));
+#endif // __gnu_linux__
+
+	m_network.SendMessageToAllClients(message);
+
+	removeTransmitterInternal(transmitter);
+}
+
+/**
+ * @brief World::removeTransmitterInternal
+ * @param uuid
+ */
+void World::removeTransmitterInternal(Transmitter * transmitter)
+{
+	for (int i = 0; i < MAX_TRANSMITTERS; ++i)
+	{
+		if (transmitter == m_aOwnedTransmitters[i])
+		{
+			m_aOwnedTransmitters[i] = nullptr;
+		}
+	}
+
+	for (int i = 0; i < m_TransmitterCount; ++i)
+	{
+		if (transmitter == (m_aTransmitters+i))
+		{
+			// Notify the game
+			if (m_pListener)
+			{
+				m_pListener->onTransmitterDestroyed(transmitter);
+			}
+
+			m_aTransmitters[i] = m_aTransmitters[m_TransmitterCount];
+			--m_TransmitterCount;
+			break;
+		}
+	}
 }
 
 /**
