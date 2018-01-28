@@ -136,7 +136,7 @@ void Ship::Update(float dt)
 	}
 	else
 	{
-		SetState((int)HIT);
+		SetState((int)TRAVEL);
 	}
 }
 
