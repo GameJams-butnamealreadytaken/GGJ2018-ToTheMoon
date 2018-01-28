@@ -28,6 +28,7 @@ protected:
 	
 	CShVector2 m_vPosition;
 
+	Ship*					m_pShip;
 	CShArray<ShEntity2*>	m_apShip;
 	CShArray<ShEntity2*>	m_apTransmitter;
 	CShArray<ShEntity2*>	m_apPlanet;
