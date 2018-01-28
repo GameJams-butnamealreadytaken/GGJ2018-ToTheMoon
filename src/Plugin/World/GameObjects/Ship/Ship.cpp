@@ -14,7 +14,7 @@ Ship::Ship(ShEntity2 * pEntity, const CShVector2 & vPosition)
 	, m_fFireRate(0.0f)
 	, m_pTargetObject(shNULL)
 	, m_pTargetType(e_type_void)
-	, m_fAttackRange(10.0f)
+	, m_fAttackRange(30.0f)
 	, m_iLife(5)
 	, m_fSpeed(800.0f)
 {
@@ -60,6 +60,7 @@ void Ship::Update(float dt)
 	const Network::vec2 & shipPos = m_pNetworkShip->getPosition();
 	const Network::vec2 & targetPos = m_pNetworkShip->getTarget();
 
+	UpdateTarget();
 	UpdateSprite(shipPos);
 
 	m_fFireRate += dt;
@@ -182,8 +183,6 @@ void Ship::SetTarget(float x, float y, Ship * pShip)
 	m_pTargetType = e_type_ship;
 	m_pTargetObject = pShip;
 	m_fAttackRange = 600.0f;
-
-	ShEntity2::SetAlpha(pShip->GetSprite(), 0.5f);
 }
 
 /**
@@ -195,8 +194,6 @@ void Ship::SetTarget(float x, float y, Transmitter * pTrans)
 	m_pTargetType = e_type_transmitter;
 	m_pTargetObject = pTrans;
 	m_fAttackRange = 600.0f;
-
-	ShEntity2::SetAlpha(pTrans->GetSprite(), 0.5f);
 }
 
 /**
@@ -213,7 +210,7 @@ void Ship::SetIdleState(void)
 	SetState((int)IDLE);
 	m_pTargetType = e_type_void;
 	m_pTargetObject = shNULL;
-	m_fAttackRange = 10.0f;
+	m_fAttackRange = 30.0f;
 }
 
 /**
@@ -230,41 +227,6 @@ void Ship::Attack(void)
 
 		m_pTargetObject->OnHit(this);
 	}
-
-	//switch (m_type)
-	//{
-	//	case BASE:
-	//	{
-	//		if (m_fFireRate > 0.25f)
-	//		{
-	//			m_pProjectileManager->Start(ProjectileManager::e_projectile_bullet, GetPosition2(), GetPosition2() + CShVector2(cos(m_fAngle) * 1500.0f, sin(m_fAngle) * 1500.0f), 2.0f);
-	//			m_fFireRate = 0.0f;
-	//		}
-	//	}
-	//	break;
-	//
-	//	case TANK:
-	//	{
-	//		if (m_fFireRate > 0.5f)
-	//		{
-	//			m_pProjectileManager->Start(ProjectileManager::e_projectile_bullet, GetPosition2(), GetPosition2() + CShVector2(cos(m_fAngle) * 1500.0f, sin(m_fAngle) * 1500.0f), 4.0f);
-	//			m_fFireRate = 0.0f;
-	//		}
-	//	}
-	//	break;
-	//
-	//	case TRORAPIDE:
-	//	{
-	//
-	//	}
-	//	break;
-	//
-	//	case PERE_NOWEL:
-	//	{
-	//
-	//	}
-	//	break;
-	//}
 }
 
 /**
@@ -276,6 +238,29 @@ void Ship::UpdateSprite(const Network::vec2 & shipPos)
 	m_vPosition.m_x = shipPos.x;
 	m_vPosition.m_y = shipPos.y;
 	ShEntity2::SetWorldPosition(m_pEntity, CShVector3(shipPos.x, shipPos.y, ShEntity2::GetWorldPositionZ(m_pEntity)));
+}
+
+void Ship::UpdateTarget(void)
+{
+	if (e_type_ship == m_pTargetType)
+	{
+		if (static_cast<Ship *>(m_pTargetObject)->IsDead())
+		{
+			SetIdleState();
+		}
+		else
+		{
+			CShVector2 targetPos =  m_pTargetObject->GetPosition2();
+			SetTarget(targetPos.m_x, targetPos.m_y);
+		}
+	}
+	else if (e_type_transmitter == m_pTargetType)
+	{
+		if (static_cast<Transmitter *>(m_pTargetObject)->IsDead())
+		{
+			SetIdleState();
+		}
+	}
 }
 
 float Ship::ComputeVecteurNorme(float Ax, float Ay, float Bx, float By)

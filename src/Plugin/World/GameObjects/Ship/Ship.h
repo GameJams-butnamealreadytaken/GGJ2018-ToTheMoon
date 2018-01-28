@@ -58,6 +58,7 @@ private:
 	void						SetIdleState			(void);
 	void						Attack					(void);
 	void						UpdateSprite			(const Network::vec2 & shipPos);
+	void						UpdateTarget			(void);
 
 	float						ComputeVecteurNorme		(float Ax, float Ay, float Bx, float By);
 
