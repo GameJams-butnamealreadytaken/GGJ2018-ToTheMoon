@@ -63,22 +63,23 @@ void CameraPlugin::Update(float dt, const CShVector2 & shipPos)
 	}
 	else
 	{
+		float speed = 50.0f * 60.0f * dt;
 		if (m_pInputs->IsCameraUp())
 		{
-			ShCamera::Translate(m_pCamera, CShVector3(0.0f, 50.0f, 0.0f));
+			ShCamera::Translate(m_pCamera, CShVector3(0.0f, speed, 0.0f));
 		}
 		else if (m_pInputs->IsCameraDown())
 		{
-			ShCamera::Translate(m_pCamera, CShVector3(0.0f, -50.0f, 0.0f));
+			ShCamera::Translate(m_pCamera, CShVector3(0.0f, -speed, 0.0f));
 		}
 
 		if (m_pInputs->IsCameraRight())
 		{
-			ShCamera::Translate(m_pCamera, CShVector3(50.0f, 0.0f, 0.0f));
+			ShCamera::Translate(m_pCamera, CShVector3(speed, 0.0f, 0.0f));
 		}
 		else if (m_pInputs->IsCameraLeft())
 		{
-			ShCamera::Translate(m_pCamera, CShVector3(-50.0f, 0.0f, 0.0f));
+			ShCamera::Translate(m_pCamera, CShVector3(-speed, 0.0f, 0.0f));
 		}
 
 		ClampPosition();
