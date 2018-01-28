@@ -74,8 +74,6 @@ void Ship::Update(float dt)
 
 	case TRAVEL:
 		{
-			const Network::vec2 & targetPos = m_pNetworkShip->getTarget();
-
 			if (m_fAttackRange > ComputeVecteurNorme(m_vPosition.m_x, m_vPosition.m_y, targetPos.x, targetPos.y))
 			{
 				if (e_type_ship == m_pTargetType)
@@ -183,7 +181,7 @@ void Ship::SetTarget(float x, float y, Ship * pShip)
 	SetTarget(x, y);
 	m_pTargetType = e_type_ship;
 	m_pTargetObject = pShip;
-	m_fAttackRange = 200.0f;
+	m_fAttackRange = 600.0f;
 }
 
 /**
@@ -194,7 +192,7 @@ void Ship::SetTarget(float x, float y, Transmitter * pTrans)
 	SetTarget(x, y);
 	m_pTargetType = e_type_transmitter;
 	m_pTargetObject = pTrans;
-	m_fAttackRange = 200.0f;
+	m_fAttackRange = 600.0f;
 }
 
 /**
