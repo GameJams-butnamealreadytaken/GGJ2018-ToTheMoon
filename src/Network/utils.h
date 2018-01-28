@@ -4,6 +4,7 @@
 #	include <uuid/uuid.h>
 #else
 #	define _WINSOCKAPI_ 
+#include <stdio.h>
 #	include <rpc.h>
 #endif // __gnu_linux__
 
