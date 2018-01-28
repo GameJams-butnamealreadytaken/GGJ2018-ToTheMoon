@@ -187,13 +187,16 @@ void World::Update(float dt)
 
 	//
 	// Plugin Inputs
-	if (m_pUser)
+	if (m_pShip)
 	{
-		if (ShUser::HasTriggeredAction(m_pUser, CShIdentifier("beacon")))
+		if (m_pUser)
 		{
-			CShVector2 & shipPos = m_pShip->GetPosition2();	
-			Network::Transmitter * pNetworkTrans = m_world.createTransmitter(m_pShip->GetTeam(), shipPos.m_x, shipPos.m_y);
-			CreateTransmitter(shipPos.m_x, shipPos.m_y, pNetworkTrans);
+			if (ShUser::HasTriggeredAction(m_pUser, CShIdentifier("beacon")))
+			{
+				CShVector2 & shipPos = m_pShip->GetPosition2();
+				Network::Transmitter * pNetworkTrans = m_world.createTransmitter(m_pShip->GetTeam(), shipPos.m_x, shipPos.m_y);
+				CreateTransmitter(shipPos.m_x, shipPos.m_y, pNetworkTrans);
+			}
 		}
 	}
 
@@ -334,7 +337,7 @@ Transmitter * World::CreateTransmitter(float x, float y, const Network::Transmit
 	pTrans->Start(CShVector2(x, y));
 	m_apTransmitter.Add(pTrans);
 	
-	int teamId = 0; // get id from network transmitter
+	const int teamId = pNetworkTrans->getTeam();
 	m_aTeam[teamId]->AddTransmitter(pTrans);
 
 	return(pTrans);
