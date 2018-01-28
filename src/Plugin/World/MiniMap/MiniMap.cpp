@@ -75,10 +75,6 @@ void MiniMap::Initialize(const CShIdentifier & levelIdentifier, World * pWorld)
 
 		ShEntity2::SetPosition2(pEntityPlanet, pPlanet->GetPosition2() * m_fRatio * 0.5f);
 	}
-
-	//
-	// Ships
-	m_pShip = m_pWorld->GetMyShip();
 	
 	int iShipCount = m_pWorld->GetShipCount();
 	for (int iShip = 0; iShip < iShipCount; ++iShip)
@@ -129,13 +125,29 @@ void MiniMap::Update(float dt)
 		{
 			CreateShip(pShip);
 		}
-
-		if (pShip == m_pShip)
-		{
-
-
-		}
 		
+		int iTeam = pShip->GetTeam();
+
+		if (m_pShip == pShip)
+		{
+			ShEntity2::SetColor(m_apShip[iShip], CShRGBAf(0.0f, 1.0f, 0.0f, 1.0f));
+		}
+		else
+		{
+			if (iTeam == 0)
+			{
+				ShEntity2::SetColor(m_apShip[iShip], CShRGBAf(0.0f, 0.0f, 1.0f, 1.0f));
+			}
+			else if (iTeam == 1)
+			{
+				ShEntity2::SetColor(m_apShip[iShip], CShRGBAf(1.0f, 0.0f, 0.0f, 1.0f));
+			}
+			else
+			{
+				SH_ASSERT_ALWAYS();
+			}
+		}
+
 		ShEntity2::SetWorldPosition2(m_apShip[iShip], m_vPosition + pShip->GetPosition2() * CShVector2(m_fRatio, m_fRatio) * 0.5f);
 		ShEntity2::SetRotation(m_apShip[iShip], pShip->GetRotation());
 	}
@@ -157,33 +169,21 @@ void MiniMap::Update(float dt)
 }
 
 /**
+* @brief SetShip
+*/
+void MiniMap::SetShip(Ship * pShip)
+{
+	m_pShip = pShip;
+}
+
+/**
 * @brief CreateShip
 */
 void MiniMap::CreateShip(Ship * pShip)
 {
 	char szSpriteIdentifier[1024];
+	ShEntity2* pEntityShip = ShEntity2::Create(m_levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("minimap_ship"), CShVector3(0.0f, 0.0f, 103.0f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
 
-	if (pShip == m_pShip)
-	{
-		sprintf(szSpriteIdentifier, "minimap_ship_green");
-	}
-	else
-	{
-		if (pShip->GetTeam() == 0)
-		{
-			sprintf(szSpriteIdentifier, "minimap_ship_blue");
-		}
-		else if (pShip->GetTeam() == 1)
-		{
-			sprintf(szSpriteIdentifier, "minimap_ship_red");
-		}
-		else
-		{
-			SH_ASSERT_ALWAYS();
-		}
-	}
-
-	ShEntity2* pEntityShip = ShEntity2::Create(m_levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier(szSpriteIdentifier), CShVector3(0.0f, 0.0f, 103.0f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
 	m_apShip.Add(pEntityShip);
 	ShEntity2::Link(m_pEntityBackground, pEntityShip);
 	m_iShipCount++;

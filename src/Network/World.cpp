@@ -12,7 +12,7 @@
 #define ENABLE_DEBUG_PRINT 0
 #define ENABLE_CHECKS 1
 
-#define PING_INTERVAL (1.0f)
+#define PING_INTERVAL (100000.0f)
 
 namespace Network
 {
@@ -132,6 +132,7 @@ void World::handleHelloMessage(HelloMessage * msg, char * machine, char * servic
 			response.target = m_aOwnedShips[i]->getTarget();
 			response.speed = m_aOwnedShips[i]->getSpeed();
 			response.team = m_aOwnedShips[i]->getTeam();
+			response.shipType = m_aOwnedShips[i]->getType();
 
 			m_network.SendMessageToMachine(response, machine);
 		}
