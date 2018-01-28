@@ -16,8 +16,8 @@ public:
 	//
 	// Constructor / Destructor
 	Ship(void);
-	Ship(const uuid_t & id, unsigned int team, unsigned int eShipType);
-	Ship(const uuid_t & id, unsigned int team, unsigned int eShipType, float x, float y);
+	Ship(const uuid_t & id, unsigned int team, unsigned int life, unsigned int eShipType);
+	Ship(const uuid_t & id, unsigned int team, unsigned int life, unsigned int eShipType, float x, float y);
 	~Ship(void);
 
 	//
@@ -44,6 +44,19 @@ public:
 	{
 		m_target.x = x;
 		m_target.y = y;
+		m_bNeedSync = true;
+	}
+
+	//
+	// Life
+	unsigned int getLife(void) const
+	{
+		return(m_life);
+	}
+
+	void setLife(unsigned int life)
+	{
+		m_life = life;
 		m_bNeedSync = true;
 	}
 
@@ -85,6 +98,8 @@ private:
 	vec2 m_target;
 
 	float m_speed; // unit / s
+
+	unsigned int m_life;
 
 	unsigned int m_team;
 
