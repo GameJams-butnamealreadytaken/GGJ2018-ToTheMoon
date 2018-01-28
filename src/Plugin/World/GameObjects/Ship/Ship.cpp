@@ -1,6 +1,7 @@
 #include "Ship.h"
 
 #include "../Projectile/ProjectileManager.h"
+#include "../Transmitter/Transmitter.h"
 
 /**
  * @brief Constructor
@@ -11,6 +12,9 @@ Ship::Ship(ShEntity2 * pEntity, const CShVector2 & vPosition)
 	, m_fAngle(0.0f)
 	, m_pProjectileManager(shNULL)
 	, m_fFireRate(0.0f)
+	, m_pTargetObject(shNULL)
+	, m_pTargetType(e_type_void)
+	, m_fAttackRange(10.0f)
 {
 	SetState((int)IDLE);
 }
@@ -58,41 +62,6 @@ void Ship::Update(float dt)
 
 	m_fFireRate += dt;
 
-	switch (m_type)
-	{
-		case BASE :
-		{
-			if (m_fFireRate > 0.5f)
-			{
-				m_pProjectileManager->Start(ProjectileManager::e_projectile_bullet, GetPosition2(), GetPosition2() + CShVector2(cos(m_fAngle) * 1500.0f, sin(m_fAngle) * 1500.0f), 2.0f);
-				m_fFireRate = 0.0f;
-			}
-		}
-		break;
-
-		case TANK :
-		{
-			if (m_fFireRate > 0.5f)
-			{
-				m_pProjectileManager->Start(ProjectileManager::e_projectile_bullet, GetPosition2(), GetPosition2() + CShVector2(cos(m_fAngle) * 1500.0f, sin(m_fAngle) * 1500.0f), 4.0f);
-				m_fFireRate = 0.0f;
-			}
-		}
-		break;
-
-		case TRORAPIDE : 
-		{
-
-		}
-		break;
-
-		case PERE_NOWEL : 
-		{
-
-		}
-		break;
-	}
-
 	switch (m_iState)
 	{
 	case IDLE:
@@ -103,16 +72,24 @@ void Ship::Update(float dt)
 
 	case TRAVEL:
 		{
-			{
-				const Network::vec2 & targetPos = m_pNetworkShip->getTarget();
+			const Network::vec2 & targetPos = m_pNetworkShip->getTarget();
 
-				if (10.0f > ComputeVecteurNorme(m_vPosition.m_x, m_vPosition.m_y, targetPos.x, targetPos.y))
+			if (m_fAttackRange > ComputeVecteurNorme(m_vPosition.m_x, m_vPosition.m_y, targetPos.x, targetPos.y))
+			{
+				m_pNetworkShip->setSpeed(0.0f);
+				SetState((int)IDLE);
+
+				if (e_type_ship == m_pTargetType)
 				{
-					// setSpeed à 0 & setState à Idle si pos, FIGHT sinon
-					m_pNetworkShip->setSpeed(0.0f);
-					SetState((int)IDLE);
+					// Attack
+				}
+				else if (e_type_transmitter == m_pTargetType)
+				{
+					// Attack
 				}
 
+				m_pTargetType = e_type_void;
+				m_pTargetObject = shNULL;
 			}
 		}
 		break;
@@ -160,7 +137,7 @@ Network::Ship * Ship::GetNetworkShip(void) const
 /**
 * @brief SetTarget
 */
-void Ship::SetTarget(float x, float y, float fSpeed, EType targetType)
+void Ship::SetTarget(float x, float y, float fSpeed)
 {
 	m_pNetworkShip->setTarget(x, y);
 	m_pNetworkShip->setSpeed(fSpeed);
@@ -177,11 +154,82 @@ void Ship::SetTarget(float x, float y, float fSpeed, EType targetType)
 }
 
 /**
+* @brief SetTarget
+*/
+void Ship::SetTarget(float x, float y, float fSpeed, Ship * pShip)
+{
+	SetTarget(x, y, fSpeed);
+	m_pTargetType = e_type_ship;
+	m_pTargetObject = pShip;
+	m_fAttackRange = 200.0f;
+}
+
+/**
+* @brief SetTarget
+*/
+void Ship::SetTarget(float x, float y, float fSpeed, Transmitter * pTrans)
+{
+	SetTarget(x, y, fSpeed);
+	m_pTargetType = e_type_transmitter;
+	m_pTargetObject = pTrans;
+	m_fAttackRange = 200.0f;
+}
+
+/**
 * @brief GameObject::GetRotationZ
 */
 CShEulerAngles Ship::GetRotation(void)
 {
 	return(ShEntity2::GetWorldRotation(m_pEntity));
+}
+
+/**
+* @brief GameObject::UpdateSprite
+*/
+void Ship::Attack(void)
+{
+	CShVector2 & vTargetPosition2 = m_pTargetObject->GetPosition2();
+	
+	if (m_fFireRate > 0.25f)
+	{
+		m_pProjectileManager->Start(ProjectileManager::e_projectile_bullet, GetPosition2(), vTargetPosition2, 2.0f);
+		m_fFireRate = 0.0f;
+	}
+
+	//switch (m_type)
+	//{
+	//	case BASE:
+	//	{
+	//		if (m_fFireRate > 0.25f)
+	//		{
+	//			m_pProjectileManager->Start(ProjectileManager::e_projectile_bullet, GetPosition2(), GetPosition2() + CShVector2(cos(m_fAngle) * 1500.0f, sin(m_fAngle) * 1500.0f), 2.0f);
+	//			m_fFireRate = 0.0f;
+	//		}
+	//	}
+	//	break;
+	//
+	//	case TANK:
+	//	{
+	//		if (m_fFireRate > 0.5f)
+	//		{
+	//			m_pProjectileManager->Start(ProjectileManager::e_projectile_bullet, GetPosition2(), GetPosition2() + CShVector2(cos(m_fAngle) * 1500.0f, sin(m_fAngle) * 1500.0f), 4.0f);
+	//			m_fFireRate = 0.0f;
+	//		}
+	//	}
+	//	break;
+	//
+	//	case TRORAPIDE:
+	//	{
+	//
+	//	}
+	//	break;
+	//
+	//	case PERE_NOWEL:
+	//	{
+	//
+	//	}
+	//	break;
+	//}
 }
 
 /**
