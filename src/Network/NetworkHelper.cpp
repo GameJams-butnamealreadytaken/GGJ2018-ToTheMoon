@@ -295,7 +295,7 @@ void NetworkHelper::UpdateClients(float dt)
 			printf("TIMEOUT\n");
 			fflush(stdout);
 
-			*client = *(m_pClients+i);
+			*client = *(m_pClients+m_iClientCount); // swap with last element
 
 			--m_iClientCount;
 
