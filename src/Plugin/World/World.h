@@ -14,6 +14,7 @@ class Ship;
 class Transmitter;
 class Team;
 class MiniMap;
+class PluginInputs;
 
 class World : public Network::WorldListener
 {
@@ -60,6 +61,8 @@ private:
 	MiniMap *							m_pMiniMap;
 
 	ShUser *							m_pUser;
+
+	PluginInputs *						m_pInputs;
 
 	ExplosionManager					m_explosionManager;
 	ProjectileManager					m_projectileManager;

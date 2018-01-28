@@ -1,5 +1,6 @@
 #include "World.h"
 
+#include "Inputs/InputManager.h"
 #include "MiniMap/MiniMap.h"
 #include "GameObjects/Transmitter/Transmitter.h"
 #include "GameObjects/Ship/Ship.h"
@@ -17,6 +18,7 @@
 , m_world(5.0f * 2048.0f, 5.0f * 1152.0f)
 , m_pMiniMap(shNULL)
 , m_pUser(shNULL)
+, m_pInputs(shNULL)
 , m_explosionManager()
 , m_projectileManager()
 , m_apTransmitter()
@@ -96,6 +98,9 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 	m_pUser = ShUser::GetUser(0);
 	SH_ASSERT(shNULL != m_pUser);
 
+	m_pInputs = new PluginInputs();
+	m_pInputs->Initialize(m_pUser);
+
 	m_pMiniMap = new MiniMap();
 	m_pMiniMap->Initialize(levelIdentifier, this);
 }
@@ -134,6 +139,9 @@ void World::Release(void)
 	m_projectileManager.Release();
 	m_explosionManager.Release();
 
+	m_pInputs->Release();
+	SH_SAFE_DELETE(m_pInputs);
+
 	m_world.release();
 }
 
@@ -143,6 +151,20 @@ void World::Release(void)
 void World::Update(float dt)
 {
 	m_world.update(dt);
+
+	m_pInputs->Update();
+
+	//
+	// Plugin Inputs
+	if (m_pInputs->LaunchedBeacon())
+	{
+		if (m_pShip)
+		{
+			CShVector2 & shipPos = m_pShip->GetPosition2();
+			Network::Transmitter * pNetworkTrans = m_world.createTransmitter(m_pShip->GetTeam(), shipPos.m_x, shipPos.m_y);
+			CreateTransmitter(shipPos.m_x, shipPos.m_y, pNetworkTrans);
+		}
+	}
 
 	//
 	// Update planets
@@ -183,21 +205,6 @@ void World::Update(float dt)
 	{
 		Transmitter * pTransmitter = m_apTransmitter[iTransmitter];
 		pTransmitter->Update(dt);
-	}
-
-	//
-	// Plugin Inputs
-	if (m_pShip)
-	{
-		if (m_pUser)
-		{
-			if (ShUser::HasTriggeredAction(m_pUser, CShIdentifier("beacon")))
-			{
-				CShVector2 & shipPos = m_pShip->GetPosition2();
-				Network::Transmitter * pNetworkTrans = m_world.createTransmitter(m_pShip->GetTeam(), shipPos.m_x, shipPos.m_y);
-				CreateTransmitter(shipPos.m_x, shipPos.m_y, pNetworkTrans);
-			}
-		}
 	}
 
 	m_pMiniMap->Update(dt);
@@ -262,7 +269,6 @@ void World::OnTouchDown(int iTouch, float positionX, float positionY)
 
 #if TEST
 	//m_explosionManager.Start(CShVector2(worldPosition.m_x, worldPosition.m_y));
-	CreateTransmitter(worldPosition.m_x, worldPosition.m_y);
 #endif //TEST
 }
 
