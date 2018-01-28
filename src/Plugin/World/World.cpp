@@ -6,8 +6,10 @@
 #include "GameObjects/Ship/Ship.h"
 #include "GameObjects/Planet/Planet.h"
 #include "Team/Team.h"
+#include "Camera/CameraPlugin.h"
 
-
+#define HALF_SIZE_X 5.0f * 2048.0f
+#define HALF_SIZE_Y 5.0f * 1152.0f
 #define TEST 0
 
 /**
@@ -15,7 +17,7 @@
 */
 /*explicit*/ World::World(void) 
 : m_levelIdentifier()
-, m_world(5.0f * 2048.0f, 5.0f * 1152.0f)
+, m_world(HALF_SIZE_X, HALF_SIZE_Y)
 , m_pMiniMap(shNULL)
 , m_pUser(shNULL)
 , m_pInputs(shNULL)
@@ -25,6 +27,7 @@
 , m_apShip()
 , m_pShip(shNULL)
 , m_aTeam()
+, m_pBoundRect(shNULL)
 {
 	// ...
 }
@@ -44,16 +47,23 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 {
 	m_levelIdentifier = levelIdentifier;
 
-	ShPrimitiveSegment::Create(m_levelIdentifier, CShIdentifier("aa"), CShVector3(5.0f,  5.0f,  5.0f), CShVector3(5.0f, -5.0f , 5.0f), CShRGBAf());
-	ShPrimitiveSegment::Create(m_levelIdentifier, CShIdentifier("aa"), CShVector3(5.0f,  5.0f,  5.0f), CShVector3(-5.0f, -5.0f, 5.0f), CShRGBAf());
-	ShPrimitiveSegment::Create(m_levelIdentifier, CShIdentifier("aa"), CShVector3(-5.0f, 5.0f, 5.0f), CShVector3(5.0f, -5.0f ,5.0f), CShRGBAf());
-	ShPrimitiveSegment::Create(m_levelIdentifier, CShIdentifier("aa"), CShVector3(-5.0f, 5.0f, 5.0f), CShVector3(-5.0f, -5.0f , 5.0f), CShRGBAf());
+	//
+	// Create world delimiters
+	{
+		m_pBoundRect = ShPrimitiveRect::Create(m_levelIdentifier, GID(NULL), CShVector2(-HALF_SIZE_X, HALF_SIZE_Y), CShVector2(HALF_SIZE_X, -HALF_SIZE_Y), CShRGBAf(1.0f, 1.0f, 0.0f, 1.0f));
+		ShPrimitiveRect::Set2d(m_pBoundRect, true);
+	}
 
 	m_world.init();
 	m_world.setListener(this);
 
 	m_explosionManager.Initialize(levelIdentifier);
 	m_projectileManager.Initialize(levelIdentifier);
+
+	//
+	// Create player's Ship
+	Network::Ship * pNetworkShip = m_world.createShip(m_iTeam, m_iShipType, 0.0f, 0.0f);
+	m_pShip = CreateShip(0.0f, 0.0f, pNetworkShip);
 
 	//
 	// Create Planets
@@ -103,6 +113,9 @@ void World::Initialize(const CShIdentifier & levelIdentifier)
 
 	m_pMiniMap = new MiniMap();
 	m_pMiniMap->Initialize(levelIdentifier, this);
+
+	m_pCamera = new CameraPlugin(CShVector2(HALF_SIZE_X, HALF_SIZE_Y));
+	m_pCamera->Initialize(m_pInputs);
 }
 
 /**
@@ -144,7 +157,12 @@ void World::Release(void)
 	m_pInputs->Release();
 	SH_SAFE_DELETE(m_pInputs);
 
+	m_pCamera->Release();
+	SH_SAFE_DELETE(m_pCamera);
+
 	m_world.release();
+
+	ShPrimitiveRect::Destroy(m_pBoundRect);
 }
 
 /**
@@ -155,17 +173,22 @@ void World::Update(float dt)
 	m_world.update(dt);
 
 	m_pInputs->Update();
-
-	//
-	// Plugin Inputs
-	if (m_pInputs->LaunchedBeacon())
+	
+	if (m_pShip)
 	{
-		if (m_pShip)
+		m_pCamera->Update(dt, m_pShip->GetPosition2());
+
+		//
+		// Plugin Inputs
+		if (m_pInputs->LaunchedBeacon())
 		{
+
 			CShVector2 & shipPos = m_pShip->GetPosition2();
 			Network::Transmitter * pNetworkTrans = m_world.createTransmitter(m_pShip->GetTeam(), shipPos.m_x, shipPos.m_y);
 			CreateTransmitter(shipPos.m_x, shipPos.m_y, pNetworkTrans);
+
 		}
+
 	}
 
 	//
@@ -190,14 +213,6 @@ void World::Update(float dt)
 	{
 		Ship * pShip = m_apShip[iShip];
 		pShip->Update(dt);
-
-		if (pShip == m_pShip)
-		{
-			ShCamera* pCamera = ShCamera::GetCamera2D();
-			CShVector2 shipPos = m_pShip->GetPosition2();
-			ShCamera::SetPosition2(pCamera, shipPos);
-			ShCamera::SetTarget(pCamera, CShVector3(shipPos, 0.0f));
-		}
 	}
 
 	//
@@ -226,6 +241,14 @@ int	World::GetShipCount(void)
 Ship * World::GetShip(int iShip)
 {
 	return(m_apShip[iShip]);
+}
+
+/**
+* @brief World::GetMyShip
+*/
+Ship * World::GetMyShip(void)
+{
+	return(m_pShip);
 }
 
 /**
@@ -369,12 +392,10 @@ void World::OnTouchMove(int iTouch, float positionX, float positionY)
 /**
 * @brief World::Start
 */
-void World::Start(unsigned int team)
+void World::Start(unsigned int team, unsigned int iShipType)
 {
-	//
-	// Create player's Ship
-	Network::Ship * pNetworkShip = m_world.createShip(team, 0.0f, 0.0f);
-	m_pShip = CreateShip(0.0f, 0.0f, pNetworkShip);
+	m_iTeam = team;
+	m_iShipType = iShipType;
 }
 
 /**
@@ -382,10 +403,10 @@ void World::Start(unsigned int team)
 */
 Ship * World::CreateShip(float x, float y, const Network::Ship * pNetworkShip)
 {
-	ShEntity2* pEntity = ShEntity2::Create(m_levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("ship"), CShVector3(x, y, 1.1f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(0.15f, 0.15f, 1.0f));
+	ShEntity2* pEntity = ShEntity2::Create(m_levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier(CShString("ship_") + CShString::FromInt(pNetworkShip->getType())), CShVector3(x, y, 1.1f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(0.15f, 0.15f, 1.0f));
 	SH_ASSERT(shNULL != pEntity);
 	Ship * pShip = new Ship(pEntity, CShVector2(x, y));
-	pShip->Initialize(Ship::BASE, pNetworkShip, &m_projectileManager);
+	pShip->Initialize((Ship::EShipType)(pNetworkShip->getType()), pNetworkShip, &m_projectileManager);
 	m_apShip.Add(pShip);
 
 	return(pShip);

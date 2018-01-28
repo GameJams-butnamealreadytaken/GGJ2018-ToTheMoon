@@ -15,6 +15,7 @@ class Transmitter;
 class Team;
 class MiniMap;
 class PluginInputs;
+class CameraPlugin;
 
 class World : public Network::WorldListener
 {
@@ -30,6 +31,7 @@ public:
 
 	int				GetShipCount			(void);
 	Ship *			GetShip					(int iShip);
+	Ship *			GetMyShip				(void);
 
 	int				GetTransmitterCount		(void);
 	Transmitter *	GetTransmitter			(int iTransmitter);
@@ -49,7 +51,7 @@ public:
 	virtual void	onTransmitterCreated	(const Network::Transmitter * pTrans);
 	virtual void	onTransmitterDestroyed	(const Network::Transmitter * pTrans);
 	
-	void			Start					(unsigned int team);
+	void			Start					(unsigned int team, unsigned int eShipType);
 
 private:
 
@@ -63,6 +65,8 @@ private:
 
 	MiniMap *							m_pMiniMap;
 
+	CameraPlugin *						m_pCamera;
+
 	ShUser *							m_pUser;
 
 	PluginInputs *						m_pInputs;
@@ -75,5 +79,10 @@ private:
 	CShArray<Ship *>					m_apShip;
 	Ship *								m_pShip;
 
+	int									m_iTeam;
+	int									m_iShipType;
+
 	CShArray<Team *>					m_aTeam;
+
+	ShPrimitiveRect *					m_pBoundRect;
 };

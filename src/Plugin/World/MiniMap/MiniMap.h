@@ -16,6 +16,10 @@ public:
 
 	void									Update				(float dt);
 
+private:
+	void									CreateShip			(Ship * pShip);
+	void									CreateTransmitter	(Transmitter * pTransmitter);
+
 protected:
 	CShIdentifier	m_levelIdentifier;
 	World *			m_pWorld;
@@ -28,6 +32,7 @@ protected:
 	
 	CShVector2 m_vPosition;
 
+	Ship*					m_pShip;
 	CShArray<ShEntity2*>	m_apShip;
 	CShArray<ShEntity2*>	m_apTransmitter;
 	CShArray<ShEntity2*>	m_apPlanet;

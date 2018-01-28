@@ -16,8 +16,8 @@ public:
 	//
 	// Constructor / Destructor
 	Ship(void);
-	Ship(const uuid_t & id, unsigned int team);
-	Ship(const uuid_t & id, unsigned int team, float x, float y);
+	Ship(const uuid_t & id, unsigned int team, unsigned int eShipType);
+	Ship(const uuid_t & id, unsigned int team, unsigned int eShipType, float x, float y);
 	~Ship(void);
 
 	//
@@ -61,6 +61,13 @@ public:
 		return(m_team);
 	}
 
+	//
+	// Team
+	unsigned int getType(void) const
+	{
+		return(m_eShipType);
+	}
+
 protected:
 
 	//
@@ -80,6 +87,8 @@ private:
 	float m_speed; // unit / s
 
 	unsigned int m_team;
+
+	unsigned int m_eShipType;
 
 	bool m_bNeedSync;
 };

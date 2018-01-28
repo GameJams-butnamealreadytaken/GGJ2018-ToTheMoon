@@ -4,6 +4,7 @@
 #	include <uuid/uuid.h>
 #else
 #	define _WINSOCKAPI_ 
+#include <stdio.h>
 #	include <rpc.h>
 #endif // __gnu_linux__
 
@@ -112,6 +113,7 @@ struct CreateShipMessage
 	vec2 target;
 	float speed;
 	unsigned int team;
+	unsigned int shipType;
 };
 
 struct DestroyShipMessage
@@ -139,6 +141,7 @@ struct SyncShipStateMessage
 	vec2 target;
 	float speed;
 	unsigned int team;
+	unsigned int shipType;
 };
 
 struct CreateTransmitterMessage

@@ -4,6 +4,8 @@
 
 class GameStateShipSelection : public GameState
 {
+public:
+
 	//
 	// BEWARE ! This enum must match Plugin/World/GameObject/Ship/Ship::EShipType
 	enum EShipType
@@ -15,8 +17,6 @@ class GameStateShipSelection : public GameState
 
 		e_ship_type_max
 	};
-
-public:
 
 	enum EState
 	{

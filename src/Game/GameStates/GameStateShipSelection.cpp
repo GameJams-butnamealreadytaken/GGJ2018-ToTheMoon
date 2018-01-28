@@ -245,17 +245,21 @@ void GameStateShipSelection::setState(GameStateShipSelection::EState eState)
 /*static*/ bool GameStateShipSelection::OnButtonClickedNext(ShGUIControlButton * pButton)
 {
 	Game & game					= Game::instance();
-	GameStateShipSelection * pGameState		= static_cast<GameStateShipSelection*>(game.get(Game::SHIP_SELECTION));
-	SH_ASSERT(shNULL != pGameState);
-	ShGUIControlImageList * pImageList		= pGameState->m_pImageListShips;
-	ShGUIControlButton * pButtonNext		= pGameState->m_pButtonNext;
-	ShGUIControlButton * pButtonPrevious	= pGameState->m_pButtonPrevious;
+	GameStateShipSelection * pGameStateShipSelection = static_cast<GameStateShipSelection*>(game.get(Game::SHIP_SELECTION));
+	SH_ASSERT(shNULL != pGameStateShipSelection);
+	ShGUIControlImageList * pImageList		= pGameStateShipSelection->m_pImageListShips;
+	ShGUIControlButton * pButtonNext		= pGameStateShipSelection->m_pButtonNext;
+	ShGUIControlButton * pButtonPrevious	= pGameStateShipSelection->m_pButtonPrevious;
 
 	int iIndex = shMin(ShGUIControlImageList::GetCurrentImageIndex(pImageList) + 1, ShGUIControl::GetChildrenCount(pImageList) - 1);
 	ShGUIControlImageList::SetCurrentImageIndex(pImageList, iIndex);
 
 	if (iIndex == ShGUIControl::GetChildrenCount(pImageList) - 1)	{	ShGUIControl::Hide(pButtonNext);		}
 	else															{	ShGUIControl::Show(pButtonPrevious);	}
+	
+	GameStateGame * pGameStateGame = static_cast<GameStateGame*>(game.get(Game::GAME_LEVEL));
+	SH_ASSERT(shNULL != pGameStateGame);
+	pGameStateGame->SetShipType((EShipType)iIndex);
 
 	return(true);
 }
@@ -278,6 +282,10 @@ void GameStateShipSelection::setState(GameStateShipSelection::EState eState)
 
 	if (iIndex == 0)	{	ShGUIControl::Hide(pButtonPrevious);	}
 	else				{	ShGUIControl::Show(pButtonNext);		}
+	
+	GameStateGame * pGameStateGame = static_cast<GameStateGame*>(game.get(Game::GAME_LEVEL));
+	SH_ASSERT(shNULL != pGameStateGame);
+	pGameStateGame->SetShipType((EShipType)iIndex);
 
 	return(true);
 }
