@@ -38,6 +38,7 @@ public:
 
 	void						SetTarget				(float x, float y, float fSpeed);
 
+	CShEulerAngles				GetRotation				(void);
 	EShipType					GetShipType				(void) const;
 	unsigned int				GetTeam					(void) const;
 

@@ -127,6 +127,14 @@ void Ship::SetTarget(float x, float y, float fSpeed)
 }
 
 /**
+* @brief GameObject::GetRotationZ
+*/
+CShEulerAngles Ship::GetRotation(void)
+{
+	return(ShEntity2::GetWorldRotation(m_pEntity));
+}
+
+/**
 * @brief GameObject::UpdateSprite
 */
 void Ship::UpdateSprite(const Network::vec2 & shipPos, const Network::vec2 & targetPos, float fAngle)

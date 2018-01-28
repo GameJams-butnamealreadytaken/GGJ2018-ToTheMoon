@@ -44,7 +44,7 @@ void MiniMap::Initialize(const CShIdentifier & levelIdentifier, World * pWorld)
 	m_fHeight = 1152.0f * 5.0f / 10.0f;
 	m_fRatio = 0.1f;
 
-	m_pEntityBackground = ShEntity2::Create(levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("minimap_background"), CShVector3(0.0f, 0.0f, 100.0f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(m_fWidth / 10.0f, m_fHeight / 10.0f, 1.0f));
+	m_pEntityBackground = ShEntity2::Create(levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("minimap_background"), CShVector3(0.0f, 0.0f, 100.0f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
 	SH_ASSERT(shNULL != m_pEntityBackground);
 	ShEntity2::SetAlpha(m_pEntityBackground, 0.8f);
 
@@ -155,6 +155,7 @@ void MiniMap::Update(float dt)
 	
 		Ship * pShip = m_pWorld->GetShip(iShip);
 		ShEntity2::SetWorldPosition2(m_apShip[iShip], m_vPosition + pShip->GetPosition2() * CShVector2(m_fRatio, m_fRatio) * 0.5f);
+		ShEntity2::SetRotation(m_apShip[iShip], pShip->GetRotation());
 	}
 
 	//
