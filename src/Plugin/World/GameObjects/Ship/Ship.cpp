@@ -77,6 +77,8 @@ void Ship::Update(float dt)
 
 			if (m_fAttackRange > ComputeVecteurNorme(m_vPosition.m_x, m_vPosition.m_y, targetPos.x, targetPos.y))
 			{
+				Attack();
+
 				if (e_type_ship == m_pTargetType)
 				{
 					// Attack
@@ -209,12 +211,14 @@ void Ship::SetIdleState(void)
 void Ship::Attack(void)
 {
 	CShVector2 & vTargetPosition2 = m_pTargetObject->GetPosition2();
-	
+
 	if (m_fFireRate > 0.25f)
 	{
 		m_pProjectileManager->Start(ProjectileManager::e_projectile_bullet, GetPosition2(), vTargetPosition2, 2.0f);
 		m_fFireRate = 0.0f;
 	}
+
+	m_pTargetObject->OnHit(this);
 
 	//switch (m_type)
 	//{
