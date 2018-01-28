@@ -210,6 +210,7 @@ void Ship::SetIdleState(void)
 	SetState((int)IDLE);
 	m_pTargetType = e_type_void;
 	m_pTargetObject = shNULL;
+	m_fAttackRange = 10.0f;
 }
 
 /**
