@@ -13,7 +13,7 @@ namespace Network
 {
 
 #if WIN32
-int NETWORK_DEBUG_LOG(const char* format, ...)
+inline int NETWORK_DEBUG_LOG(const char* format, ...)
 {
 	static char s_printf_buf[1024];
 	va_list args;
