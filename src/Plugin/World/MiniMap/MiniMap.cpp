@@ -1,5 +1,6 @@
 #include "MiniMap.h"
 
+#include "../GameObjects/Planet/Planet.h"
 #include "../GameObjects/Ship/Ship.h"
 #include "../GameObjects/Transmitter/Transmitter.h"
 
@@ -51,6 +52,28 @@ void MiniMap::Initialize(const CShIdentifier & levelIdentifier, World * pWorld)
 	ShEntity2::SetWorldPosition2(m_pEntityBackground, CShVector2(ShDisplay::GetWidth() * 0.5f - ShEntity2::GetWidth(m_pEntityBackground) * 0.5f - POSITION_OFFSET_X,-ShDisplay::GetHeight() * 0.5f + ShEntity2::GetWidth(m_pEntityBackground) * 0.5f + POSITION_OFFSET_Y));
 
 	m_vPosition = ShEntity2::GetPosition2(m_pEntityBackground);
+
+	//
+	// Planets
+	int iPlanetCount = m_pWorld->GetPlanetCount();
+	for (int iPlanet = 0; iPlanet < iPlanetCount; ++iPlanet)
+	{
+		Planet * pPlanet = m_pWorld->GetPlanet(iPlanet);
+
+		ShEntity2* pEntityPlanet = ShEntity2::Create(levelIdentifier, GID(NULL), CShIdentifier("layer_default"), CShIdentifier("ggj"), CShIdentifier("planet"), CShVector3(0.0f, 0.0f, 101.0f), CShEulerAngles(0.0f, 0.0f, 0.0f), CShVector3(1.0f, 1.0f, 1.0f));
+		m_apPlanet.Add(pEntityPlanet);
+		ShEntity2::Link(m_pEntityBackground, pEntityPlanet);
+
+		switch (pPlanet->GetPlanet())
+		{
+			case Planet::e_planet_earth:	{ ShEntity2::SetColor(pEntityPlanet, CShRGBAf(0.184f,0.752f, 0.937f, 1.0f)); }	break;
+			case Planet::e_planet_jupiter:	{ ShEntity2::SetColor(pEntityPlanet, CShRGBAf(0.843f,0.517f, 0.0f, 1.0f)); }	break;
+			case Planet::e_planet_mars:		{ ShEntity2::SetColor(pEntityPlanet, CShRGBAf(1.0f, 0.219f, 0.392f, 1.0f)); }	break;
+			case Planet::e_planet_moon:		{ ShEntity2::SetColor(pEntityPlanet, CShRGBAf(0.44f, 0.439f, 0.439f, 1.0f)); }	break;
+		}
+
+		ShEntity2::SetPosition2(pEntityPlanet, pPlanet->GetPosition2() * m_fRatio * 0.5f);
+	}
 
 	//
 	// Ships
