@@ -298,6 +298,38 @@ void World::OnTouchDown(int iTouch, float positionX, float positionY)
 	// Set new ship target
 	if (shNULL != m_pShip)
 	{
+		// Check target type
+		int iShipCount = m_apShip.GetCount();
+		for (int iShip = 0; iShip < iShipCount; ++iShip)
+		{
+			Ship * pShip = m_apShip[iShip];
+			if (pShip != m_pShip)
+			{
+				if (m_pShip->GetTeam() != pShip->GetTeam())
+				{
+					if (ShEntity2::Includes(pShip->GetSprite(), CShVector2(worldPosition.m_x, worldPosition.m_y)))
+					{
+
+					}
+				}
+			}
+		}
+
+		//
+		// Update Transmitters
+		int iTransmitterCount = m_apTransmitter.GetCount();
+		for (int iTransmitter = 0; iTransmitter < iTransmitterCount; ++iTransmitter)
+		{
+			Transmitter * pTransmitter = m_apTransmitter[iTransmitter];
+			if (m_pShip->GetTeam() != pTransmitter->GetTeam())
+			{
+				if (ShEntity2::Includes(pTransmitter->GetSprite(), CShVector2(worldPosition.m_x, worldPosition.m_y)))
+				{
+
+				}
+			}
+		}
+
 		m_pShip->SetTarget(worldPosition.m_x, worldPosition.m_y, 5.0f); // todo move speed on her right place
 	}
 
