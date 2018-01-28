@@ -27,7 +27,8 @@ public:
 	{
 		IDLE,
 		TRAVEL,
-		FIGHT,
+		HIT,
+		DESTROYED,
 	};
 
 								Ship					(ShEntity2 * pEntity, const CShVector2 & vPosition);

@@ -101,9 +101,23 @@ void Ship::Update(float dt)
 		}
 		break;
 
-	case FIGHT:
+		case HIT:
 		{
+			SetState((int)TRAVEL);
+		}
+		break;
 
+		case DESTROYED:
+		{
+			if (m_fStateTime < 1.0f)
+			{
+				ShEntity2::SetAlpha(m_pEntity, 1.0f - m_fStateTime);
+			}
+			else
+			{
+				// Dead trigger respawn
+				// recreate ship on it
+			}
 		}
 		break;
 	}
@@ -115,6 +129,15 @@ void Ship::Update(float dt)
 /*virtual*/ void Ship::OnHit(GameObject* pObject)
 {
 	--m_iLife;
+	if (m_iLife <= 0)
+	{
+		SetState((int)DESTROYED);
+		Network::DestroyTransmitterMessage(m_pTransmitter);
+	}
+	else
+	{
+		SetState((int)HIT);
+	}
 }
 
 /**
