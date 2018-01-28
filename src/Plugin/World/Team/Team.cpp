@@ -103,7 +103,7 @@ bool Team::GetVictoryCondition(void)
 		Transmitter * pTrans = m_apTransmitter[i];
 		CShVector2 & newPos = pTrans->GetPosition2();
 		// Linked to start point
-		if (2000.0f > ComputeVecteurNorme(newPos.m_x, newPos.m_y, m_startPoint.m_x, m_startPoint.m_y))
+		if (700.0f > ComputeVecteurNorme(newPos.m_x, newPos.m_y, m_startPoint.m_x, m_startPoint.m_y))
 		{
 			if (CheckNeighboorList(pTrans, transList_done))
 			{
@@ -125,7 +125,7 @@ bool Team::CheckNeighboorList(Transmitter * pTrans, CShArray<int> & transList_do
 		transList_done.Add(pTrans->GetId());
 		CShVector2 & newPos = pTrans->GetPosition2();
 		// Linked to end point
-		if (2000.0f > ComputeVecteurNorme(newPos.m_x, newPos.m_y, m_endPoint.m_x, m_endPoint.m_y))
+		if (700.0f > ComputeVecteurNorme(newPos.m_x, newPos.m_y, m_endPoint.m_x, m_endPoint.m_y))
 		{
 			return(true);
 		}
@@ -160,11 +160,11 @@ void Team::AddNeighbour(Transmitter * pTransmitterFrom, Transmitter * pTransmitt
 	
 	if (m_iTeamId == 0)
 	{
-		ShPrimitiveSegment::SetColor(pSegment, CShRGBAf(1.0f, 0.0f, 0.0f, 1.0f));
+		ShPrimitiveSegment::SetColor(pSegment, CShRGBAf(0.0f, 0.0f, 1.0f, 1.0f));
 	}
 	else if (m_iTeamId == 1)
 	{
-		ShPrimitiveSegment::SetColor(pSegment, CShRGBAf(0.0f, 0.0f, 1.0f, 1.0f));
+		ShPrimitiveSegment::SetColor(pSegment, CShRGBAf(1.0f, 0.0f, 0.0f, 1.0f));
 	}
 	else
 	{
