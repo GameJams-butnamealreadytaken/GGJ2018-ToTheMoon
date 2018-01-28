@@ -418,6 +418,14 @@ float World::ComputeVecteurNorme(float Ax, float Ay, float Bx, float By)
 }
 
 /**
+ * @brief World::onShipShooted
+ */
+/*virtual*/ void World::onShipShooted(const Network::Ship * pShip, const Network::Ship * pShooterShip)
+{
+	// TODO
+}
+
+/**
 * @brief World::onTransmitterCreate
 */
 /*virtual*/ void World::onTransmitterCreated(const Network::Transmitter * pTrans)
@@ -455,6 +463,14 @@ float World::ComputeVecteurNorme(float Ax, float Ay, float Bx, float By)
  * @brief World::onTransmitterStateChanged
  */
 /*virtual*/ void World::onTransmitterStateChanged(const Network::Transmitter * pTrans)
+{
+	// TODO
+}
+
+/**
+ * @brief World::onTransmitterShooted
+ */
+/*virtual*/ void World::onTransmitterShooted(const Network::Transmitter * pTrans, const Network::Ship * pShooterShip)
 {
 	// TODO
 }
