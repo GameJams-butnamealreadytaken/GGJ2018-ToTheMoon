@@ -32,12 +32,26 @@ source_group("State" FILES ${SOURCES_GameState})
 set(SOURCES_GameStateMainMenu GameStates/GameStateMainMenu.cpp GameStates/GameStateMainMenu.h)
 source_group("State\\MainMenu" FILES ${SOURCES_GameStateMainMenu})
 
+# Ship selectino
+set(SOURCES_GameStateShipSelection GameStates/GameStateShipSelection.cpp GameStates/GameStateShipSelection.h)
+source_group("State\\ShipSelection" FILES ${SOURCES_GameStateShipSelection})
+
 # Game
 set(SOURCES_GameStateGame GameStates/GameStateGame.cpp GameStates/GameStateGame.h)
 source_group("State\\Game" FILES ${SOURCES_GameStateGame})
 
 # Put everything together before adding platform-specific files
-set(SOURCES ${SOURCES_main} ${SOURCES_Game} ${SOURCES_Inputs} ${SOURCES_Application} ${SOURCES_InputManager} ${SOURCES_PersistentData} ${SOURCES_GameState} ${SOURCES_GameStateMainMenu} ${SOURCES_GameStateGame})
+set(SOURCES ${SOURCES_main} 
+			${SOURCES_Game} 
+			${SOURCES_Inputs} 
+			${SOURCES_Application} 
+			${SOURCES_InputManager} 
+			${SOURCES_PersistentData} 
+			${SOURCES_GameState} 
+			${SOURCES_GameStateMainMenu} 
+			${SOURCES_GameStateShipSelection} 
+			${SOURCES_GameStateGame}
+			)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 	add_executable(Game WIN32 ${SOURCES})

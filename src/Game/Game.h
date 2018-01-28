@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GameStates/GameStateMainMenu.h"
+#include "GameStates/GameStateShipSelection.h"
 #include "GameStates/GameStateGame.h"
 
 #include "InputManager.h"
@@ -17,6 +18,7 @@ public:
 	enum EState
 	{
 		MAIN_MENU,
+		SHIP_SELECTION,
 		GAME_LEVEL,
 
 		MAX_GAME_STATES
@@ -67,6 +69,7 @@ private:
 	int						m_iCurrentState;
 	
 	GameStateMainMenu		m_stateMainMenu;
+	GameStateShipSelection	m_stateShipSelection;
 	GameStateGame			m_stateGame;
 
 	float					m_fRatio;

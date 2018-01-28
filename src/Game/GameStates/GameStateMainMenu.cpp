@@ -130,7 +130,7 @@ void GameStateMainMenu::update(float dt)
 
 			if (game.GetInputManager().IsPressEnter())
 			{
-				game.push(Game::GAME_LEVEL);
+				game.push(Game::SHIP_SELECTION);
 			}
 		}
 		break;
@@ -193,7 +193,7 @@ void GameStateMainMenu::setState(GameStateMainMenu::EState eState)
 {
 	Game & game = Game::instance();
 
-	game.push(Game::GAME_LEVEL);
+	game.push(Game::SHIP_SELECTION);
 	SH_TRACE("Game launched");
 
 	return(true);
