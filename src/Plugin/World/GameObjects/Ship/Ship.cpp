@@ -77,11 +77,9 @@ void Ship::Update(float dt)
 
 			if (m_fAttackRange > ComputeVecteurNorme(m_vPosition.m_x, m_vPosition.m_y, targetPos.x, targetPos.y))
 			{
-				Attack();
-
 				if (e_type_ship == m_pTargetType)
 				{
-					// Attack
+					Attack();
 					if (static_cast<Ship *>(m_pTargetObject)->IsDead())
 					{
 						SetIdleState();
@@ -89,7 +87,7 @@ void Ship::Update(float dt)
 				}
 				else if (e_type_transmitter == m_pTargetType)
 				{
-					// Attack
+					Attack();
 					if (static_cast<Transmitter *>(m_pTargetObject)->IsDead())
 					{
 						SetIdleState();
