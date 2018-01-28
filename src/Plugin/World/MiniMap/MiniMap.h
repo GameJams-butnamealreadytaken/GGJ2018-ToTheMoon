@@ -16,6 +16,8 @@ public:
 
 	void									Update				(float dt);
 
+	void									SetShip				(Ship * pShip);
+
 private:
 	void									CreateShip			(Ship * pShip);
 	void									CreateTransmitter	(Transmitter * pTransmitter);
