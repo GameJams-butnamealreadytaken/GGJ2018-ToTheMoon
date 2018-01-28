@@ -16,7 +16,7 @@ Ship::Ship(ShEntity2 * pEntity, const CShVector2 & vPosition)
 	, m_pTargetObject(shNULL)
 	, m_pTargetType(e_type_void)
 	, m_fAttackRange(30.0f)
-	, m_iLife(5)
+	, m_iLife(100)
 	, m_fSpeed(800.0f)
 {
 	SetState((int)IDLE);
